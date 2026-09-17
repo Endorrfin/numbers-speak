@@ -1,0 +1,29 @@
+# numbers-speak — .gitignore (guides standard §4.7 + project additions)
+
+# dependencies & build output
+node_modules/
+dist/
+dist-*/
+.vite/
+*.tsbuildinfo
+
+# scratch (standard §3.11 / §4.6)
+_ci/
+preview-*.html
+scripts/_*
+test-results/
+playwright-report/
+
+# out-of-standard reference material: the legacy D3 pages being ported (never committed)
+_examples/
+
+# local env & logs
+.env
+.env.*
+*.local
+*.log
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
