@@ -1,0 +1,70 @@
+/*
+ * tokens.css — design tokens for Numbers Speak.
+ * Dark editorial by default; light theme via <html data-theme="light"> (resolved before paint in index.html).
+ * Text/background pairs are checked for WCAG AA (≥ 4.5:1; lowest pair 4.87:1).
+ * The chart palette (incl. a colour-blind-safe scheme) is defined in S2 — these are UI tokens only.
+ */
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #10141a;
+  --surface: #171d25;
+  --s2: #1f2731;
+  --line: #2c3643;
+  --line2: #3b4757;
+
+  --tx: #eceff3;
+  --tx2: #b3bcc8;
+  --tx3: #8a95a3;
+
+  --accent: #f5b544;
+  --accent-strong: #ffd27a;
+  --accent-soft: rgba(245, 181, 68, 0.14);
+  --on-accent: #10141a;
+  --link: #f7c566;
+
+  --c-new: #5fd49a;
+  --c-soon: #7cb7ff;
+  --c-draft: #ff8f8f;
+
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #f7f6f2;
+  --surface: #ffffff;
+  --s2: #efece4;
+  --line: #dedad0;
+  --line2: #c9c3b6;
+
+  --tx: #1b2129;
+  --tx2: #46505c;
+  --tx3: #5d6773;
+
+  --accent: #8a5200;
+  --accent-strong: #6e4100;
+  --accent-soft: rgba(138, 82, 0, 0.1);
+  --on-accent: #ffffff;
+  --link: #8a5200;
+
+  --c-new: #16794a;
+  --c-soon: #1f5fae;
+  --c-draft: #b3261e;
+
+  --shadow: 0 1px 2px rgba(27, 33, 41, 0.08), 0 8px 24px rgba(27, 33, 41, 0.08);
+}
+
+:root {
+  /* Fraunces has no Cyrillic glyphs (latin, latin-ext, vietnamese only) — Ukrainian headings fall back. */
+  --font-display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --radius: 14px;
+  --radius-sm: 8px;
+  --gap: clamp(1rem, 0.6rem + 1.6vw, 1.75rem);
+  --content: 1180px;
+}

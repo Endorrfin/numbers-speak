@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#10141a" />
+    <!-- Resolve the theme before first paint to avoid a flash (dark is the default). -->
+    <script>
+      (function () {
+        try {
+          var m = localStorage.getItem('numbers-speak.theme');
+          var light =
+            m === 'light' ||
+            (m !== 'dark' && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches);
+          document.documentElement.setAttribute('data-theme', light ? 'light' : 'dark');
+          if (light) {
+            var mc = document.querySelector('meta[name="theme-color"]');
+            if (mc) mc.setAttribute('content', '#f7f6f2');
+          }
+          var l = localStorage.getItem('numbers-speak.lang');
+          if (l === 'uk' || l === 'en') document.documentElement.setAttribute('lang', l);
+        } catch (e) {}
+      })();
+    </script>
+    <meta
+      name="description"
+      content="Interactive, bilingual (EN/UA) data visualizations built with D3.js, React and TypeScript — Ukraine and the world in numbers, with cited sources and shareable views."
+    />
+    <meta name="author" content="Vasyl Krupka" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Numbers Speak" />
+    <meta property="og:title" content="Numbers Speak — interactive D3 data stories" />
+    <meta
+      property="og:description"
+      content="Ukraine and the world in numbers: interactive, bilingual (EN/UA) D3.js visualizations with cited sources."
+    />
+    <meta property="og:url" content="https://endorrfin.github.io/numbers-speak/" />
+    <title>Numbers Speak — interactive D3 data stories</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

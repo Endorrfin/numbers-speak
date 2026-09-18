@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    // DOM libs + the React JSX runtime: the SSR smoke and the unit tests live in this Node project and
+    // import React components (standard §4.6).
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
+    "moduleDetection": "force",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "types": ["node", "vite/client"]
+  },
+  "include": ["vite.config.ts", "scripts/**/*.ts"],
+  "exclude": ["scripts/_*"]
+}
