@@ -27,3 +27,7 @@ _examples/
 .DS_Store
 .idea/
 .vscode/
+
+# flags copied from flag-icons by scripts/sync-flags.ts (predev / prebuild)
+public/flags/
+docs/info.txt

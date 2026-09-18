@@ -12,19 +12,22 @@
   "author": "Vasyl Krupka",
   "description": "Interactive, bilingual (EN/UA) data visualizations built with D3.js, React and TypeScript — Ukraine and the world in numbers.",
   "engines": {
-    "node": ">=22"
+    "node": "~25.7.0",
+    "npm": "~11.10.1"
   },
   "scripts": {
     "dev": "vite",
-    "predev": "npm run gen:catalog",
+    "predev": "npm run gen:catalog && npm run sync:flags",
     "build": "tsc -b && vite build",
-    "prebuild": "npm run gen:catalog",
+    "prebuild": "npm run gen:catalog && npm run sync:flags",
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "lint": "eslint .",
     "gen:catalog": "tsx scripts/gen-catalog.ts",
     "check:catalog": "tsx scripts/check-catalog.ts",
     "check:data": "tsx scripts/check-data.ts",
+    "prep": "tsx scripts/prep.ts",
+    "sync:flags": "tsx scripts/sync-flags.ts",
     "test": "tsx scripts/run-tests.ts",
     "smoke": "tsx --tsconfig tsconfig.app.json scripts/smoke.ts",
     "verify": "npm run typecheck && npm run lint && npm run check:catalog && npm run check:data && npm run test && npm run smoke && npm run build"
@@ -35,12 +38,14 @@
     "@fontsource-variable/inter": "^5.3.0",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "d3": "^7.9.0",
+    "flag-icons": "^7.5.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/d3": "^7.4.3",
+    "@types/jsdom": "^30.0.0",
     "@types/node": "^22.20.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
@@ -49,6 +54,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.3",
     "globals": "^17.7.0",
+    "jsdom": "^30.1.0",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.62.0",

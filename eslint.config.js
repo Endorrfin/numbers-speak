@@ -27,8 +27,8 @@ export default tseslint.config(
     },
   },
   {
-    // Node scripts (generators, checks, tests, smoke).
-    files: ['scripts/**/*.{ts,mjs}', 'vite.config.ts'],
+    // Node scripts (generators, checks, tests, smoke) and dataset prep scripts.
+    files: ['scripts/**/*.{ts,mjs}', 'data-raw/**/*.ts', 'vite.config.ts'],
     languageOptions: { globals: globals.node },
   },
 );

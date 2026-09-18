@@ -2,7 +2,8 @@
  * tokens.css — design tokens for Numbers Speak.
  * Dark editorial by default; light theme via <html data-theme="light"> (resolved before paint in index.html).
  * Text/background pairs are checked for WCAG AA (≥ 4.5:1; lowest pair 4.87:1).
- * The chart palette (incl. a colour-blind-safe scheme) is defined in S2 — these are UI tokens only.
+ * Chart colours (S2): --c-region-* (validated all-pairs for colour-vision deficiency — see src/charts/palette.ts)
+ * and --chart-* (axis, grid, hover) are defined per theme below.
  */
 :root,
 :root[data-theme='dark'] {
@@ -29,6 +30,16 @@
   --c-draft: #ff8f8f;
 
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.25);
+
+  /* CHANGED (S2): chart tokens (surface = --surface #171d25) */
+  --c-region-asia: #546ce7;
+  --c-region-africa: #936d13;
+  --c-region-americas: #1cb070;
+  --c-region-oceania: #9e5b8a;
+  --c-region-europe: #32a0ce;
+  --chart-grid: #26303c;
+  --chart-axis: var(--tx3);
+  --chart-hover: rgba(255, 255, 255, 0.05);
 }
 
 :root[data-theme='light'] {
@@ -55,6 +66,16 @@
   --c-draft: #b3261e;
 
   --shadow: 0 1px 2px rgba(27, 33, 41, 0.08), 0 8px 24px rgba(27, 33, 41, 0.08);
+
+  /* CHANGED (S2): chart tokens (surface = --surface #ffffff) */
+  --c-region-asia: #2364ed;
+  --c-region-africa: #b54f02;
+  --c-region-americas: #54c28c;
+  --c-region-oceania: #824b82;
+  --c-region-europe: #5ea4ec;
+  --chart-grid: #ebe8e1;
+  --chart-axis: var(--tx3);
+  --chart-hover: rgba(27, 33, 41, 0.05);
 }
 
 :root {

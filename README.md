@@ -29,7 +29,8 @@ Pages sub‑path.
 
 ```bash
 npm install          # the owner runs this (native macOS binaries)
-npm run dev          # regenerates the catalog, starts Vite
+npm run dev          # regenerates the catalog, copies flags, starts Vite
+npm run prep -- <id> # data-raw/<id>/prep.ts → public/data/<id>/ (validated)
 npm run verify       # typecheck → lint → check:catalog → check:data → test → smoke → build
 npm run preview      # preview the production build
 ```
@@ -39,17 +40,22 @@ npm run preview      # preview the production build
 ```
 src/
   catalog/     VizMeta contract · tabs & labels · pure filters · catalog.generated.ts (generated)
-  viz/<id>/    meta.ts (manifest) + index.tsx (page body) — one folder per visualization
+  viz/<id>/    meta.ts (manifest) + index.tsx (page body) + data.ts (dataset parser) + state.ts (URL state)
+  charts/      reusable D3 renderers (RankedBar) · hooks (width, reduced motion) · palette
   components/  layout · catalog (tabs, filters, cards) · viz (page, about data) · pages
   i18n/ lib/ theme/
-scripts/       gen-catalog · check-catalog · check-data · smoke · run-tests + test-*.ts
+scripts/       gen-catalog · check-catalog · check-data · prep · sync-flags · smoke · run-tests + test-*.ts
+data-raw/<id>/ raw files + prep.ts (committed, not deployed) · public/data/<id>/ cleaned JSON
 docs/PLAN.md   the implementation plan · CATALOG.md the content plan · PROJECT-BRIEF.md · CLAUDE.md
 ```
 
 ## Adding a visualization
 
+Copy the golden entry `src/viz/gdp-by-country/` (data.ts → state.ts → index.tsx) and `data-raw/gdp-by-country/`.
+
 1. Create `src/viz/<id>/meta.ts` (a `defineViz({...})` manifest) and `src/viz/<id>/index.tsx`.
-2. Put the data in `public/data/<id>/` (raw files and prep scripts in `data-raw/<id>/`).
+2. Raw files and `prep.ts` in `data-raw/<id>/`; `npm run prep -- <id>` writes `public/data/<id>/`;
+   `src/viz/<id>/data.ts` exports `validateDataFile` (checked by `check:data`).
 3. `npm run gen:catalog`, then `npm run verify`. Open a PR from `viz/<yyyy-mm>-<id>`.
 
 ## Licence
@@ -57,6 +63,7 @@ docs/PLAN.md   the implementation plan · CATALOG.md the content plan · PROJECT
 - **Code** — [MIT](LICENSE).
 - **Data** keeps the terms of its original sources; every visualization lists its sources and licence.
 - **Adapted examples** (e.g. from the D3 gallery) keep their original notice (ISC).
+- **Flags** — [flag-icons](https://github.com/lipis/flag-icons) (MIT).
 
 ---
 
@@ -86,8 +93,11 @@ docs/PLAN.md   the implementation plan · CATALOG.md the content plan · PROJECT
 
 ## Як додати візуалізацію
 
+Зразок — «золотий» запис `src/viz/gdp-by-country/` (data.ts → state.ts → index.tsx) і `data-raw/gdp-by-country/`.
+
 1. Створіть `src/viz/<id>/meta.ts` (маніфест `defineViz({...})`) і `src/viz/<id>/index.tsx`.
-2. Покладіть дані в `public/data/<id>/` (сирі файли й скрипти підготовки — у `data-raw/<id>/`).
+2. Сирі файли й `prep.ts` — у `data-raw/<id>/`; `npm run prep -- <id>` пише `public/data/<id>/`;
+   `src/viz/<id>/data.ts` експортує `validateDataFile` (перевіряє `check:data`).
 3. `npm run gen:catalog`, потім `npm run verify`. PR — з гілки `viz/<yyyy-mm>-<id>`.
 
 ## Ліцензія

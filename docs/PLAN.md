@@ -602,6 +602,7 @@ By origin — own 16 · own data + gallery code 4 · adapted 10.
 ---
 
 ## Changelog
+- **v0.3** (2026‑09‑18) — S2 done: A11 questions decided (see `CATALOG.md` §E); the separate colour‑blind palette setting (A6) is dropped — the default region palette is validated all‑pairs for CVD. / Питання A11 вирішено; окремої CVD‑палітри не потрібно.
 - **v0.2** (2026‑09‑17) — repo named `numbers-speak` (D1); location `src/guides/numbers-speak/` with the legacy copy in `_examples/` (D2); D3–D10 accepted; commit prefixes renamed. / Назва репо, розташування й рішення D3–D10 зафіксовано.
 - **v0.1** (2026‑09‑17) — initial plan: study of `src/guides` and `src/D3`; technology options; architecture;
   taxonomy; phases P0–P6; decisions and data questions. / Перша версія плану.

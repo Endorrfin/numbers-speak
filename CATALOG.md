@@ -42,7 +42,7 @@ example (licence notice required); *own data + gallery code* — own dataset on 
 
 | # | id | Title EN / UA | Tabs | Chart | Component | Legacy source | Lang now | Origin | Wave | Status | Open items |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | `gdp-by-country` | GDP by country, 2023 / ВВП країн, 2023 | `economy` | ranked-bar | `RankedBar` | `_examples/Contribution/Demographics/GDP by country` | EN | own | P2 ★ | soon (S1 placeholder) | World Bank named; fallback sample = land‑area values (Q8) |
+| 1 | `gdp-by-country` | GDP by country, 2023 / ВВП країн, 2023 | `economy` | ranked-bar | `RankedBar` | `_examples/Contribution/Demographics/GDP by country` | EN | own | P2 ★ | **published** (S2) | refresh to 2024/2025 values is an owner step (`data-raw/gdp-by-country/README.md`) |
 | 2 | `gdp-ppp-per-capita` | GDP (PPP) per capita, 2023 / ВВП (ПКС) на душу населення, 2023 | `economy` | ranked-bar | `RankedBar` | `_examples/Contribution/Demographics/GDP (PPP) per capita 2023` | EN | own | P3a | — | "world share" 620 % (Q2) |
 | 3 | `land-area` | Countries by land area / Країни за площею | `world` | ranked-bar | `RankedBar` | `_examples/Contribution/Demographics/land area` | EN | own | P3a | — | header typo `tatal area`; no source |
 | 4 | `population-by-country` | Population by country / Населення країн | `world` | ranked-bar | `RankedBar` | `_examples/Contribution/Demographics/Population density` | EN | own | P3a | — | titled "density" (Q3) |
@@ -82,19 +82,22 @@ example (licence notice required); *own data + gallery code* — own dataset on 
 4. **S4a / S4b / S4c — full migration** (P4): 5 trees · 6 one‑offs · map, books, time of life → 30 entries.
 5. **S5 — customize & inform** (P5), **S6 — growth pipeline** (P6).
 
-## E. Open data questions (block publication of the entries they affect)
+## E. Data questions — decisions (S2, 2026‑09‑18)
 
-| Q | Entry | Question |
-|---|---|---|
-| Q1 | `crime-index` | Haiti is in region "Oceania"; other datasets put the Americas under "America". Intended? |
-| Q2 | `gdp-ppp-per-capita` | "world share" = 620 % for Singapore — is it "% of the world average"? |
-| Q3 | `population-by-country` | Folder and titles say "density", the data is population. Show population, density or both? |
-| Q4 | `time-of-life` | Four folders hold three different datasets (totals 74.0 / 74.5 / 74.1 years). Which is canonical, and what is the source? |
-| Q5 | `ua-companies-race` | `value` is revenue (₴ M); 85 of 133 rows have no source; early years are sparse. Limit to 2020–2024 and call it a revenue race? |
-| Q6 | most entries | 30 of 38 legacy pages show no source. Provide a URL + retrieval date per dataset (crime index: Numbeo? GPI: which edition?). |
-| Q7 | `ua-settlements-tree` | Which script built `data_*.json` from the CSVs? Label `Population_2001` as "2001 census"? |
-| Q8 | `gdp-by-country` | OK to drop the fallback sample (it holds land‑area values) and show an error state instead? |
-| Q9 | `us-population-change` | Which example or source is the lollipop chart based on? |
+The owner delegated these decisions (S2). Rule applied throughout: **a number is published only with a named
+source; anything derivable is derived at prep time; anything not verifiable is labelled or held back.**
+
+| Q | Entry | Decision | Still blocks publication? |
+|---|---|---|---|
+| Q1 | `crime-index` | Regions are **derived from the ISO code (UN M49 continents, `data-raw/_shared/m49.ts`)**, never hand‑typed → Haiti = Americas. The same bug existed in the GDP data (11 Caribbean countries + Brunei in "Oceania") and is fixed there. | No |
+| Q2 | `gdp-ppp-per-capita` | It is **% of the world average** (Singapore ≈ 6.2 × world). Recompute at prep time as `value / world average` and show it as "6.2 × world average"; do not ship the typed column. Confirm the world average figure against the WB `WLD` row when porting. | No (verify at port) |
+| Q3 | `population-by-country` | **Population** (that is what the data holds); entry titled "Population by country". Density is a later metric toggle, derived by joining `land-area` on ISO codes — not a second hand‑typed dataset. | No |
+| Q4 | `time-of-life` | No dataset is published without a source. If none is found, the entry ships **labelled "Illustrative estimate (author's calculation)"** with the method stated, using the 15‑activity / 74.5‑year set (2 of the 4 folders agree on it); the 17‑activity set becomes the "detailed" view only if its totals reconcile. | Yes — until a source or the illustrative label + method |
+| Q5 | `ua-companies-race` | **Limit to 2020–2024** (23 companies every year — no sparse years that distort a race) and title it a **revenue race (₴ M)**. The 85 unsourced rows are checked against Opendatabot at port time; rows that cannot be verified are dropped, not guessed. | Yes — until verified |
+| Q6 | most entries | Every entry gets its publisher's canonical https URL at port time; `retrieved` = the date of the legacy snapshot when data is ported as is, or the download date when refreshed. Working assumptions to confirm at port: crime index = Numbeo (2025), GPI = Institute for Economics & Peace, GPI 2024. | Per entry (`check:data` enforces a source) |
+| Q7 | `ua-settlements-tree` | Label the column **"Population, 2001 census"**. The old script is not needed: a new `data-raw/ua-settlements-tree/prep.ts` builds one bilingual dataset from `ukr-25.csv` / `ua-25.csv`. | No |
+| Q8 | `gdp-by-country` | **Done:** fallback sample dropped; a failed or malformed file shows an error state with "Try again" (never a wrong chart). | — |
+| Q9 | `us-population-change` | Re‑implement on the chart kit (origin `original`, no third‑party code kept); data from the **US Census Bureau Vintage 2019 state estimates (NST‑EST2019)**, values verified at port. | No (verify at port) |
 
 ## F. Totals
 

@@ -1,0 +1,182 @@
+﻿#,region,flag,country,GDP,world share
+1,America,🇺🇸,United States,"27,720.70 ",26.11%
+2,Asia,🇨🇳,China,"17,794.80 ",16.76%
+3,Europe,🇩🇪,Germany,"4,525.70 ",4.26%
+4,Asia,🇯🇵,Japan,"4,204.49 ",3.96%
+5,Asia,🇮🇳,India,"3,567.55 ",3.36%
+6,Europe,🇬🇧,United Kingdom,"3,380.85 ",3.18%
+7,Europe,🇫🇷,France,"3,051.83 ",2.87%
+8,Europe,🇮🇹,Italy,"2,300.94 ",2.17%
+9,America,🇧🇷,Brazil,"2,173.67 ",2.05%
+10,America,🇨🇦,Canada,"2,142.47 ",2.02%
+11,Europe,🇷🇺,Russian Federation,"2,021.42 ",1.90%
+12,America,🇲🇽,Mexico,"1,789.11 ",1.69%
+13,Australia and New Zealand,🇦🇺,Australia,"1,728.06 ",1.63%
+14,Asia,🇰🇷,South Korea,"1,712.79 ",1.61%
+15,Europe,🇪🇸,Spain,"1,620.09 ",1.53%
+16,Asia,🇮🇩,Indonesia,"1,371.17 ",1.29%
+17,Europe,🇳🇱,Netherlands,"1,154.36 ",1.09%
+18,Asia,🇹🇷,Turkey,"1,118.25 ",1.05%
+19,Asia,🇸🇦,Saudi Arabia,"1,067.58 ",1.01%
+20,Europe,🇨🇭,Switzerland,884.94 ,0.83%
+21,Europe,🇵🇱,Poland,809.20 ,0.76%
+22,America,🇦🇷,Argentina,646.08 ,0.61%
+23,Europe,🇧🇪,Belgium,644.78 ,0.61%
+24,Europe,🇸🇪,Sweden,584.96 ,0.55%
+25,Europe,🇮🇪,Ireland,551.40 ,0.52%
+26,Asia,🇹🇭,Thailand,514.97 ,0.49%
+27,Asia,🇦🇪,United Arab Emirates,514.13 ,0.48%
+28,Asia,🇮🇱,Israel,513.61 ,0.48%
+29,Europe,🇦🇹,Austria,511.69 ,0.48%
+30,Asia,🇸🇬,Singapore,501.43 ,0.47%
+31,Europe,🇳🇴,Norway,485.31 ,0.46%
+32,Asia,🇧🇩,Bangladesh,437.42 ,0.41%
+33,Asia,🇵🇭,Philippines,437.15 ,0.41%
+34,Asia,🇻🇳,Vietnam,429.72 ,0.40%
+35,Europe,🇩🇰,Denmark,407.09 ,0.38%
+36,Asia,🇮🇷,Iran,404.63 ,0.38%
+37,Asia,🇲🇾,Malaysia,399.71 ,0.38%
+38,Africa,🇪🇬,Egypt,396.00 ,0.37%
+39,Asia,🇭🇰,Hong Kong,380.81 ,0.36%
+40,Africa,🇿🇦,South Africa,380.70 ,0.36%
+41,Africa,🇳🇬,Nigeria,363.85 ,0.34%
+42,America,🇨🇴,Colombia,363.49 ,0.34%
+43,Europe,🇷🇴,Romania,350.78 ,0.33%
+44,Europe,🇨🇿,Czech Republic,343.21 ,0.32%
+45,Asia,🇵🇰,Pakistan,337.91 ,0.32%
+46,America,🇨🇱,Chile,335.53 ,0.32%
+47,Europe,🇫🇮,Finland,295.53 ,0.28%
+48,Europe,🇵🇹,Portugal,289.11 ,0.27%
+49,America,🇵🇪,Peru,267.60 ,0.25%
+50,Asia,🇰🇿,Kazakhstan,262.64 ,0.25%
+51,Australia and New Zealand,🇳🇿,New Zealand,252.18 ,0.24%
+52,Asia,🇮🇶,Iraq,250.84 ,0.24%
+53,Africa,🇩🇿,Algeria,247.63 ,0.23%
+54,Europe,🇬🇷,Greece,243.50 ,0.23%
+55,Asia,🇶🇦,Qatar,213.00 ,0.20%
+56,Europe,🇭🇺,Hungary,212.39 ,0.20%
+57,Europe,🇺🇦,Ukraine,178.76 ,0.17%
+58,Asia,🇰🇼,Kuwait,163.71 ,0.15%
+59,Africa,🇪🇹,Ethiopia,163.70 ,0.15%
+60,Africa,🇲🇦,Morocco,144.42 ,0.14%
+61,Europe,🇸🇰,Slovakia,132.91 ,0.13%
+62,Oceania,🇩🇴,Dominican Republic,121.44 ,0.11%
+63,America,🇪🇨,Ecuador,118.85 ,0.11%
+64,Africa,🇸🇩,Sudan,109.27 ,0.10%
+65,Asia,🇴🇲,Oman,108.81 ,0.10%
+66,Africa,🇰🇪,Kenya,108.04 ,0.10%
+67,America,🇬🇹,Guatemala,104.45 ,0.10%
+68,Europe,🇧🇬,Bulgaria,102.41 ,0.10%
+69,Asia,🇺🇿,Uzbekistan,101.59 ,0.10%
+70,America,🇨🇷,Costa Rica,86.50 ,0.08%
+71,Europe,🇱🇺,Luxembourg,85.76 ,0.08%
+72,Africa,🇦🇴,Angola,84.82 ,0.08%
+73,Europe,🇭🇷,Croatia,84.39 ,0.08%
+74,Asia,🇱🇰,Sri Lanka,84.36 ,0.08%
+75,America,🇵🇦,Panama,83.32 ,0.08%
+76,Europe,🇷🇸,Serbia,81.34 ,0.08%
+77,Europe,🇱🇹,Lithuania,79.79 ,0.08%
+78,Africa,🇹🇿,Tanzania,79.06 ,0.07%
+79,Africa,🇨🇮,Côte d'Ivoire,78.88 ,0.07%
+80,America,🇺🇾,Uruguay,77.24 ,0.07%
+81,Africa,🇬🇭,Ghana,76.37 ,0.07%
+82,Asia,🇦🇿,Azerbaijan,72.36 ,0.07%
+83,Europe,🇧🇾,Belarus,71.86 ,0.07%
+84,Europe,🇸🇮,Slovenia,69.15 ,0.07%
+85,Asia,🇲🇽,Myanmar,66.76 ,0.06%
+86,Africa,🇨🇩,DR Congo,66.38 ,0.06%
+87,Asia,🇹🇲,Turkmenistan,60.63 ,0.06%
+88,Asia,🇯🇴,Jordan,50.97 ,0.05%
+89,Africa,🇨🇲,Cameroon,49.28 ,0.05%
+90,Africa,🇺🇬,Uganda,48.77 ,0.05%
+91,Africa,🇹🇳,Tunisia,48.53 ,0.05%
+92,Asia,🇧🇭,Bahrain,46.08 ,0.04%
+93,Asia,🇲🇴,Macao,45.80 ,0.04%
+94,America,🇧🇴,Bolivia,45.14 ,0.04%
+95,Africa,🇱🇾,Libya,45.10 ,0.04%
+96,America,🇵🇾,Paraguay,42.96 ,0.04%
+97,Asia,🇰🇭,Cambodia,42.34 ,0.04%
+98,Europe,🇱🇻,Latvia,42.25 ,0.04%
+99,Europe,🇪🇪,Estonia,41.29 ,0.04%
+100,Asia,🇳🇵,Nepal,40.91 ,0.04%
+101,Africa,🇿🇼,Zimbabwe,35.23 ,0.03%
+102,America,🇭🇳,Honduras,34.40 ,0.03%
+103,America,🇸🇻,El Salvador,34.02 ,0.03%
+104,Asia,🇨🇾,Cyprus,33.89 ,0.03%
+105,Europe,🇮🇸,Iceland,31.33 ,0.03%
+106,Africa,🇸🇳,Senegal,30.85 ,0.03%
+107,Asia,🇬🇪,Georgia,30.78 ,0.03%
+108,Oceania,🇵🇬,Papua New Guinea,30.73 ,0.03%
+109,Africa,🇿🇲,Zambia,27.58 ,0.03%
+110,Europe,🇧🇦,Bosnia and Herzegovina,27.51 ,0.03%
+111,Oceania,🇹🇹,Trinidad and Tobago,27.37 ,0.03%
+112,Asia,🇦🇲,Armenia,24.09 ,0.02%
+113,Europe,🇦🇱,Albania,23.55 ,0.02%
+114,Europe,🇲🇹,Malta,22.33 ,0.02%
+115,Africa,🇬🇫,Guinea,22.20 ,0.02%
+116,Africa,🇲🇿,Mozambique,20.95 ,0.02%
+117,Africa,🇲🇱,Mali,20.66 ,0.02%
+118,Asia,🇲🇳,Mongolia,20.33 ,0.02%
+119,Africa,🇧🇫,Burkina Faso,20.32 ,0.02%
+120,Oceania,🇭🇹,Haiti,19.85 ,0.02%
+121,Africa,🇧🇯,Benin,19.68 ,0.02%
+122,Oceania,🇯🇲,Jamaica,19.42 ,0.02%
+123,Africa,🇧🇼,Botswana,19.40 ,0.02%
+124,Africa,🇬🇦,Gabon,19.39 ,0.02%
+125,America,🇳🇮,Nicaragua,17.83 ,0.02%
+126,Asia,🇵🇸,State of Palestine,17.42 ,0.02%
+127,Asia,🇦🇫,Afghanistan,17.23 ,0.02%
+128,America,🇬🇾,Guyana,17.16 ,0.02%
+129,Africa,🇳🇪,Niger,16.82 ,0.02%
+130,Europe,🇲🇩,Moldova,16.54 ,0.02%
+131,Asia,🇱🇦,Laos,15.84 ,0.02%
+132,Africa,🇲🇬,Madagascar,15.79 ,0.02%
+133,Europe,🇲🇰,North Macedonia,15.76 ,0.02%
+134,Africa,🇨🇬,Congo,15.32 ,0.01%
+135,Oceania,🇧🇳,Brunei,15.13 ,0.01%
+136,Africa,🇲🇺,Mauritius,14.64 ,0.01%
+137,Oceania,🇧🇸,Bahamas,14.34 ,0.01%
+138,Africa,🇷🇼,Rwanda,14.10 ,0.01%
+139,Asia,🇰🇬,Kyrgyzstan,13.99 ,0.01%
+140,Africa,🇹🇩,Chad,13.15 ,0.01%
+141,Africa,🇲🇼,Malawi,12.71 ,0.01%
+142,Africa,🇳🇦,Namibia,12.35 ,0.01%
+143,Africa,🇬🇶,Equatorial Guinea,12.34 ,0.01%
+144,Asia,🇹🇯,Tajikistan,12.06 ,0.01%
+145,Africa,🇲🇷,Mauritania,10.65 ,0.01%
+146,Africa,🇹🇬,Togo,9.17 ,0.01%
+147,Europe,🇲🇪,Montenegro,7.53 ,0.01%
+148,Oceania,🇧🇧,Barbados,6.72 ,0.01%
+149,Asia,🇲🇻,Maldives,6.59 ,0.01%
+150,Africa,🇸🇱,Sierra Leone,6.41 ,0.01%
+151,Oceania,🇫🇯,Fiji,5.44 ,0.01%
+152,Africa,🇸🇿,Eswatini,4.44 ,0.00%
+153,Africa,🇱🇷,Liberia,4.24 ,0.00%
+154,Europe,🇦🇩,Andorra,3.79 ,0.00%
+155,America,🇦🇼,Aruba,3.65 ,0.00%
+156,America,🇸🇷,Suriname,3.46 ,0.00%
+157,America,🇧🇿,Belize,3.07 ,0.00%
+158,Africa,🇧🇮,Burundi,2.64 ,0.00%
+159,Africa,🇨🇫,Central African Republic,2.56 ,0.00%
+160,Africa,🇨🇻,Cabo Verde,2.53 ,0.00%
+161,America,🇱🇨,Saint Lucia,2.43 ,0.00%
+162,Africa,🇬🇲,Gambia,2.40 ,0.00%
+163,Africa,🇸🇨,Seychelles,2.14 ,0.00%
+164,Africa,🇱🇸,Lesotho,2.12 ,0.00%
+165,Asia,🇹🇱,Timor-Leste,2.08 ,0.00%
+166,Africa,🇬🇳,Guinea-Bissau,2.05 ,0.00%
+167,Oceania,🇦🇬,Antigua and Barbuda,2.03 ,0.00%
+168,Oceania,🇸🇧,Solomon Islands,1.63 ,0.00%
+169,Africa,🇰🇲,Comoros,1.35 ,0.00%
+170,Oceania,🇬🇩,Grenada,1.32 ,0.00%
+171,Oceania,🇻🇺,Vanuatu,1.13 ,0.00%
+172,Oceania,🇻🇨,St. Vincent & Grenadines,1.07 ,0.00%
+173,Oceania,🇰🇳,Saint Kitts & Nevis,1.06 ,0.00%
+174,Oceania,🇼🇸,Samoa,0.94 ,0.00%
+175,Africa,🇸🇹,Sao Tome & Principe,0.68 ,0.00%
+176,Oceania,🇩🇲,Dominica,0.65 ,0.00%
+177,Oceania,🇫🇲,Micronesia,0.46 ,0.00%
+178,Oceania,🇵🇼,Palau,0.28 ,0.00%
+179,Oceania,🇰🇮,Kiribati,0.28 ,0.00%
+180,Oceania,🇲🇭,Marshall Islands,0.26 ,0.00%
+181,Oceania,🇹🇻,Tuvalu,0.06 ,0.00%

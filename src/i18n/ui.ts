@@ -102,6 +102,27 @@ export const ui = {
   sourceCode: { en: 'Source code on GitHub', uk: 'Код на GitHub' },
   stack: { en: 'Stack', uk: 'Стек' },
 
+  // CHANGED (S2): shared chart controls and states.
+  chartSettings: { en: 'Chart settings', uk: 'Налаштування графіка' },
+  region: { en: 'Region', uk: 'Регіон' },
+  allRegions: { en: 'All regions', uk: 'Усі регіони' },
+  rows: { en: 'Rows', uk: 'Рядки' },
+  prevPage: { en: 'Previous rows', uk: 'Попередні рядки' },
+  nextPage: { en: 'Next rows', uk: 'Наступні рядки' },
+  view: { en: 'View', uk: 'Вигляд' },
+  viewChart: { en: 'Chart', uk: 'Графік' },
+  viewTable: { en: 'Table', uk: 'Таблиця' },
+  legend: { en: 'Legend — select a region to filter', uk: 'Легенда — виберіть регіон для фільтра' },
+  showingRange: { en: 'Showing {from}–{to} of {total}', uk: 'Показано {from}–{to} з {total}' },
+  showingAll: { en: '{total} rows', uk: 'Рядків: {total}' },
+  rank: { en: 'Rank', uk: 'Місце' },
+  country: { en: 'Country or economy', uk: 'Країна чи економіка' },
+  dataLoadError: {
+    en: 'The data could not be loaded. Check your connection and try again.',
+    uk: 'Не вдалося завантажити дані. Перевірте з’єднання й спробуйте ще раз.',
+  },
+  retry: { en: 'Try again', uk: 'Спробувати ще раз' },
+
   notFoundTitle: { en: 'Page not found', uk: 'Сторінку не знайдено' },
   notFoundBody: {
     en: 'The link may be outdated, or the visualization has moved.',
