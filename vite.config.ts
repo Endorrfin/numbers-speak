@@ -8,6 +8,16 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   base: './',
   plugins: [react()],
+  // CHANGED (S2): scan only the app entry for dependency pre-bundling. By default Vite crawls every
+  // *.html under the root, including the gitignored legacy pages in _examples/ (broken imports there
+  // made `npm run dev` print "Failed to run dependency scan").
+  optimizeDeps: {
+    entries: ['index.html'],
+  },
+  server: {
+    // CHANGED (S2): legacy pages, raw data and scratch builds never trigger a reload.
+    watch: { ignored: ['**/_examples/**', '**/data-raw/**', '**/dist-*/**'] },
+  },
   build: {
     target: 'es2022',
     outDir: 'dist',

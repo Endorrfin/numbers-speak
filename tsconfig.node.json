@@ -18,6 +18,6 @@
     "noUnusedParameters": true,
     "types": ["node", "vite/client"]
   },
-  "include": ["vite.config.ts", "scripts/**/*.ts"],
+  "include": ["vite.config.ts", "scripts/**/*.ts", "data-raw/**/*.ts"],
   "exclude": ["scripts/_*"]
 }

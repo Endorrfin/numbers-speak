@@ -4,8 +4,10 @@
  *   A. every visualization body (through its lazy loader),
  *   B. every catalog tab (with and without filters), the About and 404 pages,
  *   C. every visualization page + an unknown id,
- *   D. the <App/> shell across representative and bogus hashes.
- * D3 runs in effects, which SSR doesn't execute — chart drawing gets its own jsdom checks from S2.
+ *   D. the <App/> shell across representative and bogus hashes,
+ *   E. every visualization body in its READY state — its data files primed from public/data (S2).
+ * D3 runs in effects, which SSR doesn't execute — chart drawing is checked in jsdom
+ * (scripts/test-ranked-bar.ts).
  * createElement only (no JSX), so this stays a plain .ts that tsconfig.node.json typechecks.
  */
 import { register } from 'node:module';
@@ -113,7 +115,8 @@ async function main(): Promise<void> {
     if (!loader) continue;
     const Body = (await loader()).default as ComponentType<{ params: object; setParams: () => void }>;
     ok(typeof Body === 'function', `${meta.id}: default export is a component`);
-    for (const lang of langs) check(`body:${meta.id}`, h(Body, { params: {}, setParams: noop }), lang, 80);
+    // CHANGED (S2): before its data loads, a body shows its loading state (short, but not empty).
+    for (const lang of langs) check(`body:${meta.id}`, h(Body, { params: {}, setParams: noop }), lang, 30);
   }
 
   // ── B: catalog tabs, About, 404 ────────────────────────────────────────────────────────────────
@@ -151,6 +154,38 @@ async function main(): Promise<void> {
   loc.hash = '#/t/bogus';
   check('App 404', h(App), 'en', 600, ['Page not found']);
   loc.hash = '';
+
+  // ── E: every body in its ready state (data primed from public/data) ─────────────────────────────
+  // CHANGED (S2): renders controls, legend and table with the real dataset, and hostile params.
+  const { readFileSync } = await import('node:fs');
+  const { primeDataset, dataUrl } = await import('../src/lib/useDataset');
+  for (const meta of CATALOG) {
+    if (meta.data.length === 0) continue;
+    for (const file of meta.data) {
+      primeDataset(dataUrl(meta.id, file), JSON.parse(readFileSync(`public/data/${meta.id}/${file}`, 'utf8')));
+    }
+    const Body = (await getVizLoader(meta.id)!()).default as ComponentType<{ params: object; setParams: () => void }>;
+    const variants: Array<Record<string, string>> = [
+      {},
+      { view: 'table' },
+      { region: 'europe', page: '2' },
+      { region: '<script>', page: '999', view: 'x' },
+    ];
+    for (const params of variants) {
+      for (const lang of langs) {
+        const html = check(`ready:${meta.id} ${JSON.stringify(params)}`, h(Body, { params, setParams: noop }), lang, 600);
+        ok(!html.includes('<script>'), `ready:${meta.id} [${lang}] never echoes params as markup`);
+      }
+    }
+  }
+  if (CATALOG.some((m) => m.id === 'gdp-by-country')) {
+    const { default: Gdp } = await import('../src/viz/gdp-by-country/index');
+    check('ready:gdp chart', h(Gdp, { params: {}, setParams: noop }), 'en', 600, ['role="img"', 'Showing 1–15 of 181', 'Americas']);
+    check('ready:gdp table', h(Gdp, { params: { view: 'table' }, setParams: noop }), 'en', 5000, ['<table', 'United States', '27,720.7', 'Tuvalu']);
+    check('ready:gdp table uk', h(Gdp, { params: { view: 'table' }, setParams: noop }), 'uk', 5000, ['Україна', 'Сполучені Штати']);
+    const europe = check('ready:gdp europe', h(Gdp, { params: { region: 'europe', view: 'table' }, setParams: noop }), 'en', 2000, ['Germany']);
+    ok(!europe.includes('United States'), 'ready:gdp europe filter excludes the Americas');
+  }
 
   // ── Sanity: the language switch took ───────────────────────────────────────────────────────────
   ok(ssr(h(AboutPage), 'en') !== ssr(h(AboutPage), 'uk'), 'EN and UK renders differ (language toggle works)');

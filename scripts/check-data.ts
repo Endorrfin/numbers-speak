@@ -2,12 +2,13 @@
  * check-data.ts — manifest and data-file integrity gate (standard §3.8). Run: `npm run check:data`.
  * Every rule here protects a promise the site makes: bilingual text, traceable sources, stable URLs.
  */
-import { existsSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
 import { join } from 'node:path';
 import { CATALOG } from '../src/catalog';
 import { CHART_KINDS, GEOS, RUBRIC_IDS, STATUSES } from '../src/catalog/types';
 import type { Localized, VizMeta } from '../src/catalog/types';
-import { ID_PATTERN, PUBLIC_DATA_DIR, listVizFolders } from './lib/viz-folders';
+import { ID_PATTERN, PUBLIC_DATA_DIR, VIZ_DIR, listVizFolders } from './lib/viz-folders';
 
 const errors: string[] = [];
 const err = (ok: unknown, msg: string): void => {
@@ -112,10 +113,41 @@ err(
 
 for (const m of CATALOG) checkMeta(m);
 
+// CHANGED (S2): dataset schemas. A visualization that ships data exports
+// `validateDataFile(file, json)` from src/viz/<id>/data.ts — the same parser the page uses at runtime.
+// Published entries must have one, so no published chart draws from an unchecked file.
+type DataModule = { validateDataFile?: (file: string, json: unknown) => void };
+let dataFiles = 0;
+for (const m of CATALOG) {
+  if (m.data.length === 0) continue;
+  const modPath = join(VIZ_DIR, m.id, 'data.ts');
+  if (!existsSync(modPath)) {
+    err(m.status !== 'published', `viz ${m.id}: published with data but without src/viz/${m.id}/data.ts`);
+    continue;
+  }
+  const mod = (await import(pathToFileURL(modPath).href)) as DataModule;
+  if (typeof mod.validateDataFile !== 'function') {
+    errors.push(`viz ${m.id}: data.ts must export validateDataFile(file, json)`);
+    continue;
+  }
+  for (const file of m.data) {
+    const path = join(PUBLIC_DATA_DIR, m.id, file);
+    if (!existsSync(path)) continue; // reported above
+    try {
+      mod.validateDataFile(file, JSON.parse(readFileSync(path, 'utf8')));
+      dataFiles++;
+    } catch (e) {
+      errors.push(`viz ${m.id}: public/data/${m.id}/${file} — ${(e as Error).message}`);
+    }
+  }
+}
+
 if (errors.length) {
   console.error(`✗ check:data — ${errors.length} problem(s):`);
   for (const e of errors) console.error('  - ' + e);
   process.exit(1);
 }
 const byStatus = STATUSES.map((s) => `${CATALOG.filter((m) => m.status === s).length} ${s}`).join(', ');
-console.log(`✓ check:data — ${CATALOG.length} visualization(s) (${byStatus}); bilingual, sourced, files present.`);
+console.log(
+  `✓ check:data — ${CATALOG.length} visualization(s) (${byStatus}); bilingual, sourced; ${dataFiles} data file(s) match their schema.`,
+);
