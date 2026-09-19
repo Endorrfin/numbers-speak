@@ -218,6 +218,43 @@ async function main(): Promise<void> {
     ]);
   }
 
+  // CHANGED (S3-bdd): born & died per day — clock, KPIs, chart, table, filters and both languages.
+  if (CATALOG.some((m) => m.id === 'births-deaths-per-day')) {
+    const { default: Pd } = await import('../src/viz/births-deaths-per-day/index');
+    check('ready:per-day chart', h(Pd, { params: {}, setParams: noop }), 'en', 1500, [
+      'role="img"',
+      'role="timer"',
+      'Since you opened this page',
+      'Pause',
+      '362,714',
+      '174,194',
+      '+188,520',
+      '2.18×',
+      'Showing 1–15 of 235',
+      'Find Ukraine',
+      'UN estimates',
+    ]);
+    check('ready:per-day uk', h(Pd, { params: {}, setParams: noop }), 'uk', 1500, [
+      'Відколи ви відкрили цю сторінку',
+      '362\u00a0714',
+      'Знайти: Україна',
+      '2,18×',
+    ]);
+    check('ready:per-day table', h(Pd, { params: { view: 'table' }, setParams: noop }), 'en', 5000, [
+      '<table',
+      'India',
+      '62,939',
+      'Ukraine',
+      '−780',
+      'is-home',
+      '—',
+    ]);
+    const africa = check('ready:per-day africa', h(Pd, { params: { region: 'africa', view: 'table' }, setParams: noop }), 'en', 2000, ['Nigeria']);
+    ok(!africa.includes('>India<') && !africa.includes(' India<'), 'ready:per-day africa filter excludes Asia');
+    const asia = check('ready:per-day asia', h(Pd, { params: { region: 'asia' }, setParams: noop }), 'en', 1000);
+    ok(!asia.includes('Find Ukraine'), 'ready:per-day hides "Find Ukraine" when Ukraine is filtered out');
+  }
+
   // ── Sanity: the language switch took ───────────────────────────────────────────────────────────
   ok(ssr(h(AboutPage), 'en') !== ssr(h(AboutPage), 'uk'), 'EN and UK renders differ (language toggle works)');
 

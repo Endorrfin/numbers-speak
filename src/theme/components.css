@@ -942,6 +942,186 @@
   margin-top: 0.3rem;
 }
 
+/* ── Butterfly chart (S3-bdd): renderButterfly.ts ───────────────────────── */
+/* CHANGED (S3-bdd): back-to-back bars; text never wears the data colours (chips carry them). */
+.bf-axis .tick line {
+  stroke: var(--chart-grid);
+  stroke-width: 1;
+}
+.bf-axis .tick text {
+  fill: var(--chart-axis);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.bf-head-text {
+  fill: var(--tx);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.bf-hit {
+  fill: transparent;
+}
+.bf-row.is-hover .bf-hit {
+  fill: var(--chart-hover);
+}
+.bf-band,
+.bf-flag,
+.bf-label,
+.bf-bar,
+.bf-value {
+  pointer-events: none;
+}
+.bf-row.is-tint .bf-band {
+  fill: var(--c-death-soft);
+  opacity: 0.55;
+}
+.bf-row.is-highlight .bf-band {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+.bf-row.is-highlight:not(.is-tint) .bf-band {
+  fill: none;
+}
+.bf-label {
+  fill: var(--tx);
+  font-size: 13px;
+}
+.bf-row.is-tint .bf-label,
+.bf-row.is-highlight .bf-label {
+  font-weight: 700;
+}
+.bf-value {
+  fill: var(--tx2);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.swatch-tint {
+  background: var(--c-death-soft);
+  outline: 1px solid var(--line2);
+}
+.swatch-home {
+  background: transparent;
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.data-table tr.is-home th,
+.data-table tr.is-home td {
+  background: var(--accent-soft);
+}
+
+/* ── Born & died per day page (S3-bdd) ─────────────────────────────────── */
+.pd-clock {
+  display: grid;
+  gap: 0.9rem;
+  padding: clamp(1rem, 0.6rem + 1.6vw, 1.75rem);
+  border: 1px solid var(--line2);
+  border-radius: var(--radius-sm);
+  background:
+    radial-gradient(120% 140% at 0% 0%, var(--c-birth-soft), transparent 55%),
+    radial-gradient(120% 140% at 100% 100%, var(--c-death-soft), transparent 55%),
+    var(--surface);
+}
+.pd-clock-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+}
+.pd-clock-title,
+.pd-split-title {
+  margin: 0;
+  color: var(--tx2);
+  font: 700 0.78rem/1.2 var(--font-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.pd-counts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+.pd-count {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  padding: 0.4rem 0 0.4rem clamp(0.5rem, 0.3rem + 0.8vw, 0.9rem);
+  border-left: clamp(4px, 0.2rem + 0.3vw, 6px) solid var(--line2);
+}
+.pd-count-birth {
+  border-left-color: var(--c-birth);
+}
+.pd-count-death {
+  border-left-color: var(--c-death);
+}
+.pd-count-net {
+  border-left-color: var(--accent);
+}
+.pd-count-value {
+  color: var(--tx);
+  font-size: clamp(1.45rem, 0.8rem + 3.4vw, 3.6rem);
+  overflow-wrap: anywhere;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.pd-count-label {
+  color: var(--tx2);
+  font-size: clamp(0.8rem, 0.7rem + 0.4vw, 0.95rem);
+  font-weight: 600;
+}
+.pd-clock-rate {
+  margin: 0;
+  color: var(--tx2);
+}
+.pd-split {
+  display: grid;
+  gap: 0.4rem;
+}
+.pd-split-bar {
+  display: flex;
+  gap: 3px;
+  height: 1.1rem;
+}
+.pd-split-bar span {
+  flex-basis: 0;
+  min-width: 4px;
+}
+.pd-split-birth {
+  border-radius: 4px 0 0 4px;
+  background: var(--c-birth);
+}
+.pd-split-death {
+  border-radius: 0 4px 4px 0;
+  background: var(--c-death);
+}
+.pd-split-labels {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  color: var(--tx2);
+  font-size: 0.9rem;
+}
+.pd-split-labels b {
+  color: var(--tx);
+  font-variant-numeric: tabular-nums;
+}
+.kpi-birth {
+  border-top: 4px solid var(--c-birth);
+}
+.kpi-death {
+  border-top: 4px solid var(--c-death);
+}
+.kpi-home {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
 /* ── About ─────────────────────────────────────────────────────────────── */
 .principles {
   list-style: none;

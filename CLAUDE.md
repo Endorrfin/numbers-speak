@@ -35,7 +35,8 @@ src/
   viz/<id>/    meta.ts (manifest) · index.tsx (page body, default export) · data.ts (types, parser,
                validateDataFile) · state.ts (URL state ↔ params)
   charts/      renderRankedBar.ts (pure renderer) · RankedBar.tsx (wrapper) · renderYearChart.ts ·
-               YearChart.tsx (S3‑bd) · hooks.ts · palette.ts
+               YearChart.tsx (S3‑bd) ·
+               renderButterfly.ts · Butterfly.tsx (S3‑bdd) · hooks.ts · palette.ts
   components/  layout/ (TopBar, Footer) · catalog/ (CatalogPage, FilterBar, VizCard)
                viz/ (VizPage, AboutData) · pages/ (AboutPage, NotFound) · AppStateProvider.tsx
   i18n/        lang.ts · LangProvider.tsx · ui.ts
@@ -67,11 +68,12 @@ _examples/     legacy D3 pages being ported (gitignored — never committed)
 
 ## 5. Catalog
 31 entries in 5 tabs — see `CATALOG.md` (authoritative). Waves: P2 golden → P3 MVP (16) → P4 full (30);
-`births-deaths-ua` (#31) shipped out of wave as a priority (S3‑bd).
+`births-deaths-ua` (#31, S3‑bd) and `births-deaths-per-day` (#5, S3‑bdd) shipped out of wave as priorities.
 
 ## 6. Charts & interactivity
 Chart kit: `RankedBar` (S2) · `YearChart` (S3‑bd: lines, gap fills, areas, bars, mirrored bars, period bands,
-notes over consecutive years — the `LineSeries` slot) · `BarRace` · `HierarchyTree` + one‑offs. Every chart:
+notes over consecutive years — the `LineSeries` slot) · `Butterfly` (S3‑bdd: back‑to‑back bars, one shared
+scale, tinted/outlined rows) · `BarRace` · `HierarchyTree` + one‑offs. Every chart:
 responsive width (ResizeObserver; labels stack above bars < 560 px), `role="img"` + a label that states the
 view, keyboard‑operable controls, a **table view** (the keyboard / screen‑reader path; tooltips are
 pointer‑only, text‑only), `prefers-reduced-motion` → no transitions, all settings in the URL query with
@@ -164,3 +166,15 @@ S4a/b/c full migration → S5 customize & share → S6 growth pipeline. Details:
   Branch `viz/2026-09-births-deaths-ua`.
   Open: primary source is a secondary compilation (Slovo i Dilo); stat.gov.ua datasets are linked but are
   not consolidated 1990–2025 — replace when an official consolidated table is found.
+- **S3‑bdd** (2026‑09‑19) — priority entry `births-deaths-per-day` **published** (CATALOG #5, replaces the planned
+  births‑only `births-per-day`; owner decision): live world clock since page open (4.2 births / 2.0 deaths per
+  second, Pause button — WCAG 2.2.2, `role="timer"`), per‑day split bar, KPI row (world births, deaths, net,
+  47 shrinking countries, Ukraine 2.18 deaths per birth), new chart core `Butterfly` (`renderButterfly.ts`,
+  births ← | country | → deaths on one scale, rows with deaths > births tinted, Ukraine outlined, phone layout),
+  sorted by births (owner decision, no sub‑tabs), region filter, paging, "Find Ukraine", table view with net and
+  deaths per birth. Data: owner xlsx (World Population Review ← UN WPP 2024) → two CSVs → `prep.ts` → 235 rows.
+  Tests: `test-butterfly.ts` (8), `test-births-deaths-per-day.ts` (8); smoke covers EN + UK, table, filters.
+  Branch `viz/2026-09-births-deaths-per-day`.
+  Open: source is a secondary publisher of UN WPP (licence/terms of World Population Review not verified; UN WPP
+  itself is CC BY 3.0 IGO) — switch to the UN WPP download when the sandbox/owner can fetch it; UN figures for
+  Ukraine differ from registered data (noted on the page).
