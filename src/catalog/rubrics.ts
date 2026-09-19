@@ -9,9 +9,10 @@ export const RUBRICS: readonly RubricDef[] = [
     id: 'ukraine',
     icon: '🌻',
     title: { en: 'Ukraine', uk: 'Україна' },
+    // CHANGED (S3-bd): demography joins the tab (births-deaths-ua).
     lede: {
-      en: 'War, volunteering, cities and companies — Ukraine in numbers.',
-      uk: 'Війна, волонтерство, міста й компанії — Україна в цифрах.',
+      en: 'War, demography, volunteering, cities and companies — Ukraine in numbers.',
+      uk: 'Війна, демографія, волонтерство, міста й компанії — Україна в цифрах.',
     },
   },
   {

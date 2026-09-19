@@ -187,6 +187,37 @@ async function main(): Promise<void> {
     ok(!europe.includes('United States'), 'ready:gdp europe filter excludes the Americas');
   }
 
+  // CHANGED (S3-bd): births & deaths — every angle, the table and both languages with the real dataset.
+  if (CATALOG.some((m) => m.id === 'births-deaths-ua')) {
+    const { default: Bd } = await import('../src/viz/births-deaths-ua/index');
+    const { SHOWS } = await import('../src/viz/births-deaths-ua/state');
+    check('ready:births-deaths chart', h(Bd, { params: {}, setParams: noop }), 'en', 1500, [
+      'role="img"',
+      '168.8k',
+      '485.3k',
+      '2.88×',
+      '9.29 million',
+      'The gap',
+      'Deaths per birth',
+      'Coverage changed',
+    ]);
+    check('ready:births-deaths uk', h(Bd, { params: {}, setParams: noop }), 'uk', 1500, ['168,8 тис.', 'Розрив', 'Облік змінювався']);
+    for (const show of SHOWS) {
+      for (const lang of langs) {
+        const html = check(`ready:births-deaths ${show}`, h(Bd, { params: { show }, setParams: noop }), lang, 1500, ['role="img"']);
+        ok(html.includes('class="is-on"'), `ready:births-deaths ${show} [${lang}] marks the active angle`);
+      }
+    }
+    check('ready:births-deaths table', h(Bd, { params: { view: 'table' }, setParams: noop }), 'en', 3000, [
+      '<table',
+      '657,200',
+      '472,700',
+      '2014*',
+      '2025**',
+      '−440,500',
+    ]);
+  }
+
   // ── Sanity: the language switch took ───────────────────────────────────────────────────────────
   ok(ssr(h(AboutPage), 'en') !== ssr(h(AboutPage), 'uk'), 'EN and UK renders differ (language toggle works)');
 

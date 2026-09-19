@@ -31,3 +31,4 @@ _examples/
 # flags copied from flag-icons by scripts/sync-flags.ts (predev / prebuild)
 public/flags/
 docs/info.txt
+docs/data

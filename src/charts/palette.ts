@@ -16,3 +16,12 @@ export const REGION_COLOR: Record<Region, string> = {
   oceania: 'var(--c-region-oceania)',
   europe: 'var(--c-region-europe)',
 };
+
+// CHANGED (S3-bd): births vs deaths — a cool/warm pair (values and validation in theme/tokens.css).
+// Text never wears these colours; they mark lines, bars, swatches and tinted areas only.
+export const DEMO_COLOR = {
+  births: 'var(--c-birth)',
+  deaths: 'var(--c-death)',
+  birthsSoft: 'var(--c-birth-soft)',
+  deathsSoft: 'var(--c-death-soft)',
+} as const;

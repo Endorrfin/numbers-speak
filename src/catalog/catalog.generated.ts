@@ -3,14 +3,17 @@
 // fails the build when this file is stale. Source of truth: src/viz/<id>/meta.ts.
 import type { ComponentType } from 'react';
 import type { VizBodyProps, VizMeta } from './types';
-import meta0 from '../viz/gdp-by-country/meta';
+import meta0 from '../viz/births-deaths-ua/meta';
+import meta1 from '../viz/gdp-by-country/meta';
 
 export type VizLoader = () => Promise<{ default: ComponentType<VizBodyProps> }>;
 
 export const VIZ_METAS: readonly VizMeta[] = [
   meta0,
+  meta1,
 ];
 
 export const VIZ_LOADERS: Readonly<Record<string, VizLoader>> = {
+  'births-deaths-ua': () => import('../viz/births-deaths-ua/index'),
   'gdp-by-country': () => import('../viz/gdp-by-country/index'),
 };
