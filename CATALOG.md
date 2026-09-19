@@ -46,7 +46,7 @@ example (licence notice required); *own data + gallery code* — own dataset on 
 | 2 | `gdp-ppp-per-capita` | GDP (PPP) per capita, 2023 / ВВП (ПКС) на душу населення, 2023 | `economy` | ranked-bar | `RankedBar` | `_examples/Contribution/Demographics/GDP (PPP) per capita 2023` | EN | own | P3a | — | "world share" 620 % (Q2) |
 | 3 | `land-area` | Countries by land area / Країни за площею | `world` | ranked-bar | `RankedBar` | `_examples/Contribution/Demographics/land area` | EN | own | P3a | — | header typo `tatal area`; no source |
 | 4 | `population-by-country` | Population by country / Населення країн | `world` | ranked-bar | `RankedBar` | `_examples/Contribution/Demographics/Population density` | EN | own | P3a | — | titled "density" (Q3) |
-| 5 | `births-per-day` | Births per day by country / Народжуваність за добу | `world` | ranked-bar | `RankedBar` | `_examples/Contribution/Demographics/number births per day` | EN | own | P3a | — | no source |
+| 5 | `births-deaths-per-day` | Born and died per day, 2026 / Народжуються й помирають щодня, 2026 | `world` + `ukraine` | ranked-bar | `Butterfly` (+ live world clock) | `_examples/Contribution/Demographics/number births per day` (xlsx: births + deaths sheets) | EN + UA | own | S3‑bdd (priority, out of wave; replaces births‑only `births-per-day`) | **published** (S3‑bdd) | UN WPP 2024 estimates via World Population Review — for Ukraine they differ from registered data (note + link to #31) |
 | 6 | `crime-index` | Crime index by country, 2025 / Індекс злочинності, 2025 | `security` | ranked-bar | `RankedBar` | `_examples/Contribution/Demographics/Crime index` | EN | own | P3a | — | Haiti → Oceania (Q1); Numbeo? |
 | 7 | `global-peace-index` | Global Peace Index, 2024 / Глобальний індекс миру, 2024 | `security` | ranked-bar | `RankedBar` | `_examples/Contribution/Demographics/GPI-162` | EN | own | P3a | — | page title "Crime Index…"; heading says 2024 — confirm source |
 | 8 | `robotization` | Industrial robots per 10,000 workers (top 15) / Роботизація виробництва (топ‑15) | `economy` | ranked-bar | `RankedBar` | `_examples/Contribution/Robotization of production` | EN | own | P3a | — | IFR named, no link |
@@ -102,10 +102,15 @@ source; anything derivable is derived at prep time; anything not verifiable is l
 
 ## F. Totals
 
-31 entries · 5 topic tabs · 11 chart kinds · by wave: P2 1 · P3 15 · P4 14 · priority 1 (`births-deaths-ua`) ·
-by component: `RankedBar` 10 · `LineSeries` 4 · `BarRace` 2 · `HierarchyTree` 5 · `YearChart` 1 · others 9 ·
+31 entries · 5 topic tabs · 11 chart kinds · by wave: P2 1 · P3 14 · P4 14 · priority 2 (`births-deaths-ua`,
+`births-deaths-per-day` — CHANGED (S3‑bdd): #5 moved out of P3a) ·
+by component: `RankedBar` 9 · `Butterfly` 1 · `LineSeries` 4 · `BarRace` 2 · `HierarchyTree` 5 · `YearChart` 1 · others 9 ·
 by origin: own 17 · own data + gallery code 4 · adapted 10.
 
 `YearChart` (S3‑bd, `src/charts/renderYearChart.ts`) draws lines, gap fills, areas, bars and mirrored bars over
 consecutive years from a declarative spec — the planned `LineSeries` entries (#12–#14, #22) should reuse it
 rather than add a second line renderer.
+
+`Butterfly` (S3‑bdd, `src/charts/renderButterfly.ts`) draws back‑to‑back bars of two quantities in one unit on a
+shared scale, with tinted and outlined rows — reusable for any "A vs B per country" entry (e.g. imports vs
+exports, a population pyramid by country).
