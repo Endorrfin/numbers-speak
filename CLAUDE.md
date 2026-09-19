@@ -34,7 +34,8 @@ src/
                filter.ts (pure filtering, unit‑tested) · catalog.generated.ts (GENERATED)
   viz/<id>/    meta.ts (manifest) · index.tsx (page body, default export) · data.ts (types, parser,
                validateDataFile) · state.ts (URL state ↔ params)
-  charts/      renderRankedBar.ts (pure renderer) · RankedBar.tsx (wrapper) · hooks.ts · palette.ts
+  charts/      renderRankedBar.ts (pure renderer) · RankedBar.tsx (wrapper) · renderYearChart.ts ·
+               YearChart.tsx (S3‑bd) · hooks.ts · palette.ts
   components/  layout/ (TopBar, Footer) · catalog/ (CatalogPage, FilterBar, VizCard)
                viz/ (VizPage, AboutData) · pages/ (AboutPage, NotFound) · AppStateProvider.tsx
   i18n/        lang.ts · LangProvider.tsx · ui.ts
@@ -65,10 +66,12 @@ _examples/     legacy D3 pages being ported (gitignored — never committed)
   recorded. One parser per dataset (`data.ts`) runs in prep, `check:data` and the browser.
 
 ## 5. Catalog
-30 entries in 5 tabs — see `CATALOG.md` (authoritative). Waves: P2 golden → P3 MVP (16) → P4 full (30).
+31 entries in 5 tabs — see `CATALOG.md` (authoritative). Waves: P2 golden → P3 MVP (16) → P4 full (30);
+`births-deaths-ua` (#31) shipped out of wave as a priority (S3‑bd).
 
 ## 6. Charts & interactivity
-Chart kit: `RankedBar` (S2) · `LineSeries` · `BarRace` · `HierarchyTree` + one‑offs. Every chart:
+Chart kit: `RankedBar` (S2) · `YearChart` (S3‑bd: lines, gap fills, areas, bars, mirrored bars, period bands,
+notes over consecutive years — the `LineSeries` slot) · `BarRace` · `HierarchyTree` + one‑offs. Every chart:
 responsive width (ResizeObserver; labels stack above bars < 560 px), `role="img"` + a label that states the
 view, keyboard‑operable controls, a **table view** (the keyboard / screen‑reader path; tooltips are
 pointer‑only, text‑only), `prefers-reduced-motion` → no transitions, all settings in the URL query with
@@ -150,3 +153,14 @@ S4a/b/c full migration → S5 customize & share → S6 growth pipeline. Details:
   **Backlog (later, owner‑approved):** refresh `gdp-by-country` to the latest WDI year (2024/2025) — steps in
   `data-raw/gdp-by-country/README.md` (owner download → ISO3→ISO2 in prep → bump year, `DATA_FILE`,
   `retrieved`, `updated`, CHANGELOG line).
+- **S3‑bd** (2026‑09‑19) — priority entry `births-deaths-ua` **published** (CATALOG #31): births vs deaths in
+  Ukraine, 1990–2025, in five angles chosen by sub‑tabs (`?show=gap|ratio|net|mirror|index`, A = gap is the
+  default, B = deaths per birth second) + table view; KPI row; coverage bands (2014–2021*, 2022–2025**) and a
+  coverage note on every angle. New chart core `YearChart` (`renderYearChart.ts`, declarative spec; jsdom tests),
+  `--c-birth` / `--c-death` tokens validated for CVD in both themes, `data-raw/births-deaths-ua/` (CSV export of
+  the owner's sheet → prep → JSON with coverage segments; 2007 births corrected to 472,700 by the owner).
+  Decided: one entry with sub‑tabs, not a new top‑level tab (CATALOG §A: a tab needs ≥ 4 primary entries).
+  Tests: `test-births-deaths.ts` (18), `test-year-chart.ts` (6); smoke covers every angle in EN + UK.
+  Branch `viz/2026-09-births-deaths-ua`.
+  Open: primary source is a secondary compilation (Slovo i Dilo); stat.gov.ua datasets are linked but are
+  not consolidated 1990–2025 — replace when an official consolidated table is found.

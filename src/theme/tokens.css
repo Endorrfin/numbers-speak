@@ -3,7 +3,7 @@
  * Dark editorial by default; light theme via <html data-theme="light"> (resolved before paint in index.html).
  * Text/background pairs are checked for WCAG AA (≥ 4.5:1; lowest pair 4.87:1).
  * Chart colours (S2): --c-region-* (validated all-pairs for colour-vision deficiency — see src/charts/palette.ts)
- * and --chart-* (axis, grid, hover) are defined per theme below.
+ * and --chart-* (axis, grid, hover) are defined per theme below; --c-birth / --c-death (S3-bd) likewise.
  */
 :root,
 :root[data-theme='dark'] {
@@ -40,6 +40,15 @@
   --chart-grid: #26303c;
   --chart-axis: var(--tx3);
   --chart-hover: rgba(255, 255, 255, 0.05);
+
+  /* CHANGED (S3-bd): births vs deaths — cool vs warm pair, validated on #171d25 (CVD ΔE 24.4, normal 32.3,
+     both ≥ 3:1). Soft tints fill areas; bands mark periods with different data coverage. */
+  --c-birth: #4a90f0;
+  --c-death: #f2554a;
+  --c-birth-soft: rgba(74, 144, 240, 0.22);
+  --c-death-soft: rgba(242, 85, 74, 0.24);
+  --chart-band-1: rgba(255, 255, 255, 0.03);
+  --chart-band-2: rgba(255, 255, 255, 0.065);
 }
 
 :root[data-theme='light'] {
@@ -76,6 +85,14 @@
   --chart-grid: #ebe8e1;
   --chart-axis: var(--tx3);
   --chart-hover: rgba(27, 33, 41, 0.05);
+
+  /* CHANGED (S3-bd): births vs deaths on #ffffff (CVD ΔE 26.3, normal 34.6, both ≥ 3:1). */
+  --c-birth: #1f63d6;
+  --c-death: #d0342c;
+  --c-birth-soft: rgba(31, 99, 214, 0.16);
+  --c-death-soft: rgba(208, 52, 44, 0.16);
+  --chart-band-1: rgba(27, 33, 41, 0.03);
+  --chart-band-2: rgba(27, 33, 41, 0.07);
 }
 
 :root {

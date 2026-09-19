@@ -34,7 +34,7 @@ export). `id` is kebab‑case and equals the folder name and the URL slug `#/v/<
 
 `soon` and `published` entries need at least one https source with a retrieval date (`check:data`).
 
-## C. The 30 entries
+## C. The 31 entries
 
 Legacy sources are the copies in `_examples/` (the originals stay in `src/D3`). **Status** = current state in
 this repo (— = no manifest yet). **Origin:** *own* — own data and design; *adapted* — based on an external
@@ -72,6 +72,7 @@ example (licence notice required); *own data + gallery code* — own dataset on 
 | 28 | `design-patterns-tree` | Design patterns tree / Дерево патернів проєктування | `knowledge` | tree | `HierarchyTree` | `_examples/d3_collections/Tree/Patterns` | EN | own data + gallery code | P4a | — | cross‑link to the DPP guide |
 | 29 | `flare-collapsible-tree` | Collapsible tree (flare) / Згортуване дерево (flare) | `knowledge` | tree | `HierarchyTree` | `_examples/d3_collections/Tree/Collapsible tree` | EN | adapted (D3 gallery "Collapsible tree") | P4a | — | — |
 | 30 | `flare-indented-tree` | Indented tree (flare) / Дерево з відступами (flare) | `knowledge` | tree | `HierarchyTree` | `_examples/d3_collections/Tree/Indented tree` | EN | adapted (D3 gallery "Indented tree") | P4a | — | — |
+| 31 | `births-deaths-ua` | Births and deaths in Ukraine, 1990–2025 / Народжуваність і смертність в Україні, 1990–2025 | `ukraine` | line | `YearChart` (5 angles: gap · deaths per birth · natural change · mirrored bars · index) | owner sheet `docs/data/birth_and-mortality` (Slovo i Dilo compilation) | EN + UA | own | S3‑bd (priority, out of wave) | **published** (S3‑bd) | primary series is a secondary compilation (State Statistics Service / Ministry of Justice publish no consolidated 1990–2025 table); coverage changes in 2014 and 2022 shown as bands + note |
 
 ## D. Build order
 
@@ -101,6 +102,10 @@ source; anything derivable is derived at prep time; anything not verifiable is l
 
 ## F. Totals
 
-30 entries · 5 topic tabs · 11 chart kinds · by wave: P2 1 · P3 15 · P4 14 · by component: `RankedBar` 10 ·
-`LineSeries` 4 · `BarRace` 2 · `HierarchyTree` 5 · others 9 · by origin: own 16 · own data + gallery code 4 ·
-adapted 10.
+31 entries · 5 topic tabs · 11 chart kinds · by wave: P2 1 · P3 15 · P4 14 · priority 1 (`births-deaths-ua`) ·
+by component: `RankedBar` 10 · `LineSeries` 4 · `BarRace` 2 · `HierarchyTree` 5 · `YearChart` 1 · others 9 ·
+by origin: own 17 · own data + gallery code 4 · adapted 10.
+
+`YearChart` (S3‑bd, `src/charts/renderYearChart.ts`) draws lines, gap fills, areas, bars and mirrored bars over
+consecutive years from a declarative spec — the planned `LineSeries` entries (#12–#14, #22) should reuse it
+rather than add a second line renderer.

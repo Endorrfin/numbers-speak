@@ -713,6 +713,235 @@
   vertical-align: -0.15em;
 }
 
+/* ── Year chart (S3-bd): renderYearChart.ts ─────────────────────────────── */
+.yc-grid .tick line {
+  stroke: var(--chart-grid);
+}
+.yc-axis text {
+  fill: var(--chart-axis);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.yc-axis-x .domain,
+.yc-axis-x .tick line {
+  stroke: var(--line2);
+}
+.yc-band-1 {
+  fill: var(--chart-band-1);
+}
+.yc-band-2 {
+  fill: var(--chart-band-2);
+}
+.yc-band-label {
+  fill: var(--tx3);
+  font: 11px var(--font-mono);
+}
+.yc-unit {
+  fill: var(--tx2);
+  font-size: 12px;
+  font-weight: 600;
+}
+.yc-line {
+  fill: none;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.yc-rule {
+  stroke: var(--tx3);
+  stroke-width: 1.5;
+}
+.yc-rule-label,
+.yc-note,
+.yc-label {
+  fill: var(--tx2);
+  font-size: 12px;
+}
+.yc-label {
+  font-size: 13px;
+}
+.yc-label.is-strong,
+.yc-note.is-key {
+  fill: var(--tx);
+  font-weight: 700;
+}
+.yc-note-line {
+  stroke: var(--tx3);
+  stroke-width: 1;
+}
+.yc-marker,
+.yc-hover-dot {
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+.yc-end-label {
+  font-size: 15px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.yc-hit {
+  fill: transparent;
+}
+.yc-hover-line {
+  stroke: var(--tx3);
+  stroke-width: 1;
+  opacity: 0.7;
+}
+.chart-year .chart-tip {
+  min-width: 13rem;
+}
+.yc-tip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+.yc-tip-row b {
+  color: var(--tx);
+  font-weight: 600;
+}
+
+/* ── Births & deaths page (S3-bd) ──────────────────────────────────────── */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+.kpi-value {
+  color: var(--tx);
+  font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.1rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.kpi-label {
+  color: var(--tx2);
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+.controls .field-subtabs {
+  flex: 1 1 100%;
+  max-width: none;
+}
+.subtabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.subtabs label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.4rem;
+  padding: 0.35rem 0.85rem;
+  border: 1px solid var(--line2);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--tx2);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.subtabs label:hover {
+  color: var(--tx);
+}
+.subtabs label.is-on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--tx);
+}
+.subtabs .subtab-key {
+  font: 600 0.75rem/1 var(--font-mono);
+  color: var(--tx3);
+}
+.subtabs label.is-on .subtab-key {
+  color: var(--accent);
+}
+.subtabs input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.subtabs label:has(input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.show-intro {
+  margin: 0;
+  max-width: 72ch;
+  color: var(--tx2);
+}
+.key-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--tx2);
+  font-size: 0.85rem;
+}
+.key-list li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.key-line {
+  display: inline-block;
+  width: 1rem;
+  height: 3px;
+  border-radius: 2px;
+}
+.pros-cons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: 0.75rem;
+  margin: 0;
+}
+.pros-cons div {
+  padding: 0.6rem 0.9rem;
+  border-radius: var(--radius-sm);
+  background: var(--s2);
+  color: var(--tx2);
+  font-size: 0.88rem;
+}
+.pros-cons dt {
+  color: var(--tx);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.pros-cons dd {
+  margin: 0.15rem 0 0;
+}
+.coverage-note {
+  border-left-color: var(--accent);
+  font-size: 0.88rem;
+}
+.coverage-note p {
+  margin: 0;
+}
+.coverage-note p + p {
+  margin-top: 0.3rem;
+}
+
 /* ── About ─────────────────────────────────────────────────────────────── */
 .principles {
   list-style: none;
