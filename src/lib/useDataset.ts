@@ -46,27 +46,34 @@ function fromCache<T>(url: string, parse: (json: unknown) => T): DatasetState<T>
   }
 }
 
+// CHANGED (S3-gdp): the state remembers its URL. When the URL changes (a page switching year or metric),
+// the previous file is never returned under the new URL: a cached file renders at once, otherwise "Loading…".
 export function useDataset<T>(url: string, parse: (json: unknown) => T): DatasetState<T> {
   const [attempt, setAttempt] = useState(0);
-  const [state, setState] = useState<DatasetState<T>>(() => fromCache(url, parse));
+  const [entry, setEntry] = useState<{ url: string; state: DatasetState<T> }>(() => ({
+    url,
+    state: fromCache(url, parse),
+  }));
 
   useEffect(() => {
     let active = true;
-    setState((prev) => (prev.status === 'ready' ? prev : { status: 'loading' }));
+    setEntry((prev) =>
+      prev.url === url && prev.state.status === 'ready' ? prev : { url, state: fromCache(url, parse) },
+    );
     loadJson(url)
       .then((json) => {
-        if (active) setState({ status: 'ready', data: parse(json) });
+        if (active) setEntry({ url, state: { status: 'ready', data: parse(json) } });
       })
       .catch((e: unknown) => {
         if (!active) return;
         const error = e instanceof Error ? e : new Error(String(e));
         if (import.meta.env?.DEV) console.error(error);
-        setState({ status: 'error', error, retry: () => setAttempt((n) => n + 1) });
+        setEntry({ url, state: { status: 'error', error, retry: () => setAttempt((n) => n + 1) } });
       });
     return () => {
       active = false;
     };
   }, [url, parse, attempt]);
 
-  return state;
+  return entry.url === url ? entry.state : fromCache(url, parse);
 }

@@ -1,0 +1,219 @@
+rank,country,per_capita
+1,Monaco,288002
+2,Liechtenstein,220167
+3,Bermuda,142250
+4,Luxembourg,137782
+5,Ireland,112895
+6,Switzerland,107702
+7,Cayman Islands,104293
+8,Singapore,94897
+9,Isle of Man,"$90,015 (2023)"
+10,Norway,89889
+11,United States,86170
+12,Iceland,85863
+13,Qatar,75685
+14,Faeroe Islands,74175
+15,Macao,72005
+16,Denmark,71026
+17,Netherlands,67465
+18,Australia,64610
+19,San Marino,"$60,946 (IMF)"
+20,Greenland,"$58,499 (2023)"
+21,Austria,58269
+22,Sweden,57223
+23,Belgium,56582
+24,Germany,56104
+25,Canada,55016
+26,Hong Kong,54275
+27,Israel,54217
+28,United Kingdom,53341
+29,Finland,53156
+30,United Arab Emirates,50274
+31,New Zealand,49432
+32,Andorra,49357
+33,France,46103
+34,U.S. Virgin Islands,"$44,321 (2022)"
+35,Malta,44024
+36,Guam,"$41,833 (2022)"
+37,Sint Maarten,41473
+38,Italy,40430
+39,Bahamas,39455
+40,Puerto Rico,39353
+41,Cyprus,38674
+42,British Virgin Islands,"$38,627 (UN, 2023)"
+43,Aruba,38591
+44,Turks and Caicos,37507
+45,South Korea,36239
+46,Saudi Arabia,35528
+47,Spain,35327
+48,Slovenia,34301
+49,Taiwan,"$34,252 (IMF)"
+50,Japan,33797
+51,Brunei,33153
+52,Kuwait,32856
+53,Czech Republic (Czechia),31828
+54,Estonia,31428
+55,Bahrain,29717
+56,Guyana,29675
+57,Lithuania,29604
+58,Portugal,29328
+59,New Caledonia,29213
+60,Anguilla,"$28,850 (UN, 2023)"
+61,Barbados,26897
+62,Slovakia,25993
+63,Cook Islands,"$25,750 (UN, 2023)"
+64,Poland,25104
+65,Greece,24626
+66,Uruguay,24308
+67,Croatia,24050
+68,Saint Kitts & Nevis,23961
+69,Northern Mariana Islands,"$23,786 (2022)"
+70,Latvia,23579
+71,Hungary,23305
+72,Antigua and Barbuda,23060
+73,Curaçao,22833
+74,French Polynesia,22440
+75,Oman,20285
+76,Romania,20080
+77,Panama,19161
+78,Costa Rica,18853
+79,Trinidad and Tobago,18733
+80,Seychelles,18365
+81,Cuba,"$18,329 (UN, 2023)"
+82,Montserrat,"$18,197 (UN, 2023)"
+83,Palau,18169
+84,American Samoa,"$18,017 (2022)"
+85,Bulgaria,17597
+86,Chile,16659
+87,Turkey,15893
+88,Russia,14962
+89,Saint Lucia,14494
+90,Kazakhstan,14155
+91,Nauru,14048
+92,Mexico,13988
+93,Argentina,13970
+94,Serbia,13678
+95,Maldives,13379
+96,China,13293
+97,Montenegro,13270
+98,Mauritius,11991
+99,Malaysia,11874
+100,Grenada,11529
+101,St. Vincent & Grenadines,11501
+102,Albania,11374
+103,Dominican Republic,10876
+104,Dominica,10405
+105,Brazil,10311
+106,Bosnia and Herzegovina,9398
+107,North Macedonia,9292
+108,Georgia,8968
+109,Belarus,8606
+110,Armenia,8556
+111,Peru,8526
+112,Gabon,8230
+113,Colombia,7951
+114,Jamaica,7754
+115,Belize,7681
+116,Botswana,7650
+117,Marshall Islands,7590
+118,Moldova,7579
+119,Thailand,7387
+120,Azerbaijan,7295
+121,Equatorial Guinea,7004
+122,Suriname,6962
+123,Ecuador,6827
+124,Mongolia,6751
+125,Libya,6569
+126,Paraguay,6457
+127,Fiji,6426
+128,South Africa,6267
+129,Tonga,6215
+130,Guatemala,6151
+131,Iraq,6074
+132,Turkmenistan,5904
+133,Algeria,5753
+134,Tuvalu,"$5,729 (IMF)"
+135,El Salvador,5503
+136,Samoa,5393
+137,Ukraine,5392
+138,Iran,5190
+139,Cabo Verde,5170
+140,Jordan,5074
+141,Indonesia,4925
+142,Vietnam,4717
+143,Sri Lanka,4545
+144,Namibia,4502
+145,Lebanon,4473
+146,Bolivia,4421
+147,Micronesia,4252
+148,Venezuela,4244
+149,Bhutan,4228
+150,Tunisia,4188
+151,Morocco,4153
+152,Philippines,3985
+153,Vanuatu,3960
+154,Eswatini,3910
+155,Djibouti,3553
+156,Sao Tome & Principe,3503
+157,Honduras,3416
+158,Egypt,3338
+159,Uzbekistan,3337
+160,State of Palestine,3028
+161,Papua New Guinea,2912
+162,Nicaragua,2848
+163,Côte d'Ivoire,2728
+164,Angola,2721
+165,Cambodia,2628
+166,Bangladesh,2593
+167,India,2592
+168,Kiribati,2551
+169,Kyrgyzstan,2515
+170,Zimbabwe,2496
+171,Congo,2482
+172,Ghana,2419
+173,Kenya,2133
+174,Laos,2124
+175,Mauritania,2105
+176,Haiti,2060
+177,Solomon Islands,1934
+178,Comoros,1858
+179,Cameroon,1830
+180,Senegal,1739
+181,Guinea,1695
+182,Benin,1485
+183,Pakistan,1479
+184,Nepal,1460
+185,Tajikistan,1362
+186,Myanmar,1359
+187,Timor-Leste,1332
+188,Togo,1266
+189,Tanzania,1193
+190,Zambia,1187
+191,Ethiopia,1134
+192,Mali,1093
+193,Nigeria,1084
+194,Uganda,1078
+195,Rwanda,1060
+196,Lesotho,1023
+197,Guinea-Bissau,998
+198,Sudan,985
+199,Burkina Faso,982
+200,Chad,981
+201,Gambia,871
+202,Liberia,851
+203,Syria,$847 (2023)
+204,Sierra Leone,807
+205,Niger,730
+206,DR Congo,693
+207,Mozambique,657
+208,Eritrea,"$656 (UN, 2023)"
+209,North Korea,"$640 (UN, 2023)"
+210,Somalia,630
+211,Madagascar,550
+212,Malawi,522
+213,Central African Republic,516
+214,Yemen,$441 (IMF)
+215,Afghanistan,417
+216,South Sudan,$388 (IMF)
+217,Burundi,216
+—,Saint Martin,"$21,668 (2021)"

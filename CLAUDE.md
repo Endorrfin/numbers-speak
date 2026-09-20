@@ -152,9 +152,7 @@ S4a/b/c full migration → S5 customize & share → S6 growth pipeline. Details:
   Post‑S2 fix: renderer renamed `rankedBar.ts` → `renderRankedBar.ts` (case collision with `RankedBar.tsx`
   broke `tsc` on macOS) + `test-filenames.ts` guard.
   Decided: Fraunces fallback to a system serif for Ukrainian headings is accepted (owner, 2026‑09‑18).
-  **Backlog (later, owner‑approved):** refresh `gdp-by-country` to the latest WDI year (2024/2025) — steps in
-  `data-raw/gdp-by-country/README.md` (owner download → ISO3→ISO2 in prep → bump year, `DATA_FILE`,
-  `retrieved`, `updated`, CHANGELOG line).
+  **Backlog (later, owner‑approved):** refresh `gdp-by-country` to the latest WDI year (2024/2025) — done in S3‑gdp.
 - **S3‑bd** (2026‑09‑19) — priority entry `births-deaths-ua` **published** (CATALOG #31): births vs deaths in
   Ukraine, 1990–2025, in five angles chosen by sub‑tabs (`?show=gap|ratio|net|mirror|index`, A = gap is the
   default, B = deaths per birth second) + table view; KPI row; coverage bands (2014–2021*, 2022–2025**) and a
@@ -178,3 +176,20 @@ S4a/b/c full migration → S5 customize & share → S6 growth pipeline. Details:
   Open: source is a secondary publisher of UN WPP (licence/terms of World Population Review not verified; UN WPP
   itself is CC BY 3.0 IGO) — switch to the UN WPP download when the sandbox/owner can fetch it; UN figures for
   Ukraine differ from registered data (noted on the page).
+- **S3‑gdp** (2026‑09‑20) — `gdp-by-country` extended: title "GDP by country, 2023–2025"; sub‑tabs **GDP · GDP per
+  capita** (`?metric=per-capita`) × year (`?year=2023|2024|2025`, per capita 2024–2025; default = total 2025; a
+  year the metric lacks → latest). Data: owner workbooks (Worldometers ← WB WDI July 2026) → WB sheets exported
+  to `wb-gdp-<year>.csv` / `wb-gdp-per-capita-<year>.csv` → `prep.ts` → 4 new JSON files (218 economies each);
+  2023 file unchanged. Owner decisions: **World Bank** sheets (not IMF, no source toggle); values that are
+  IMF/UN estimates or an earlier year are **kept + marked** (`note {source?, year?}` → `*`, tooltip line, table
+  "Note" column; 20 rows in 2024, 34 in 2025); **one entry with sub‑tabs** (not a separate per‑capita entry).
+  worldTotal 2024+ = Σ listed economies (Worldometers' share denominator, US share cross‑checked);
+  worldAverage = Σ GDP ÷ Σ population (≈ $13.8k 2024, $14.5k 2025) → "× world average" column.
+  Shared changes: `useDataset` never returns the previous file under a new URL (year switch); `formatUsdWhole`,
+  `formatMultiple`; `test-filenames` counts importable extensions only (owner's `X.txt` + `X.xlsx` pair).
+  Tests: `test-gdp.ts` 40 (notes, per capita, file‑name pinning, meta.data ↔ DATA_FILES); smoke covers
+  total/per capita, 2023/2024/2025, EN + UK. `verify` green; gdp chunk 5.2 kB gzip.
+  Branch `viz/2026-09-gdp-2024-2025`.
+  Open: Worldometers is a secondary route (terms not verified) — switch to the WB API when the owner can fetch
+  it; 2023 is an older WB vintage (Dec 2024) than 2024–2025 (Jul 2026) — noted on the page; `gdp-ppp-per-capita`
+  (#2, PPP) stays a separate planned entry.

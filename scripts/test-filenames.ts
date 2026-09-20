@@ -2,6 +2,9 @@
 // macOS (APFS) and Windows resolve './RankedBar' to 'rankedBar.ts' when it exists, while Linux CI
 // does not — so `RankedBar.tsx` next to `rankedBar.ts` passed CI and broke `tsc` on the owner's Mac (S2).
 // Rule: within one folder, no two files may share a module name (name without extension) ignoring case.
+// CHANGED (S3-gdp): only importable files count — raw inputs such as 'X.txt' + 'X.xlsx' are never resolved
+// by a bundler, so a notes file next to its workbook is not a collision.
+const MODULE_EXT = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.mts', '.cts', '.json', '.css']);
 import { readdirSync, statSync } from 'node:fs';
 import { extname, join, relative } from 'node:path';
 import { ROOT } from './lib/viz-folders';
@@ -19,6 +22,7 @@ function walk(dir: string): void {
       continue;
     }
     files++;
+    if (!MODULE_EXT.has(extname(name).toLowerCase())) continue;
     const key = name.slice(0, name.length - extname(name).length).toLowerCase();
     const other = seen.get(key);
     if (other && other !== name) problems.push(`${relative(ROOT, dir)}/: '${other}' and '${name}' collide ignoring case`);

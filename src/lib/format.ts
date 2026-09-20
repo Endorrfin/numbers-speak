@@ -68,3 +68,18 @@ export function formatShare(ratio: number, lang: Lang): string {
   }
   return nf(lang, 'pct', { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(ratio);
 }
+
+// CHANGED (S3-gdp): per-capita views.
+/** Tables: whole US$, no unit (the column header names it) — 86_170 → '86,170'. */
+export function formatUsdWhole(value: number, lang: Lang): string {
+  return nf(lang, 'whole', { maximumFractionDigits: 0 }).format(value);
+}
+
+/** Ratio to an average: 6.26 → '6.3×', 0.0157 → '0.016×' (two significant digits below 1, never '0×'). */
+export function formatMultiple(ratio: number, lang: Lang): string {
+  const f =
+    ratio < 1
+      ? nf(lang, 'mult-small', { maximumSignificantDigits: 2 })
+      : nf(lang, 'mult', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  return `${f.format(ratio)}×`;
+}
