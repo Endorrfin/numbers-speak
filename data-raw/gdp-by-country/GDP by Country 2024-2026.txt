@@ -1,0 +1,53 @@
+GDP by Country (2024) - IMF
+Source: IMF, World Economic Outlook (April 2026). Data Type: Latest Estimate for 2024 in Nominal terms.
+Gross Domestic Product (GDP) is the total monetary value of all goods and services produced and sold within a country over one year. (Learn more)
+Nominal (or "Current") GDP reflects current prices and exchange rates, without adjustments for inflation or cost-of-living differences.
+See also: GDP per Capita by Country
+
+Reference: https://www.worldometers.info/gdp/gdp-by-country/?source=imf&region=worldwide&year=2024&metric=nominal
+
+
+---------
+
+GDP by Country (2024) - World Bank
+Source: World Bank (WB) World Development Indicators (WDI), July 2026 Update. Data Type: Estimate for 2024 in Nominal terms.
+Gross Domestic Product (GDP) is the total monetary value of all goods and services produced and sold within a country over one year. (Learn more)
+Nominal (or "Current") GDP reflects current prices and exchange rates, without adjustments for inflation or cost-of-living differences.
+See also: GDP per Capita by Country
+
+Reference: https://www.worldometers.info/gdp/gdp-by-country/?source=wb&region=worldwide&year=2024&metric=nominal
+
+
+---------
+
+GDP by Country (2025) - IMF
+Source: IMF, World Economic Outlook (April 2026). Data Type: Latest Estimate for 2025 in Nominal terms.
+Gross Domestic Product (GDP) is the total monetary value of all goods and services produced and sold within a country over one year. (Learn more)
+Nominal (or "Current") GDP reflects current prices and exchange rates, without adjustments for inflation or cost-of-living differences.
+See also: GDP per Capita by Country
+
+Reference: https://www.worldometers.info/gdp/gdp-by-country/?source=imf&region=worldwide&year=2025&metric=nominal
+
+
+---------
+
+GDP by Country (2025) - World Bank
+Source: World Bank (WB) World Development Indicators (WDI), July 2026 Update. Data Type: Estimate for 2025 in Nominal terms.
+Gross Domestic Product (GDP) is the total monetary value of all goods and services produced and sold within a country over one year. (Learn more)
+Nominal (or "Current") GDP reflects current prices and exchange rates, without adjustments for inflation or cost-of-living differences.
+See also: GDP per Capita by Country
+
+Reference: https://www.worldometers.info/gdp/gdp-by-country/?source=wb&region=worldwide&year=2025&metric=nominal
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -42,7 +42,7 @@ example (licence notice required); *own data + gallery code* — own dataset on 
 
 | # | id | Title EN / UA | Tabs | Chart | Component | Legacy source | Lang now | Origin | Wave | Status | Open items |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | `gdp-by-country` | GDP by country, 2023 / ВВП країн, 2023 | `economy` | ranked-bar | `RankedBar` | `_examples/Contribution/Demographics/GDP by country` | EN | own | P2 ★ | **published** (S2) | refresh to 2024/2025 values is an owner step (`data-raw/gdp-by-country/README.md`) |
+| 1 | `gdp-by-country` | GDP by country, 2023–2025 / ВВП країн, 2023–2025 | `economy` | ranked-bar | `RankedBar` | `_examples/Contribution/Demographics/GDP by country` | EN | own | P2 ★ | **published** (S2; 2024–2025 + per capita S3‑gdp) | sub‑tabs GDP · GDP per capita × year (`?metric=per-capita&year=2024`); WB WDI July 2026 via Worldometers; IMF/UN/earlier‑year values marked * |
 | 2 | `gdp-ppp-per-capita` | GDP (PPP) per capita, 2023 / ВВП (ПКС) на душу населення, 2023 | `economy` | ranked-bar | `RankedBar` | `_examples/Contribution/Demographics/GDP (PPP) per capita 2023` | EN | own | P3a | — | "world share" 620 % (Q2) |
 | 3 | `land-area` | Countries by land area / Країни за площею | `world` | ranked-bar | `RankedBar` | `_examples/Contribution/Demographics/land area` | EN | own | P3a | — | header typo `tatal area`; no source |
 | 4 | `population-by-country` | Population by country / Населення країн | `world` | ranked-bar | `RankedBar` | `_examples/Contribution/Demographics/Population density` | EN | own | P3a | — | titled "density" (Q3) |

@@ -2,6 +2,13 @@
 
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
+## 2026‑09‑20
+- **Updated:** [GDP by country, 2023–2025 / ВВП країн, 2023–2025](https://endorrfin.github.io/numbers-speak/#/v/gdp-by-country) —
+  years 2024 and 2025 (218 economies, World Bank WDI July 2026) and a new **GDP per capita** sub‑tab with a
+  "× world average" column; values that are IMF/UN estimates or an earlier year are marked *. /
+  Додано 2024 і 2025 роки (218 економік) і вкладку «ВВП на душу населення» з порівнянням зі світовим
+  середнім; оцінки МВФ/ООН і значення за попередні роки позначено *.
+
 ## 2026‑09‑19
 - **New:** [Born and died per day, 2026 / Народжуються й помирають щодня, 2026](https://endorrfin.github.io/numbers-speak/#/v/births-deaths-per-day) —
   a live world clock (≈ 4.2 births and 2.0 deaths every second) and 235 countries as back‑to‑back bars:

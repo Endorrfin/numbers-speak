@@ -1,0 +1,105 @@
+GDP per Capita (2024) - IMF
+Source: IMF, World Economic Outlook (April 2026). Data Type: Latest Estimate for 2024 in Nominal terms.
+GDP per Capita represents the total monetary value of all goods and services produced within a country over one year, divided by its population.
+Nominal (or "Current") GDP reflects current prices and exchange rates, without adjustments for inflation or cost-of-living differences.
+See also: GDP by Country
+
+Reference: https://www.worldometers.info/gdp/gdp-per-capita/?source=imf&region=worldwide&year=2024&metric=nominal
+
+
+Frequently Asked Questions
+
+What is GDP per capita?
+GDP per capita is calculated by dividing the total Gross Domestic Product (GDP) of a country by its population. It expresses the average economic output, often used as a rough proxy for average income, per person in the country. The population number used is the average (or mid-year) population for the same year as the GDP figure.
+
+
+What is the difference between nominal and PPP GDP per capita?
+
+What is the world average GDP per capita?
+
+
+---------
+
+GDP per Capita (2024) - World Bank
+Source: World Bank (WB) World Development Indicators (WDI), July 2026 Update. Data Type: Estimate for 2024 in Nominal terms.
+GDP per Capita represents the total monetary value of all goods and services produced within a country over one year, divided by its population.
+Nominal (or "Current") GDP reflects current prices and exchange rates, without adjustments for inflation or cost-of-living differences.
+See also: GDP by Country
+
+Reference: https://www.worldometers.info/gdp/gdp-per-capita/?source=wb&region=worldwide&year=2024&metric=nominal
+
+
+Frequently Asked Questions
+
+What is GDP per capita?
+GDP per capita is calculated by dividing the total Gross Domestic Product (GDP) of a country by its population. It expresses the average economic output, often used as a rough proxy for average income, per person in the country. The population number used is the average (or mid-year) population for the same year as the GDP figure.
+
+
+What is the difference between nominal and PPP GDP per capita?
+Nominal GDP per capita uses current market prices and exchange rates to convert all values into US dollars, without any adjustment for price differences between countries. PPP (Purchasing Power Parity) GDP per capita adjusts for differences in the cost of goods and services across countries, expressed in "international dollars." PPP is generally considered a better measure for comparing living standards, since a dollar buys more in some countries than in others.
+
+
+What is the world average GDP per capita?
+The world average GDP per capita (PPP) is around $25,000 as of 2024. This is a population-weighted average, calculated by dividing total global output (adjusted for purchasing power) by the world's population.
+
+---------
+
+GDP per Capita (2025) - IMF
+Source: IMF, World Economic Outlook (April 2026). Data Type: Latest Estimate for 2025 in Nominal terms.
+GDP per Capita represents the total monetary value of all goods and services produced within a country over one year, divided by its population.
+Nominal (or "Current") GDP reflects current prices and exchange rates, without adjustments for inflation or cost-of-living differences.
+See also: GDP by Country
+
+
+Reference: https://www.worldometers.info/gdp/gdp-per-capita/?source=imf&region=worldwide&year=2025&metric=nominal
+
+
+Frequently Asked Questions
+
+What is GDP per capita?
+GDP per capita is calculated by dividing the total Gross Domestic Product (GDP) of a country by its population. It expresses the average economic output, often used as a rough proxy for average income, per person in the country. The population number used is the average (or mid-year) population for the same year as the GDP figure.
+
+
+What is the difference between nominal and PPP GDP per capita?
+Nominal GDP per capita uses current market prices and exchange rates to convert all values into US dollars, without any adjustment for price differences between countries. PPP (Purchasing Power Parity) GDP per capita adjusts for differences in the cost of goods and services across countries, expressed in "international dollars." PPP is generally considered a better measure for comparing living standards, since a dollar buys more in some countries than in others.
+
+What is the world average GDP per capita?
+The world average GDP per capita (PPP) is around $25,000 as of 2024. This is a population-weighted average, calculated by dividing total global output (adjusted for purchasing power) by the world's population.
+
+
+---------
+
+GDP per Capita (2025) - World Bank
+Source: World Bank (WB) World Development Indicators (WDI), July 2026 Update. Data Type: Estimate for 2025 in Nominal terms.
+GDP per Capita represents the total monetary value of all goods and services produced within a country over one year, divided by its population.
+Nominal (or "Current") GDP reflects current prices and exchange rates, without adjustments for inflation or cost-of-living differences.
+See also: GDP by Country
+
+Reference: https://www.worldometers.info/gdp/gdp-per-capita/?source=wb&region=worldwide&year=2025&metric=nominal
+
+
+Frequently Asked Questions
+
+What is GDP per capita?
+GDP per capita is calculated by dividing the total Gross Domestic Product (GDP) of a country by its population. It expresses the average economic output, often used as a rough proxy for average income, per person in the country. The population number used is the average (or mid-year) population for the same year as the GDP figure.
+
+
+What is the difference between nominal and PPP GDP per capita?
+Nominal GDP per capita uses current market prices and exchange rates to convert all values into US dollars, without any adjustment for price differences between countries. PPP (Purchasing Power Parity) GDP per capita adjusts for differences in the cost of goods and services across countries, expressed in "international dollars." PPP is generally considered a better measure for comparing living standards, since a dollar buys more in some countries than in others.
+
+
+What is the world average GDP per capita?
+The world average GDP per capita (PPP) is around $25,000 as of 2024. This is a population-weighted average, calculated by dividing total global output (adjusted for purchasing power) by the world's population.
+
+
+
+
+
+
+
+
+
+
+
+
+

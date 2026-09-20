@@ -180,9 +180,14 @@ async function main(): Promise<void> {
   }
   if (CATALOG.some((m) => m.id === 'gdp-by-country')) {
     const { default: Gdp } = await import('../src/viz/gdp-by-country/index');
-    check('ready:gdp chart', h(Gdp, { params: {}, setParams: noop }), 'en', 600, ['role="img"', 'Showing 1–15 of 181', 'Americas']);
-    check('ready:gdp table', h(Gdp, { params: { view: 'table' }, setParams: noop }), 'en', 5000, ['<table', 'United States', '27,720.7', 'Tuvalu']);
-    check('ready:gdp table uk', h(Gdp, { params: { view: 'table' }, setParams: noop }), 'uk', 5000, ['Україна', 'Сполучені Штати']);
+    // CHANGED (S3-gdp): default = total GDP 2025; per-capita and 2023 views; marked values.
+    check('ready:gdp chart', h(Gdp, { params: {}, setParams: noop }), 'en', 600, ['role="img"', 'Showing 1–15 of 218', 'Americas', 'GDP per capita', '2023']);
+    check('ready:gdp table', h(Gdp, { params: { view: 'table' }, setParams: noop }), 'en', 5000, ['<table', 'United States', '30,769.7', 'Tuvalu', 'IMF estimate']);
+    check('ready:gdp 2023 table', h(Gdp, { params: { year: '2023', view: 'table' }, setParams: noop }), 'en', 5000, ['27,720.7', '181 rows']);
+    check('ready:gdp table uk', h(Gdp, { params: { view: 'table' }, setParams: noop }), 'uk', 5000, ['Україна', 'Сполучені Штати', 'оцінка МВФ']);
+    const pcChart = check('ready:gdp per capita', h(Gdp, { params: { metric: 'per-capita' }, setParams: noop }), 'en', 600, ['World average GDP per capita, 2025', 'Monaco']);
+    ok(!pcChart.includes('>2023<'), 'ready:gdp per capita offers no 2023 year');
+    check('ready:gdp per capita table uk', h(Gdp, { params: { metric: 'per-capita', year: '2024', view: 'table' }, setParams: noop }), 'uk', 5000, ['Люксембург', '× світового середнього']);
     const europe = check('ready:gdp europe', h(Gdp, { params: { region: 'europe', view: 'table' }, setParams: noop }), 'en', 2000, ['Germany']);
     ok(!europe.includes('United States'), 'ready:gdp europe filter excludes the Americas');
   }
