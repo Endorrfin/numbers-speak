@@ -25,3 +25,14 @@ export const DEMO_COLOR = {
   birthsSoft: 'var(--c-birth-soft)',
   deathsSoft: 'var(--c-death-soft)',
 } as const;
+
+// CHANGED (S3-tl): time of life — one hue per group (needs · duties · free), a neutral for "other";
+// activities inside a group alternate full and lighter tone (values and validation in theme/tokens.css).
+export const LIFE_COLOR = {
+  needs: 'var(--c-life-needs)',
+  duties: 'var(--c-life-duties)',
+  free: 'var(--c-life-free)',
+  other: 'var(--c-life-other)',
+  women: 'var(--c-women)',
+  men: 'var(--c-men)',
+} as const;

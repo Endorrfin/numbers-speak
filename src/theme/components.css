@@ -1176,3 +1176,117 @@
     display: none;
   }
 }
+
+/* ── Human life in numbers (S3-tl) ─────────────────────────────────────── */
+/* CHANGED (S3-tl): unit grid, 100 % strip, group cards. Marks wear data colours; text wears text tokens. */
+.chart-waffle .chart-svg {
+  width: auto;
+  max-width: 100%;
+}
+.wf-axis {
+  fill: var(--chart-axis);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.wf-cell {
+  transition: opacity 120ms ease;
+}
+.wf-label-text {
+  fill: var(--tx2);
+  font-size: 12px;
+}
+.wf-leader {
+  fill: none;
+  stroke: var(--line2);
+  stroke-width: 1;
+}
+.wf-grid.is-hover .wf-cell:not(.is-on) {
+  opacity: 0.25;
+}
+.st-seg {
+  cursor: default;
+}
+
+.chart-strip svg.is-hover .st-seg:not(.is-on) .st-bar {
+  opacity: 0.35;
+}
+.st-name {
+  fill: var(--tx);
+  font-size: 12px;
+  font-weight: 600;
+}
+.st-value {
+  fill: var(--tx2);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.st-tick {
+  fill: var(--chart-axis);
+  font-size: 11px;
+}
+.life-key {
+  gap: 0.35rem 1rem;
+}
+.life-key b {
+  color: var(--tx);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.life-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 0.75rem;
+}
+.life-group {
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+.life-group h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  color: var(--tx2);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.life-group-value {
+  margin: 0.3rem 0 0;
+  color: var(--tx);
+  font-size: clamp(1.4rem, 1.1rem + 1vw, 1.9rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.life-group-hint {
+  margin: 0.1rem 0 0.6rem;
+  color: var(--tx3);
+  font-size: 0.8rem;
+}
+.life-group ul {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.88rem;
+}
+.life-group li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: var(--tx2);
+}
+.life-group li b {
+  color: var(--tx);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.data-table tfoot th,
+.data-table tfoot td {
+  border-top: 2px solid var(--line2);
+  font-weight: 700;
+}

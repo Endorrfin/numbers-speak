@@ -33,7 +33,7 @@ const SHOW_TEXT: Readonly<Record<Show, ShowText>> = {
     },
     mind: {
       en: '“How many times more” is easier to read on the next tab, B.',
-      uk: '«У скільки разів більше» зручніше читати на наступній вкладці, B.',
+      uk: '«У скільки разів наочніше» та зручніше читати на наступній вкладці, B.',
     },
   },
   ratio: {

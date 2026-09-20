@@ -93,6 +93,14 @@ const GLYPHS: Readonly<Record<ChartKind, ReactElement>> = {
       ))}
     </g>
   ),
+  // CHANGED (S3-tl): unit grid — rows of squares, the first run filled.
+  waffle: (
+    <g className="g-fill">
+      {Array.from({ length: 40 }, (_, i) => (
+        <rect key={i} className={i < 17 ? undefined : 'g-dim'} x={14 + (i % 8) * 9.5} y={14 + Math.floor(i / 8) * 11} width={7.5} height={8.5} rx={1.2} />
+      ))}
+    </g>
+  ),
 };
 
 export function ChartGlyph({ kind }: { kind: ChartKind }) {

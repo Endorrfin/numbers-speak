@@ -6,6 +6,7 @@ import type { VizBodyProps, VizMeta } from './types';
 import meta0 from '../viz/births-deaths-per-day/meta';
 import meta1 from '../viz/births-deaths-ua/meta';
 import meta2 from '../viz/gdp-by-country/meta';
+import meta3 from '../viz/time-of-life/meta';
 
 export type VizLoader = () => Promise<{ default: ComponentType<VizBodyProps> }>;
 
@@ -13,10 +14,12 @@ export const VIZ_METAS: readonly VizMeta[] = [
   meta0,
   meta1,
   meta2,
+  meta3,
 ];
 
 export const VIZ_LOADERS: Readonly<Record<string, VizLoader>> = {
   'births-deaths-per-day': () => import('../viz/births-deaths-per-day/index'),
   'births-deaths-ua': () => import('../viz/births-deaths-ua/index'),
   'gdp-by-country': () => import('../viz/gdp-by-country/index'),
+  'time-of-life': () => import('../viz/time-of-life/index'),
 };
