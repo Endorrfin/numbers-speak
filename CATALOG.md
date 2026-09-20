@@ -67,7 +67,7 @@ example (licence notice required); *own data + gallery code* — own dataset on 
 | 23 | `letter-frequency` | Letter frequency with animated transitions / Частота літер з анімованими переходами | `knowledge` | bar | `Bar` | `_examples/d3_collections/Bar chart/alphabet transitions` | EN | adapted (D3 gallery "Bar chart transitions") | P4b | — | — |
 | 24 | `walmart-growth` | Walmart's growth / Зростання Walmart | `economy` | map | `MapTimeline` | `_examples/d3_collections/Brands Growth/Walmart’s growth` | EN | adapted (D3 gallery "Walmart's growth") | P4c | — | bundle `us-atlas` from npm |
 | 25 | `books` | Books by genre: pages and audio length / Книги за жанрами: сторінки й тривалість аудіо | `knowledge` | grouped-bar | `GroupedBar` | `_examples/Contribution/topic_books_eng` + `topic_books_ua` | EN + UA | own | P4c | — | the EN copy reads a Ukrainian CSV with different headers |
-| 26 | `time-of-life` | Time of life by activity / Час життя за видами діяльності | `knowledge` | bar | `Bar` | `_examples/Contribution/topic_time/*` (4 folders) | EN + UA | own | P4c | — | 4 folders, 3 different datasets (Q4); simple + detailed → 1 (D5) |
+| 26 | `time-of-life` | Human life in numbers / Людське життя в цифрах | `knowledge` | waffle | `Waffle` + `Strip` (new) · `RankedBar` · `Butterfly` (6 angles: weeks · day · ranking · needs/duties/free · countries · women vs men) | `_examples/Contribution/topic_time/*` (4 folders) — data **replaced** by the OECD Time Use Database | EN + UA | own | S3‑tl (priority, out of wave) | **published** (S3‑tl) | legacy sets (74–74.5 y, overlapping categories, no source) dropped (Q4); OECD surveys cover ages 15–64 → the page scales one day to 50 years; Ukraine not in the database |
 | 27 | `alphabet-tree` | Ukrainian alphabet tree / Абетка деревом | `knowledge` | tree | `HierarchyTree` | `_examples/d3_collections/Tree/Alhpabet-ua tree` | UA data, EN UI | own data + gallery code | P4a | — | — |
 | 28 | `design-patterns-tree` | Design patterns tree / Дерево патернів проєктування | `knowledge` | tree | `HierarchyTree` | `_examples/d3_collections/Tree/Patterns` | EN | own data + gallery code | P4a | — | cross‑link to the DPP guide |
 | 29 | `flare-collapsible-tree` | Collapsible tree (flare) / Згортуване дерево (flare) | `knowledge` | tree | `HierarchyTree` | `_examples/d3_collections/Tree/Collapsible tree` | EN | adapted (D3 gallery "Collapsible tree") | P4a | — | — |
@@ -93,7 +93,7 @@ source; anything derivable is derived at prep time; anything not verifiable is l
 | Q1 | `crime-index` | Regions are **derived from the ISO code (UN M49 continents, `data-raw/_shared/m49.ts`)**, never hand‑typed → Haiti = Americas. The same bug existed in the GDP data (11 Caribbean countries + Brunei in "Oceania") and is fixed there. | No |
 | Q2 | `gdp-ppp-per-capita` | It is **% of the world average** (Singapore ≈ 6.2 × world). Recompute at prep time as `value / world average` and show it as "6.2 × world average"; do not ship the typed column. Confirm the world average figure against the WB `WLD` row when porting. | No (verify at port) |
 | Q3 | `population-by-country` | **Population** (that is what the data holds); entry titled "Population by country". Density is a later metric toggle, derived by joining `land-area` on ISO codes — not a second hand‑typed dataset. | No |
-| Q4 | `time-of-life` | No dataset is published without a source. If none is found, the entry ships **labelled "Illustrative estimate (author's calculation)"** with the method stated, using the 15‑activity / 74.5‑year set (2 of the 4 folders agree on it); the 17‑activity set becomes the "detailed" view only if its totals reconcile. | Yes — until a source or the illustrative label + method |
+| Q4 | `time-of-life` | **Superseded (S3‑tl, owner):** the legacy sets are not used (unsourced, categories overlap — sickness overlaps sleep, smoking covers smokers only — so no honest part‑to‑whole). The entry is rebuilt from the **OECD Time Use Database** (minutes per average day, 15 mutually exclusive activities, sums to 1,440) scaled to the 50 years from 15 to 64. | No |
 | Q5 | `ua-companies-race` | **Limit to 2020–2024** (23 companies every year — no sparse years that distort a race) and title it a **revenue race (₴ M)**. The 85 unsourced rows are checked against Opendatabot at port time; rows that cannot be verified are dropped, not guessed. | Yes — until verified |
 | Q6 | most entries | Every entry gets its publisher's canonical https URL at port time; `retrieved` = the date of the legacy snapshot when data is ported as is, or the download date when refreshed. Working assumptions to confirm at port: crime index = Numbeo (2025), GPI = Institute for Economics & Peace, GPI 2024. | Per entry (`check:data` enforces a source) |
 | Q7 | `ua-settlements-tree` | Label the column **"Population, 2001 census"**. The old script is not needed: a new `data-raw/ua-settlements-tree/prep.ts` builds one bilingual dataset from `ukr-25.csv` / `ua-25.csv`. | No |
@@ -102,9 +102,9 @@ source; anything derivable is derived at prep time; anything not verifiable is l
 
 ## F. Totals
 
-31 entries · 5 topic tabs · 11 chart kinds · by wave: P2 1 · P3 14 · P4 14 · priority 2 (`births-deaths-ua`,
+31 entries · 5 topic tabs · 12 chart kinds · by wave: P2 1 · P3 14 · P4 13 · priority 3 (`births-deaths-ua`, `time-of-life`,
 `births-deaths-per-day` — CHANGED (S3‑bdd): #5 moved out of P3a) ·
-by component: `RankedBar` 9 · `Butterfly` 1 · `LineSeries` 4 · `BarRace` 2 · `HierarchyTree` 5 · `YearChart` 1 · others 9 ·
+by component: `RankedBar` 9 · `Butterfly` 1 · `LineSeries` 4 · `BarRace` 2 · `HierarchyTree` 5 · `YearChart` 1 · `Waffle` 1 (CHANGED (S3‑tl), was `Bar`) · others 8 ·
 by origin: own 17 · own data + gallery code 4 · adapted 10.
 
 `YearChart` (S3‑bd, `src/charts/renderYearChart.ts`) draws lines, gap fills, areas, bars and mirrored bars over
@@ -114,3 +114,7 @@ rather than add a second line renderer.
 `Butterfly` (S3‑bdd, `src/charts/renderButterfly.ts`) draws back‑to‑back bars of two quantities in one unit on a
 shared scale, with tinted and outlined rows — reusable for any "A vs B per country" entry (e.g. imports vs
 exports, a population pyramid by country).
+
+CHANGED (S3‑tl): `Waffle` (`src/charts/renderWaffle.ts`) draws a unit grid — N cells per row, blocks laid end to
+end, direct labels beside the grid on wide screens — and `Strip` (`src/charts/renderStrip.ts`) one 100 % bar cut
+into parts with labels below. Both fit any "whole split into parts" entry (a budget, a day, a population).

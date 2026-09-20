@@ -260,6 +260,33 @@ async function main(): Promise<void> {
     ok(!asia.includes('Find Ukraine'), 'ready:per-day hides "Find Ukraine" when Ukraine is filtered out');
   }
 
+  // CHANGED (S3-tl): human life in numbers — every angle, both tables, filters and both languages.
+  if (CATALOG.some((m) => m.id === 'time-of-life')) {
+    const { default: Tl } = await import('../src/viz/time-of-life/index');
+    const { SHOWS } = await import('../src/viz/time-of-life/state');
+    check('ready:time-of-life chart', h(Tl, { params: {}, setParams: noop }), 'en', 1500, [
+      'role="img"',
+      '17.6 years',
+      '10.2 years',
+      'Life in weeks',
+      'OECD average (30 countries)',
+      'Women vs men',
+      'Ukraine has no national time-use survey',
+    ]);
+    check('ready:time-of-life uk', h(Tl, { params: {}, setParams: noop }), 'uk', 1500, ['17,6 року', 'Життя в тижнях', 'Середнє по OECD (30 країн)']);
+    for (const show of SHOWS) {
+      for (const lang of langs) {
+        const html = check(`ready:time-of-life ${show}`, h(Tl, { params: { show }, setParams: noop }), lang, 1500, ['role="img"']);
+        ok(html.includes('class="is-on"'), `ready:time-of-life ${show} [${lang}] marks the active angle`);
+      }
+    }
+    check('ready:time-of-life table', h(Tl, { params: { view: 'table' }, setParams: noop }), 'en', 3000, ['<table', 'Sleep', '2,600', 'Total', '17.56']);
+    check('ready:time-of-life japan women', h(Tl, { params: { country: 'JP', sex: 'women', show: 'ranking', unit: 'hours' }, setParams: noop }), 'en', 1500, ['Japan · 2021', 'Women']);
+    check('ready:time-of-life countries table', h(Tl, { params: { show: 'countries', measure: 'unpaid', view: 'table' }, setParams: noop }), 'en', 3000, ['<table', 'Japan', 'Mexico', 'Women − men']);
+    const gender = check('ready:time-of-life gender', h(Tl, { params: { show: 'gender', measure: 'unpaid', country: 'JP' }, setParams: noop }), 'en', 1500, ['Unpaid work (OECD category)']);
+    ok(!gender.includes('Japan · 2021'), 'ready:time-of-life gender hides the country picker');
+  }
+
   // ── Sanity: the language switch took ───────────────────────────────────────────────────────────
   ok(ssr(h(AboutPage), 'en') !== ssr(h(AboutPage), 'uk'), 'EN and UK renders differ (language toggle works)');
 

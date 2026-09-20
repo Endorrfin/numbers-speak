@@ -1,0 +1,181 @@
+{
+  "unit": "minutes per day",
+  "release": "2026-04-30",
+  "countries": [
+    {"code": "AU", "oecd": true, "surveyYear": "2006", "ages": "15 and more", "minutes": {
+      "total": {"sleep":512.36,"eating":89.06,"personal-care":56.04,"paid-work":186.13,"study":27.02,"commute":25.02,"housework":132.09,"shopping":29.02,"care":50.04,"errands":32.02,"tv":140.1,"social":46.01,"sports":19.01,"other-leisure":76.08,"other":20.01},
+      "women": {"sleep":514,"eating":91,"personal-care":61,"paid-work":128,"study":26,"commute":18,"housework":168,"shopping":36,"care":71,"errands":36,"tv":123,"social":52,"sports":16,"other-leisure":78,"other":22},
+      "men": {"sleep":512.78,"eating":87.3,"personal-care":49.17,"paid-work":247.87,"study":25.08,"commute":31.11,"housework":93.32,"shopping":22.08,"care":31.11,"errands":25.09,"tv":158.55,"social":39.05,"sports":23.08,"other-leisure":76.35,"other":18.06}
+    }},
+    {"code": "AT", "oecd": true, "surveyYear": "2021/22", "ages": "15-64", "minutes": {
+      "total": {"sleep":515.83,"eating":95.71,"personal-care":56.12,"paid-work":213.96,"study":27.35,"commute":24.33,"housework":114.56,"shopping":21.76,"care":41.5,"errands":10.15,"tv":115.74,"social":40.9,"sports":39.37,"other-leisure":110.86,"other":11.86},
+      "women": {"sleep":518.4,"eating":96.89,"personal-care":62.75,"paid-work":169.44,"study":28.59,"commute":21.05,"housework":148.03,"shopping":24.73,"care":52.41,"errands":12.63,"tv":106.91,"social":41.45,"sports":35.72,"other-leisure":107.57,"other":13.43},
+      "men": {"sleep":513.28,"eating":94.54,"personal-care":49.54,"paid-work":258.14,"study":26.12,"commute":27.59,"housework":81.35,"shopping":18.81,"care":30.67,"errands":7.68,"tv":124.49,"social":40.35,"sports":43,"other-leisure":114.14,"other":10.29}
+    }},
+    {"code": "BE", "oecd": true, "surveyYear": "2013", "ages": "15-64", "minutes": {
+      "total": {"sleep":512.86,"eating":98.52,"personal-care":52.67,"paid-work":168.12,"study":41.27,"commute":26.36,"housework":120.54,"shopping":28.6,"care":28.1,"errands":14.58,"tv":130.57,"social":65.85,"sports":21.02,"other-leisure":121.91,"other":9.22},
+      "women": {"sleep":519.25,"eating":101.29,"personal-care":56.86,"paid-work":134.48,"study":41.14,"commute":23.61,"housework":153.11,"shopping":33.95,"care":34.48,"errands":15.78,"tv":122.01,"social":67.23,"sports":16.01,"other-leisure":111.46,"other":9.03},
+      "men": {"sleep":505.73,"eating":95.6,"personal-care":47.13,"paid-work":203.3,"study":41.2,"commute":29.2,"housework":86.77,"shopping":22.73,"care":21.71,"errands":12.96,"tv":139.92,"social":64.42,"sports":26.63,"other-leisure":134.2,"other":8.49}
+    }},
+    {"code": "CA", "oecd": true, "surveyYear": "2022", "ages": "15-64", "minutes": {
+      "total": {"sleep":526.68,"eating":77.81,"personal-care":51.47,"paid-work":270.52,"study":37.71,"commute":28.73,"housework":90.97,"shopping":20.35,"care":80.8,"errands":13.17,"tv":83.19,"social":52.67,"sports":19.75,"other-leisure":55.66,"other":30.52},
+      "women": {"sleep":529.68,"eating":76.01,"personal-care":58.05,"paid-work":240.59,"study":36.51,"commute":25.74,"housework":114.91,"shopping":23.94,"care":93.97,"errands":14.36,"tv":78.4,"social":60.45,"sports":16.16,"other-leisure":41.9,"other":29.33},
+      "men": {"sleep":523.47,"eating":79.57,"personal-care":44.87,"paid-work":300.33,"study":38.88,"commute":31.71,"housework":66.41,"shopping":16.15,"care":69.39,"errands":11.97,"tv":87.94,"social":44.87,"sports":23.33,"other-leisure":69.4,"other":31.71}
+    }},
+    {"code": "DK", "oecd": true, "surveyYear": "2001", "ages": "15-64", "minutes": {
+      "total": {"sleep":488.61,"eating":119.15,"personal-care":51.6,"paid-work":176.73,"study":25.04,"commute":23.05,"housework":127.56,"shopping":26.03,"care":41.02,"errands":22.02,"tv":122.97,"social":88.81,"sports":22.12,"other-leisure":94.94,"other":10.35},
+      "women": {"sleep":496.53,"eating":120.26,"personal-care":56.59,"paid-work":146.97,"study":29.43,"commute":18.19,"housework":145.03,"shopping":29.69,"care":45.67,"errands":22.42,"tv":114.75,"social":95.28,"sports":19.94,"other-leisure":89.64,"other":9.61},
+      "men": {"sleep":479.38,"eating":117.86,"personal-care":45.8,"paid-work":211.41,"study":19.95,"commute":28.71,"housework":107.2,"shopping":21.78,"care":35.6,"errands":21.56,"tv":132.5,"social":81.24,"sports":24.66,"other-leisure":101.14,"other":11.21}
+    }},
+    {"code": "EE", "oecd": true, "surveyYear": "2019/21", "ages": "15-64", "minutes": {
+      "total": {"sleep":519.01,"eating":82.09,"personal-care":52.72,"paid-work":234.38,"study":30.01,"commute":28.67,"housework":101.64,"shopping":19.76,"care":33.71,"errands":18.55,"tv":111.14,"social":43.14,"sports":39.59,"other-leisure":107.28,"other":18.3},
+      "women": {"sleep":516.81,"eating":79.54,"personal-care":59.93,"paid-work":217.18,"study":35.05,"commute":25.75,"housework":124.26,"shopping":21.81,"care":43.34,"errands":19.96,"tv":101.54,"social":44.05,"sports":37.89,"other-leisure":93.83,"other":19.06},
+      "men": {"sleep":519.8,"eating":84.87,"personal-care":46.02,"paid-work":251.1,"study":25.27,"commute":31.47,"housework":79.13,"shopping":17.88,"care":24.98,"errands":17.2,"tv":120.71,"social":42.35,"sports":41.21,"other-leisure":120.51,"other":17.5}
+    }},
+    {"code": "FI", "oecd": true, "surveyYear": "2020/21", "ages": "15-64", "minutes": {
+      "total": {"sleep":507.46,"eating":87.82,"personal-care":49.41,"paid-work":191.29,"study":32.28,"commute":16.54,"housework":107.72,"shopping":26.22,"care":37.91,"errands":13.7,"tv":125.54,"social":50.8,"sports":36.47,"other-leisure":117,"other":39.85},
+      "women": {"sleep":517.59,"eating":89.92,"personal-care":55.87,"paid-work":172.45,"study":34.39,"commute":15.29,"housework":125.23,"shopping":27.39,"care":42.08,"errands":14.05,"tv":119.03,"social":57.37,"sports":32.7,"other-leisure":99.44,"other":37.2},
+      "men": {"sleep":499.03,"eating":85.81,"personal-care":43.27,"paid-work":210.87,"study":29.09,"commute":17.2,"housework":90.39,"shopping":25.09,"care":33.54,"errands":12.97,"tv":132.49,"social":43.77,"sports":40.41,"other-leisure":133.62,"other":42.45}
+    }},
+    {"code": "FR", "oecd": true, "surveyYear": "2009/10", "ages": "15-64", "minutes": {
+      "total": {"sleep":512.97,"eating":132.76,"personal-care":106.52,"paid-work":147.13,"study":34.11,"commute":22.93,"housework":128.5,"shopping":22.11,"care":24.91,"errands":5.58,"tv":113.85,"social":70.04,"sports":11.96,"other-leisure":97.69,"other":8.95},
+      "women": {"sleep":516.47,"eating":131.31,"personal-care":113.11,"paid-work":119.48,"study":36.11,"commute":19.77,"housework":157.47,"shopping":25.63,"care":33.95,"errands":6.98,"tv":103.57,"social":71.89,"sports":7.22,"other-leisure":87.06,"other":9.97},
+      "men": {"sleep":509.22,"eating":134.31,"personal-care":99.43,"paid-work":176.85,"study":31.95,"commute":26.33,"housework":97.36,"shopping":18.31,"care":15.19,"errands":4.08,"tv":124.9,"social":68.06,"sports":17.06,"other-leisure":109.11,"other":7.84}
+    }},
+    {"code": "DE", "oecd": true, "surveyYear": "2022", "ages": "15-64", "minutes": {
+      "total": {"sleep":512.1,"eating":92.76,"personal-care":52.74,"paid-work":198.37,"study":25,"commute":20.68,"housework":110.54,"shopping":19.78,"care":44.47,"errands":17.56,"tv":120.29,"social":84.2,"sports":32.67,"other-leisure":103.72,"other":5.11},
+      "women": {"sleep":515.78,"eating":93.51,"personal-care":57.95,"paid-work":167.85,"study":24.67,"commute":17.36,"housework":134.99,"shopping":22.46,"care":54.62,"errands":20.55,"tv":113.12,"social":88.37,"sports":30.45,"other-leisure":92.52,"other":5.79},
+      "men": {"sleep":508.86,"eating":92.37,"personal-care":47.95,"paid-work":228.86,"study":24.57,"commute":23.38,"housework":85.2,"shopping":16.7,"care":34.61,"errands":15.13,"tv":127.95,"social":81.33,"sports":34.28,"other-leisure":114.48,"other":4.32}
+    }},
+    {"code": "GR", "oecd": true, "surveyYear": "2013/14", "ages": "15-64", "minutes": {
+      "total": {"sleep":500,"eating":128,"personal-care":57,"paid-work":168,"study":36,"commute":26,"housework":105,"shopping":17,"care":49,"errands":13,"tv":131,"social":61,"sports":28,"other-leisure":115,"other":6},
+      "women": {"sleep":498,"eating":122,"personal-care":60,"paid-work":123,"study":38,"commute":22,"housework":165,"shopping":18,"care":63,"errands":14,"tv":126,"social":60,"sports":22,"other-leisure":102,"other":7},
+      "men": {"sleep":501,"eating":134,"personal-care":54,"paid-work":214,"study":34,"commute":28,"housework":38,"shopping":15,"care":33,"errands":11,"tv":150,"social":63,"sports":33,"other-leisure":129,"other":3}
+    }},
+    {"code": "HU", "oecd": true, "surveyYear": "2010", "ages": "15-64", "minutes": {
+      "total": {"sleep":505.9,"eating":101.13,"personal-care":76.11,"paid-work":170.9,"study":38.17,"commute":28.54,"housework":149.96,"shopping":19.21,"care":42.17,"errands":17.82,"tv":133.9,"social":40.77,"sports":12.93,"other-leisure":93.75,"other":8.74},
+      "women": {"sleep":508.45,"eating":96.94,"personal-care":73.88,"paid-work":141.11,"study":37.24,"commute":24.16,"housework":196.19,"shopping":21.6,"care":55.13,"errands":20.85,"tv":122.74,"social":39.71,"sports":9.86,"other-leisure":84.53,"other":7.61},
+      "men": {"sleep":502.86,"eating":105.18,"personal-care":78.25,"paid-work":200.39,"study":39.17,"commute":33.1,"housework":102.23,"shopping":16.36,"care":28.12,"errands":15.63,"tv":144.3,"social":42.06,"sports":17.07,"other-leisure":104.73,"other":10.55}
+    }},
+    {"code": "IE", "oecd": true, "surveyYear": "2005", "ages": "15-64", "minutes": {
+      "total": {"sleep":491.25,"eating":75.39,"personal-care":42.27,"paid-work":208.47,"study":36.74,"commute":22.75,"housework":90.75,"shopping":27.57,"care":68.57,"errands":22.75,"tv":85.14,"social":90.68,"sports":20.02,"other-leisure":116.47,"other":41.17},
+      "women": {"sleep":500.65,"eating":74.68,"personal-care":47.8,"paid-work":140.22,"study":35.11,"commute":19.6,"housework":133.82,"shopping":39.33,"care":99.76,"errands":19.6,"tv":75.78,"social":88.56,"sports":17.28,"other-leisure":105.36,"other":42.44},
+      "men": {"sleep":481.88,"eating":76.09,"personal-care":36.76,"paid-work":276.56,"study":38.36,"commute":25.89,"housework":47.79,"shopping":15.83,"care":37.47,"errands":25.89,"tv":94.47,"social":92.81,"sports":22.76,"other-leisure":127.54,"other":39.9}
+    }},
+    {"code": "IT", "oecd": true, "surveyYear": "2013/14", "ages": "15-64", "minutes": {
+      "total": {"sleep":513.32,"eating":126.97,"personal-care":67.52,"paid-work":127.56,"study":27.82,"commute":21.33,"housework":134.71,"shopping":27.74,"care":36.07,"errands":20.52,"tv":103.69,"social":71.18,"sports":38.21,"other-leisure":110.18,"other":13.19},
+      "women": {"sleep":512.35,"eating":125,"personal-care":67.98,"paid-work":88.24,"study":28.83,"commute":16.05,"housework":204.99,"shopping":32.42,"care":46.07,"errands":22.86,"tv":90.28,"social":62.97,"sports":32.73,"other-leisure":94.94,"other":14.29},
+      "men": {"sleep":514.3,"eating":128.98,"personal-care":67.04,"paid-work":167.35,"study":26.79,"commute":26.67,"housework":63.61,"shopping":23.01,"care":25.94,"errands":18.15,"tv":117.27,"social":79.49,"sports":43.76,"other-leisure":125.58,"other":12.06}
+    }},
+    {"code": "JP", "oecd": true, "surveyYear": "2021", "ages": "15-64", "minutes": {
+      "total": {"sleep":462,"eating":91,"personal-care":87,"paid-work":294,"study":34,"commute":40,"housework":78,"shopping":24,"care":23,"errands":0,"tv":80,"social":10,"sports":9,"other-leisure":170,"other":37},
+      "women": {"sleep":457,"eating":93,"personal-care":97,"paid-work":226,"study":34,"commute":32,"housework":139,"shopping":32,"care":37,"errands":0,"tv":80,"social":12,"sports":7,"other-leisure":155,"other":40},
+      "men": {"sleep":466,"eating":89,"personal-care":77,"paid-work":360,"study":34,"commute":48,"housework":19,"shopping":17,"care":11,"errands":0,"tv":80,"social":8,"sports":11,"other-leisure":185,"other":34}
+    }},
+    {"code": "KR", "oecd": true, "surveyYear": "2014", "ages": "15-64", "minutes": {
+      "total": {"sleep":471.35,"eating":116.94,"personal-care":89.56,"paid-work":230.72,"study":56.85,"commute":56.88,"housework":76.16,"shopping":13.27,"care":29.46,"errands":12.82,"tv":102,"social":46.67,"sports":27.19,"other-leisure":82.4,"other":27.73},
+      "women": {"sleep":471.23,"eating":114.76,"personal-care":93.89,"paid-work":174.04,"study":54.09,"commute":41.26,"housework":130.25,"shopping":19.82,"care":46.73,"errands":18.21,"tv":102.75,"social":51.34,"sports":22.96,"other-leisure":66.92,"other":31.76},
+      "men": {"sleep":471.47,"eating":119.11,"personal-care":85.25,"paid-work":287.01,"study":59.6,"commute":72.38,"housework":22.46,"shopping":6.77,"care":12.3,"errands":7.46,"tv":101.25,"social":42.02,"sports":31.38,"other-leisure":97.8,"other":23.74}
+    }},
+    {"code": "LV", "oecd": true, "surveyYear": "2003", "ages": "15-64", "minutes": {
+      "total": {"sleep":512.29,"eating":88.87,"personal-care":40.14,"paid-work":280.03,"study":13.38,"commute":36.53,"housework":129.98,"shopping":15.85,"care":26.05,"errands":24.19,"tv":123.3,"social":39.88,"sports":24.99,"other-leisure":80.67,"other":3.85},
+      "women": {"sleep":515.45,"eating":84.89,"personal-care":43.35,"paid-work":241.58,"study":15.4,"commute":31.49,"housework":170.35,"shopping":20.4,"care":34.67,"errands":27.83,"tv":108.37,"social":39.66,"sports":20.43,"other-leisure":80.79,"other":5.34},
+      "men": {"sleep":510.14,"eating":92.99,"personal-care":36.47,"paid-work":323.25,"study":11.13,"commute":42.55,"housework":85.2,"shopping":10.53,"care":15.69,"errands":18.31,"tv":138.92,"social":40.78,"sports":30.42,"other-leisure":80.36,"other":3.26}
+    }},
+    {"code": "LT", "oecd": true, "surveyYear": "2003", "ages": "20-64", "minutes": {
+      "total": {"sleep":503.07,"eating":88.21,"personal-care":54.26,"paid-work":274.82,"study":11.57,"commute":28.83,"housework":154.42,"shopping":17.28,"care":32.72,"errands":20.05,"tv":136.78,"social":33.13,"sports":15.96,"other-leisure":60.74,"other":8.17},
+      "women": {"sleep":504.02,"eating":85.09,"personal-care":55.69,"paid-work":240.79,"study":12.73,"commute":25.74,"housework":207.42,"shopping":21.49,"care":41.11,"errands":21.93,"tv":115.07,"social":33.3,"sports":12.72,"other-leisure":54.21,"other":8.69},
+      "men": {"sleep":500.66,"eating":91.07,"personal-care":52.59,"paid-work":311.49,"study":9.97,"commute":32.8,"housework":96.16,"shopping":13.03,"care":23.88,"errands":18.54,"tv":159.73,"social":33.18,"sports":19.64,"other-leisure":69.65,"other":7.61}
+    }},
+    {"code": "LU", "oecd": true, "surveyYear": "2013", "ages": "15-64", "minutes": {
+      "total": {"sleep":518.17,"eating":112.22,"personal-care":55.28,"paid-work":212.39,"study":37.47,"commute":34.83,"housework":107.93,"shopping":23.03,"care":26.07,"errands":22.13,"tv":116.07,"social":44.74,"sports":33.24,"other-leisure":82.34,"other":14.06},
+      "women": {"sleep":520.19,"eating":113.41,"personal-care":60.41,"paid-work":169.73,"study":37.48,"commute":31.66,"housework":148.19,"shopping":29.22,"care":34.17,"errands":28.04,"tv":108.24,"social":46.47,"sports":28.08,"other-leisure":70.23,"other":14.51},
+      "men": {"sleep":514.65,"eating":111.46,"personal-care":50.75,"paid-work":254.46,"study":37.61,"commute":37.93,"housework":68.67,"shopping":16.78,"care":17.82,"errands":17.81,"tv":123.95,"social":43.23,"sports":38.82,"other-leisure":93.04,"other":13.03}
+    }},
+    {"code": "MX", "oecd": true, "surveyYear": "2024", "ages": "15-64", "minutes": {
+      "total": {"sleep":470.42,"eating":75.56,"personal-care":60.09,"paid-work":270.65,"study":40.04,"commute":38.21,"housework":185.34,"shopping":14.49,"care":47.65,"errands":8.55,"tv":67.69,"social":51.35,"sports":14.23,"other-leisure":69.56,"other":26.16},
+      "women": {"sleep":470.16,"eating":76.27,"personal-care":64.51,"paid-work":191.08,"study":39.92,"commute":28.75,"housework":255.73,"shopping":16.75,"care":65.64,"errands":10.4,"tv":63.25,"social":54.05,"sports":11,"other-leisure":66.02,"other":26.48},
+      "men": {"sleep":470.72,"eating":74.72,"personal-care":54.9,"paid-work":364.14,"study":40.2,"commute":49.32,"housework":102.62,"shopping":11.83,"care":26.54,"errands":6.37,"tv":72.91,"social":48.17,"sports":18.03,"other-leisure":73.73,"other":25.79}
+    }},
+    {"code": "NL", "oecd": true, "surveyYear": "2016", "ages": "15-64", "minutes": {
+      "total": {"sleep":502.78,"eating":114.31,"personal-care":64.5,"paid-work":186.6,"study":25.16,"commute":31.03,"housework":104.94,"shopping":28.2,"care":34.08,"errands":18.34,"tv":112.52,"social":79.2,"sports":22.4,"other-leisure":100.64,"other":15.3},
+      "women": {"sleep":509.35,"eating":116.56,"personal-care":70.75,"paid-work":150.7,"study":24.82,"commute":25.91,"housework":128.33,"shopping":31.77,"care":43.06,"errands":21.79,"tv":100.36,"social":84.13,"sports":20.28,"other-leisure":95.45,"other":16.74},
+      "men": {"sleep":496.07,"eating":112.02,"personal-care":58.14,"paid-work":223.19,"study":25.51,"commute":36.24,"housework":81.1,"shopping":24.56,"care":24.93,"errands":14.83,"tv":124.92,"social":74.18,"sports":24.56,"other-leisure":105.93,"other":13.83}
+    }},
+    {"code": "NZ", "oecd": true, "surveyYear": "2009/10", "ages": "15-64", "minutes": {
+      "total": {"sleep":526,"eating":80,"personal-care":42,"paid-work":218,"study":29,"commute":23,"housework":110,"shopping":24,"care":42,"errands":28,"tv":124,"social":75,"sports":17,"other-leisure":85,"other":17},
+      "women": {"sleep":529,"eating":80,"personal-care":47,"paid-work":159,"study":28,"commute":18,"housework":142,"shopping":30,"care":58,"errands":34,"tv":118,"social":84,"sports":15,"other-leisure":78,"other":19},
+      "men": {"sleep":522,"eating":79,"personal-care":38,"paid-work":278,"study":31,"commute":29,"housework":76,"shopping":17,"care":26,"errands":22,"tv":132,"social":65,"sports":19,"other-leisure":90,"other":16}
+    }},
+    {"code": "NO", "oecd": true, "surveyYear": "2022", "ages": "15-64", "minutes": {
+      "total": {"sleep":504,"eating":71.23,"personal-care":38.1,"paid-work":220.67,"study":34.13,"commute":20.6,"housework":106.56,"shopping":26.86,"care":40.21,"errands":11.95,"tv":101.65,"social":85.98,"sports":44.09,"other-leisure":122.25,"other":11.71},
+      "women": {"sleep":513.1,"eating":71.57,"personal-care":47.33,"paid-work":190.55,"study":36.69,"commute":19.8,"housework":124.29,"shopping":30.34,"care":45.08,"errands":12.35,"tv":97.78,"social":93.54,"sports":41.84,"other-leisure":106.63,"other":9.11},
+      "men": {"sleep":495.84,"eating":70.93,"personal-care":29.09,"paid-work":250.19,"study":31.52,"commute":21.04,"housework":89.49,"shopping":23.15,"care":35.67,"errands":11.62,"tv":103.77,"social":78.94,"sports":46.42,"other-leisure":137.96,"other":14.37}
+    }},
+    {"code": "PL", "oecd": true, "surveyYear": "2023", "ages": "15-64", "minutes": {
+      "total": {"sleep":515,"eating":100,"personal-care":67,"paid-work":185,"study":9,"commute":20,"housework":154,"shopping":26,"care":47,"errands":21,"tv":126,"social":41,"sports":24,"other-leisure":70,"other":35},
+      "women": {"sleep":520.28,"eating":99.86,"personal-care":72.9,"paid-work":145.79,"study":9.99,"commute":15.98,"housework":182.75,"shopping":28.96,"care":56.91,"errands":23.97,"tv":116.84,"social":42.94,"sports":20.97,"other-leisure":64.91,"other":36.95},
+      "men": {"sleep":505.6,"eating":98.73,"personal-care":60.82,"paid-work":236.34,"study":8.97,"commute":26.93,"housework":113.68,"shopping":22.94,"care":33.9,"errands":18.95,"tv":137.62,"social":38.89,"sports":28.92,"other-leisure":75.79,"other":31.91}
+    }},
+    {"code": "PT", "oecd": true, "surveyYear": "1999", "ages": "15-64", "minutes": {
+      "total": {"sleep":505.51,"eating":111.78,"personal-care":58.4,"paid-work":233.63,"study":36.25,"commute":25.17,"housework":161.12,"shopping":15.1,"care":26.19,"errands":20.14,"tv":113.79,"social":54.37,"sports":12.08,"other-leisure":60.43,"other":6.04},
+      "women": {"sleep":507.82,"eating":107.6,"personal-care":58.32,"paid-work":178.99,"study":32.18,"commute":20.11,"housework":253.41,"shopping":19.11,"care":38.21,"errands":17.43,"tv":103.07,"social":44.25,"sports":6.03,"other-leisure":46.43,"other":7.04},
+      "men": {"sleep":503.14,"eating":115.72,"personal-care":58.37,"paid-work":299.88,"study":40.25,"commute":32.2,"housework":51.32,"shopping":10.06,"care":11.07,"errands":23.82,"tv":126.29,"social":65.41,"sports":20.13,"other-leisure":77.31,"other":5.03}
+    }},
+    {"code": "SI", "oecd": true, "surveyYear": "2000/01", "ages": "15-64", "minutes": {
+      "total": {"sleep":501.3,"eating":85.88,"personal-care":40.95,"paid-work":201.71,"study":37.95,"commute":24.97,"housework":165.77,"shopping":17.98,"care":28.95,"errands":17.98,"tv":119.83,"social":66.9,"sports":31.96,"other-leisure":91.88,"other":5.99},
+      "women": {"sleep":504.35,"eating":83.06,"personal-care":43.03,"paid-work":169.11,"study":41.03,"commute":24.02,"housework":212.15,"shopping":20.01,"care":35.03,"errands":19.01,"tv":106.07,"social":65.04,"sports":28.02,"other-leisure":84.07,"other":6},
+      "men": {"sleep":501.39,"eating":89.25,"personal-care":41.11,"paid-work":235.65,"study":36.1,"commute":28.08,"housework":114.32,"shopping":15.04,"care":21.06,"errands":16.04,"tv":133.37,"social":68.19,"sports":35.1,"other-leisure":100.28,"other":5.01}
+    }},
+    {"code": "ES", "oecd": true, "surveyYear": "2009/10", "ages": "15-64", "minutes": {
+      "total": {"sleep":515.66,"eating":125.56,"personal-care":50.57,"paid-work":154.33,"study":26.24,"commute":21.43,"housework":115.86,"shopping":25.44,"care":53.7,"errands":21.73,"tv":129.44,"social":60,"sports":41.88,"other-leisure":84.73,"other":13.42},
+      "women": {"sleep":511.1,"eating":122.55,"personal-care":52.9,"paid-work":122.35,"study":25.84,"commute":18.56,"housework":163.41,"shopping":31.04,"care":70.48,"errands":24.2,"tv":118.14,"social":56.98,"sports":36.91,"other-leisure":71.97,"other":13.18},
+      "men": {"sleep":520.09,"eating":128.48,"personal-care":48.31,"paid-work":185.39,"study":26.61,"commute":24.23,"housework":69.69,"shopping":20.01,"care":36.89,"errands":19.32,"tv":140.41,"social":62.95,"sports":46.7,"other-leisure":97.11,"other":13.66}
+    }},
+    {"code": "SE", "oecd": true, "surveyYear": "2010", "ages": "15-64", "minutes": {
+      "total": {"sleep":482.7,"eating":82.54,"personal-care":57.23,"paid-work":231.19,"study":31.22,"commute":31,"housework":107.16,"shopping":23.46,"care":39.64,"errands":26.24,"tv":113.29,"social":61.52,"sports":34.34,"other-leisure":112.33,"other":6.14},
+      "women": {"sleep":483.34,"eating":85.06,"personal-care":65.04,"paid-work":212.15,"study":33.02,"commute":30.02,"housework":120.08,"shopping":27.02,"care":46.03,"errands":27.02,"tv":104.07,"social":64.05,"sports":33.02,"other-leisure":105.07,"other":5},
+      "men": {"sleep":482,"eating":80,"personal-care":49,"paid-work":250,"study":30,"commute":33,"housework":93,"shopping":20,"care":32,"errands":26,"tv":123,"social":59,"sports":36,"other-leisure":120,"other":7}
+    }},
+    {"code": "TR", "oecd": true, "surveyYear": "2014/15", "ages": "15-64", "minutes": {
+      "total": {"sleep":514.58,"eating":117.58,"personal-care":49.64,"paid-work":186.62,"study":29.04,"commute":30.66,"housework":123.9,"shopping":13.96,"care":35.96,"errands":12.27,"tv":124.03,"social":70.7,"sports":9.47,"other-leisure":81.53,"other":40.1},
+      "women": {"sleep":518.02,"eating":119.54,"personal-care":46.95,"paid-work":85.46,"study":30.74,"commute":17.75,"housework":221.55,"shopping":14.79,"care":56.36,"errands":12.35,"tv":121.91,"social":74.49,"sports":5.48,"other-leisure":68.57,"other":46.1},
+      "men": {"sleep":511.16,"eating":115.64,"personal-care":52.3,"paid-work":287.38,"study":27.35,"commute":43.52,"housework":26.62,"shopping":13.12,"care":15.67,"errands":12.18,"tv":126.15,"social":66.93,"sports":13.44,"other-leisure":94.43,"other":34.12}
+    }},
+    {"code": "GB", "oecd": true, "surveyYear": "2014/15", "ages": "15-64", "minutes": {
+      "total": {"sleep":508.11,"eating":79.25,"personal-care":57.84,"paid-work":196.32,"study":26.77,"commute":39.17,"housework":103.62,"shopping":29.41,"care":41.11,"errands":20.39,"tv":133.32,"social":54.44,"sports":19.36,"other-leisure":98.41,"other":32.47},
+      "women": {"sleep":511.75,"eating":78.5,"personal-care":65.18,"paid-work":161.78,"study":24.85,"commute":29.57,"housework":132.43,"shopping":35.51,"care":57.88,"errands":22.81,"tv":121.84,"social":60.34,"sports":15.51,"other-leisure":86.99,"other":35.06},
+      "men": {"sleep":504.45,"eating":80.01,"personal-care":50.46,"paid-work":231.09,"study":28.7,"commute":48.83,"housework":74.63,"shopping":23.28,"care":24.22,"errands":17.95,"tv":144.87,"social":48.5,"sports":23.24,"other-leisure":109.91,"other":29.87}
+    }},
+    {"code": "US", "oecd": true, "surveyYear": "2024", "ages": "15-64", "minutes": {
+      "total": {"sleep":541.3,"eating":65.44,"personal-care":57.3,"paid-work":228.79,"study":29.79,"commute":19.63,"housework":109.87,"shopping":19.01,"care":43.32,"errands":24.92,"tv":130.5,"social":47.78,"sports":19,"other-leisure":82.58,"other":20.77},
+      "women": {"sleep":544.55,"eating":64.65,"personal-care":66.45,"paid-work":204.22,"study":31.05,"commute":16,"housework":131.88,"shopping":21.85,"care":53.5,"errands":27.47,"tv":117.85,"social":50.8,"sports":15.31,"other-leisure":71.14,"other":23.29},
+      "men": {"sleep":538.02,"eating":66.24,"personal-care":48.04,"paid-work":253.67,"study":28.5,"commute":23.29,"housework":87.61,"shopping":16.13,"care":33.02,"errands":22.34,"tv":143.3,"social":44.72,"sports":22.75,"other-leisure":94.14,"other":18.22}
+    }},
+    {"code": "BG", "oecd": false, "surveyYear": "2020", "ages": "15-64", "minutes": {
+      "total": {"sleep":532.2,"eating":137.47,"personal-care":53.38,"paid-work":228.31,"study":20.09,"commute":33.52,"housework":122.27,"shopping":18.57,"care":30.8,"errands":17.33,"tv":107.51,"social":58.51,"sports":20.66,"other-leisure":54.29,"other":5.08},
+      "women": {"sleep":527.58,"eating":131.46,"personal-care":52.36,"paid-work":205.91,"study":20.01,"commute":30.28,"housework":173.91,"shopping":20.79,"care":42.53,"errands":19.66,"tv":96.58,"social":52.95,"sports":17.7,"other-leisure":43.25,"other":5.02},
+      "men": {"sleep":535.41,"eating":143.43,"personal-care":53.77,"paid-work":249.7,"study":19.58,"commute":36.6,"housework":73.89,"shopping":16.85,"care":19.8,"errands":15.22,"tv":117.98,"social":64.13,"sports":24.05,"other-leisure":65.11,"other":4.48}
+    }},
+    {"code": "HR", "oecd": false, "surveyYear": "2022/23", "ages": "15-64", "minutes": {
+      "total": {"sleep":492.67,"eating":104.78,"personal-care":57.33,"paid-work":258.7,"study":29.11,"commute":33.65,"housework":100.85,"shopping":15.11,"care":72.44,"errands":14.51,"tv":92.99,"social":41.31,"sports":29.12,"other-leisure":87.15,"other":10.28},
+      "women": {"sleep":484.52,"eating":102.25,"personal-care":61.57,"paid-work":235.02,"study":34.35,"commute":28.73,"housework":144.53,"shopping":16.47,"care":81.26,"errands":15.47,"tv":80.25,"social":41.78,"sports":27.52,"other-leisure":75.53,"other":10.75},
+      "men": {"sleep":500.79,"eating":107.33,"personal-care":53.06,"paid-work":282.17,"study":23.86,"commute":38.41,"housework":57.91,"shopping":13.85,"care":63.57,"errands":13.64,"tv":105.51,"social":40.83,"sports":30.62,"other-leisure":98.65,"other":9.8}
+    }},
+    {"code": "CN", "oecd": false, "surveyYear": "2008", "ages": "15-74", "minutes": {
+      "total": {"sleep":541.62,"eating":99.93,"personal-care":51.97,"paid-work":267.81,"study":24.98,"commute":46.97,"housework":102.93,"shopping":19.99,"care":25.98,"errands":14.99,"tv":126.91,"social":24.98,"sports":22.98,"other-leisure":52.97,"other":14.99},
+      "women": {"sleep":544,"eating":96,"personal-care":52,"paid-work":228,"study":25,"commute":38,"housework":155,"shopping":25,"care":36,"errands":18,"tv":122,"social":26,"sports":22,"other-leisure":41,"other":12},
+      "men": {"sleep":540,"eating":104,"personal-care":52,"paid-work":308,"study":26,"commute":56,"housework":48,"shopping":15,"care":16,"errands":12,"tv":132,"social":25,"sports":24,"other-leisure":67,"other":15}
+    }},
+    {"code": "IN", "oecd": false, "surveyYear": "1998/99", "ages": "15-64", "minutes": {
+      "total": {"sleep":528.14,"eating":83.86,"personal-care":75.49,"paid-work":239.52,"study":23.44,"commute":32.02,"housework":148.4,"shopping":11.57,"care":22.89,"errands":8.29,"tv":61.44,"social":77.87,"sports":5.5,"other-leisure":109.19,"other":12.39},
+      "women": {"sleep":520.92,"eating":79.95,"personal-care":68.99,"paid-work":148.86,"study":18.14,"commute":17.7,"housework":298.25,"shopping":8.93,"care":38.48,"errands":6.28,"tv":54.41,"social":67.15,"sports":1.38,"other-leisure":98.01,"other":12.55},
+      "men": {"sleep":534.4,"eating":87.24,"personal-care":81.13,"paid-work":318.1,"study":28.03,"commute":44.44,"housework":18.51,"shopping":13.86,"care":9.37,"errands":10.03,"tv":67.53,"social":87.16,"sports":9.07,"other-leisure":118.88,"other":12.25}
+    }},
+    {"code": "ZA", "oecd": false, "surveyYear": "2010", "ages": "15-64", "minutes": {
+      "total": {"sleep":553.14,"eating":72.39,"personal-care":69.55,"paid-work":165.67,"study":38.81,"commute":36.1,"housework":130.31,"shopping":9.48,"care":33.21,"errands":9.28,"tv":131.73,"social":87.26,"sports":5.09,"other-leisure":81.82,"other":16.16},
+      "women": {"sleep":556.6,"eating":68.92,"personal-care":69.31,"paid-work":130.71,"study":35.24,"commute":29.08,"housework":183.36,"shopping":10.73,"care":45.27,"errands":10.23,"tv":125.44,"social":78.67,"sports":1.63,"other-leisure":76.11,"other":18.7},
+      "men": {"sleep":549.07,"eating":76.46,"personal-care":69.84,"paid-work":206.78,"study":43.02,"commute":44.36,"housework":67.87,"shopping":8.01,"care":18.89,"errands":8.17,"tv":139.14,"social":97.35,"sports":9.15,"other-leisure":88.55,"other":13.18}
+    }}
+  ]
+}

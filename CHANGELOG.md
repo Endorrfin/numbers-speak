@@ -3,6 +3,12 @@
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
 ## 2026‑09‑20
+- **New:** [Human life in numbers / Людське життя в цифрах](https://endorrfin.github.io/numbers-speak/#/v/time-of-life) —
+  the OECD average day stretched over the 50 years from 15 to 64, in six angles: life in weeks (2,600 squares),
+  one average day, a ranking in years / days / hours / %, needs · duties · free time, 35 countries and women vs
+  men. ≈ 17.6 years of sleep, 7.3 of paid work, ≈ 10 years of free time. Data: OECD Time Use Database (April 2026). /
+  Середній день OECD, розтягнутий на 50 років від 15 до 64: життя в тижнях, один день, рейтинг, потреби ·
+  обов’язки · вільне, 35 країн, жінки й чоловіки. ≈ 17,6 року сну, 7,3 — роботи, ≈ 10 — вільного часу.
 - **Updated:** [GDP by country, 2023–2025 / ВВП країн, 2023–2025](https://endorrfin.github.io/numbers-speak/#/v/gdp-by-country) —
   years 2024 and 2025 (218 economies, World Bank WDI July 2026) and a new **GDP per capita** sub‑tab with a
   "× world average" column; values that are IMF/UN estimates or an earlier year are marked *. /

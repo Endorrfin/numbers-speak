@@ -3,7 +3,8 @@
  * Dark editorial by default; light theme via <html data-theme="light"> (resolved before paint in index.html).
  * Text/background pairs are checked for WCAG AA (≥ 4.5:1; lowest pair 4.87:1).
  * Chart colours (S2): --c-region-* (validated all-pairs for colour-vision deficiency — see src/charts/palette.ts)
- * and --chart-* (axis, grid, hover) are defined per theme below; --c-birth / --c-death (S3-bd) likewise.
+ * and --chart-* (axis, grid, hover) are defined per theme below; --c-birth / --c-death (S3-bd) and
+ * --c-life-* / --c-women / --c-men (S3-tl) likewise.
  */
 :root,
 :root[data-theme='dark'] {
@@ -49,6 +50,16 @@
   --c-death-soft: rgba(242, 85, 74, 0.24);
   --chart-band-1: rgba(255, 255, 255, 0.03);
   --chart-band-2: rgba(255, 255, 255, 0.065);
+
+  /* CHANGED (S3-tl): time of life — needs · duties · free (dataviz validator, all pairs, on #171d25:
+     CVD ΔE 9.7, normal 19.3, all ≥ 3:1). "Other" is a neutral, named everywhere, never a fourth hue.
+     Women vs men: CVD ΔE 13.9, normal 20.4, both ≥ 3:1. */
+  --c-life-needs: #4a86e8;
+  --c-life-duties: #bf7c12;
+  --c-life-free: #2fae7a;
+  --c-life-other: #6f7a88;
+  --c-women: #c0569a;
+  --c-men: #5b7ff0;
 }
 
 :root[data-theme='light'] {
@@ -93,6 +104,14 @@
   --c-death-soft: rgba(208, 52, 44, 0.16);
   --chart-band-1: rgba(27, 33, 41, 0.03);
   --chart-band-2: rgba(27, 33, 41, 0.07);
+
+  /* CHANGED (S3-tl): on #ffffff — CVD ΔE 9.8, normal 19.2, all ≥ 3:1. Women vs men: CVD ΔE 14.4, normal 20.4. */
+  --c-life-needs: #2461c9;
+  --c-life-duties: #b86e00;
+  --c-life-free: #1a8a70;
+  --c-life-other: #8a939e;
+  --c-women: #b0407f;
+  --c-men: #3a5fd6;
 }
 
 :root {

@@ -36,7 +36,8 @@ src/
                validateDataFile) · state.ts (URL state ↔ params)
   charts/      renderRankedBar.ts (pure renderer) · RankedBar.tsx (wrapper) · renderYearChart.ts ·
                YearChart.tsx (S3‑bd) ·
-               renderButterfly.ts · Butterfly.tsx (S3‑bdd) · hooks.ts · palette.ts
+               renderButterfly.ts · Butterfly.tsx (S3‑bdd) · renderWaffle.ts · Waffle.tsx · renderStrip.ts · Strip.tsx ·
+               tooltip.ts (S3‑tl) · hooks.ts · palette.ts
   components/  layout/ (TopBar, Footer) · catalog/ (CatalogPage, FilterBar, VizCard)
                viz/ (VizPage, AboutData) · pages/ (AboutPage, NotFound) · AppStateProvider.tsx
   i18n/        lang.ts · LangProvider.tsx · ui.ts
@@ -73,7 +74,8 @@ _examples/     legacy D3 pages being ported (gitignored — never committed)
 ## 6. Charts & interactivity
 Chart kit: `RankedBar` (S2) · `YearChart` (S3‑bd: lines, gap fills, areas, bars, mirrored bars, period bands,
 notes over consecutive years — the `LineSeries` slot) · `Butterfly` (S3‑bdd: back‑to‑back bars, one shared
-scale, tinted/outlined rows) · `BarRace` · `HierarchyTree` + one‑offs. Every chart:
+scale, tinted/outlined rows) · `Waffle` (S3‑tl: unit grid, blocks end to end, direct labels) · `Strip` (S3‑tl:
+one 100 % bar, labels below) · `BarRace` · `HierarchyTree` + one‑offs. Every chart:
 responsive width (ResizeObserver; labels stack above bars < 560 px), `role="img"` + a label that states the
 view, keyboard‑operable controls, a **table view** (the keyboard / screen‑reader path; tooltips are
 pointer‑only, text‑only), `prefers-reduced-motion` → no transitions, all settings in the URL query with
@@ -193,3 +195,20 @@ S4a/b/c full migration → S5 customize & share → S6 growth pipeline. Details:
   Open: Worldometers is a secondary route (terms not verified) — switch to the WB API when the owner can fetch
   it; 2023 is an older WB vintage (Dec 2024) than 2024–2025 (Jul 2026) — noted on the page; `gdp-ppp-per-capita`
   (#2, PPP) stays a separate planned entry.
+- **S3‑tl** (2026‑09‑20) — priority entry `time-of-life` **published** (CATALOG #26) as **“Human life in numbers /
+  Людське життя в цифрах”** (owner's title): the OECD average day scaled to the 50 years from 15 to 64, six
+  angles by sub‑tabs (`?show=weeks|day|ranking|groups|countries|gender`, weeks = default) × country (`?country=JP`,
+  default = unweighted OECD‑30 average) × sex (`?sex=women|men`) × unit (ranking: `?unit=years|days|hours|share`) ×
+  measure (countries/gender: `?measure=unpaid…`) + table view. Owner decisions: **OECD data, not the legacy sets**
+  (unsourced, overlapping categories — Q4 superseded); primary tab `knowledge`; no emoji in labels.
+  Data: OECD Time Use Database workbook (update 30 Apr 2026, sheets Total/Men/Women) — fetched through the
+  in‑app browser (sandbox and VM egress block oecd.org), kept rows exported to three CSVs in
+  `data-raw/time-of-life/` with checksums → `prep.ts` → 15 mutually exclusive activities per country and sex
+  (unreported sub‑activities → residual of the same OECD category, so main categories match the sheet).
+  New chart core `Waffle` + `Strip` (+ shared `tooltip.ts`), chart kind `waffle` (label + glyph), tokens
+  `--c-life-needs/duties/free/other` and `--c-women/--c-men` validated with the dataviz script (both themes).
+  Formats via Intl units (Ukrainian plurals: “17,6 року”; EN durations narrow “8h 26m”, UK short “8 год 26 хв”).
+  Tests: `test-time-of-life.ts` (10), `test-waffle-strip.ts` (7); smoke covers every angle in EN + UK, both tables.
+  Branch `viz/2026-09-time-of-life`.
+  Open: Ukraine has no survey in the database (said on the page); surveys span 1998–2024; the OECD average is
+  our unweighted mean; childhood and 65+ not covered — a “your remaining weeks” calculator stays for S5.
