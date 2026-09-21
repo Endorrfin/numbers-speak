@@ -36,3 +36,14 @@ export const LIFE_COLOR = {
   women: 'var(--c-women)',
   men: 'var(--c-men)',
 } as const;
+
+// CHANGED (S3-br): brand sector groups (global-brands-race) — five validated hues + one neutral, all-pairs
+// checked in both themes (values and results in theme/tokens.css). Colour follows the group, never the rank.
+export const SECTOR_COLOR = {
+  tech: 'var(--c-sector-tech)',
+  auto: 'var(--c-sector-auto)',
+  finance: 'var(--c-sector-finance)',
+  consumer: 'var(--c-sector-consumer)',
+  fashion: 'var(--c-sector-fashion)',
+  industry: 'var(--c-sector-industry)',
+} as const;

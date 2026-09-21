@@ -37,7 +37,7 @@ src/
   charts/      renderRankedBar.ts (pure renderer) · RankedBar.tsx (wrapper) · renderYearChart.ts ·
                YearChart.tsx (S3‑bd) ·
                renderButterfly.ts · Butterfly.tsx (S3‑bdd) · renderWaffle.ts · Waffle.tsx · renderStrip.ts · Strip.tsx ·
-               tooltip.ts (S3‑tl) · hooks.ts · palette.ts
+               tooltip.ts (S3‑tl) · renderBarRace.ts · BarRace.tsx (S3‑br) · hooks.ts · palette.ts
   components/  layout/ (TopBar, Footer) · catalog/ (CatalogPage, FilterBar, VizCard)
                viz/ (VizPage, AboutData) · pages/ (AboutPage, NotFound) · AppStateProvider.tsx
   i18n/        lang.ts · LangProvider.tsx · ui.ts
@@ -75,7 +75,9 @@ _examples/     legacy D3 pages being ported (gitignored — never committed)
 Chart kit: `RankedBar` (S2) · `YearChart` (S3‑bd: lines, gap fills, areas, bars, mirrored bars, period bands,
 notes over consecutive years — the `LineSeries` slot) · `Butterfly` (S3‑bdd: back‑to‑back bars, one shared
 scale, tinted/outlined rows) · `Waffle` (S3‑tl: unit grid, blocks end to end, direct labels) · `Strip` (S3‑tl:
-one 100 % bar, labels below) · `BarRace` · `HierarchyTree` + one‑offs. Every chart:
+one 100 % bar, labels below) · `BarRace` (S3‑br: one frame per call, keyed rows slide in/out from below the
+last slot, fixed layout for the whole race, big year ticker; the page owns the clock — Play/Pause, year slider,
+‹ › year steps) · `HierarchyTree` + one‑offs. Every chart:
 responsive width (ResizeObserver; labels stack above bars < 560 px), `role="img"` + a label that states the
 view, keyboard‑operable controls, a **table view** (the keyboard / screen‑reader path; tooltips are
 pointer‑only, text‑only), `prefers-reduced-motion` → no transitions, all settings in the URL query with
@@ -232,3 +234,24 @@ S4a/b/c full migration → S5 customize & share → S6 growth pipeline. Details:
   orders, purity); smoke covers the chips, the filter and the sort keys in EN + UK. `verify` green.
   Branch `viz/2026-09-births-deaths-per-day-filters`.
   Open: the sort control is a `<select>` — if more angles appear it should become sub‑tabs like #31/#26.
+- **S3‑br** (2026‑09‑21) — `global-brands-race` **published** (CATALOG #15; the three legacy brand races merged, D5):
+  Interbrand Best Global Brands 2000–2025 as a bar chart race — top 12, Play / Pause / Replay (inline SVG icons,
+  no emoji), year slider over 8 frames per year (1.6 s per year), ‹ › year steps, big year ticker; six sector-group
+  chips = legend + filter (`?group=tech|auto|finance|consumer|fashion|industry`), `?year=` (default 2025, the race
+  position between years stays page state, only the whole year reaches the URL — on pause, at the end, on a jump
+  or scrub), table view for any year (rank, sector, country + flag, value, YoY change / “new”), and a `Strip` with
+  each group's share of the ranking's total (tech 47 % in 2000 → 63 % in 2025). Reduced motion → one frame per
+  year, no tweening. New chart core `BarRace` (`renderBarRace.ts`, jsdom tests); tokens `--c-sector-*` = the five
+  validated region hues under sector names + a neutral for industry (dataviz validator, six marks all‑pairs: dark
+  CVD ΔE 11.3 / normal 15.0; light 12.2 / 17.2).
+  Data: 2000–2019 from the gallery's Interbrand extract (the legacy `interbrand.csv` is corrupt — 22 brands in
+  2020–2024, Ford filed as “Citi”); 2020–2025 transcribed from interbrand.com (sandbox egress blocks the site —
+  read through the fetch tool) into `data-raw/global-brands-race/`; prep recomputes all 569 published YoY changes
+  and aborts on a mismatch (0 mismatches); 5 renames aliased; 22 Interbrand sectors → 6 colour groups.
+  Owner decision needed: logos — skipped (Simple Icons covers ~60 % of the top brands, misses Microsoft, Amazon,
+  Mercedes…); flags mark the home country instead.
+  Tests: `test-global-brands.ts` (11), `test-bar-race.ts` (7); smoke covers chart / 2000 / table / group / EN + UK.
+  `verify` green; chunk 8.7 kB gzip. Branch `viz/2026-09-global-brands-race`.
+  Open: brand home countries are editorial (HQ); Interbrand's terms for reuse of the ranking not verified (PLAN
+  “Data terms”) — the page attributes and links every year; speed control and a “highlight one brand” search are
+  candidates for S5.

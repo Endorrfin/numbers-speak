@@ -1,0 +1,196 @@
+name,sector,country
+3M,Diversified,US
+AIG,Financial Services,US
+AOL,Media,US
+AT&T,Telecommunications,US
+AXA,Financial Services,FR
+Absolut,Alcohol,SE
+Accenture,Business Services,IE
+Adobe,Business Services,US
+Airbnb,Hospitality,US
+Allianz,Financial Services,DE
+Amazon,Technology,US
+American Express,Financial Services,US
+Apple,Technology,US
+Armani,Luxury,IT
+Audi,Automotive,DE
+Avon,FMCG,US
+BARCLAYS,Financial Services,GB
+BMW,Automotive,DE
+BP,Energy,GB
+BYD,Automotive,CN
+Bacardi,Alcohol,BM
+Barbie,Toys & Games,US
+Benetton,Apparel,IT
+BlackBerry,Electronics,CA
+BlackRock,Financial Services,US
+Boeing,Diversified,US
+Booking.com,Hospitality,NL
+Budweiser,Alcohol,US
+Bulgari,Luxury,IT
+Burberry,Luxury,GB
+Burger King,Restaurants,US
+Campbell's,FMCG,US
+Canon,Electronics,JP
+Carlsberg,Alcohol,DK
+Cartier,Luxury,FR
+Caterpillar,Diversified,US
+Chanel,Luxury,FR
+Chevrolet,Automotive,US
+Cisco,Business Services,US
+Citi,Financial Services,US
+Coca-Cola,Beverages,US
+Colgate,FMCG,US
+Compaq,Technology,US
+Corona,Alcohol,MX
+Credit Suisse,Financial Services,CH
+DHL,Logistics,DE
+Danone,FMCG,FR
+Dell,Electronics,US
+Dior,Luxury,FR
+Discovery,Media,US
+Disney,Media,US
+Duracell,FMCG,US
+Ericsson,Electronics,SE
+Estee Lauder,FMCG,US
+Facebook,Technology,US
+FedEx,Logistics,US
+Ferrari,Automotive,IT
+Financial Times,Media,GB
+Ford,Automotive,US
+GE,Diversified,US
+GE Aerospace,Diversified,US
+Gap,Apparel,US
+Gillette,FMCG,US
+Goldman Sachs,Financial Services,US
+Google,Technology,US
+Gucci,Luxury,IT
+Guinness,Alcohol,IE
+H&M,Apparel,SE
+HP,Electronics,US
+HSBC,Financial Services,GB
+HTC,Electronics,TW
+Harley-Davidson,Automotive,US
+Heineken,Alcohol,NL
+Heinz,FMCG,US
+Hennessy,Alcohol,FR
+Hermès,Luxury,FR
+Hertz,Automotive,US
+Hewlett Packard Enterprise,Business Services,US
+Hilton,Hospitality,US
+Honda,Automotive,JP
+Huawei,Technology,CN
+Hugo Boss,Apparel,DE
+Hyundai,Automotive,KR
+IBM,Business Services,US
+IKEA,Retail,SE
+ING,Financial Services,NL
+Instagram,Media,US
+Intel,Technology,US
+J.P. Morgan,Financial Services,US
+Jack Daniel's,Alcohol,US
+John Deere,Diversified,US
+Johnnie Walker,Alcohol,GB
+Johnson & Johnson,FMCG,US
+Jordan,Sporting Goods,US
+KFC,Restaurants,US
+Kellogg's,FMCG,US
+Kia,Automotive,KR
+Kleenex,FMCG,US
+Kodak,Electronics,US
+Kraft,FMCG,US
+L'Oréal Paris,FMCG,FR
+LEGO,FMCG,DK
+LG,Electronics,KR
+Lancôme,FMCG,FR
+Land Rover,Automotive,GB
+Lenovo,Technology,CN
+Levi's,Apparel,US
+Lexus,Automotive,JP
+LinkedIn,Media,US
+Louis Vuitton,Luxury,FR
+MINI,Automotive,GB
+MTV,Media,US
+Marlboro,Tobacco,US
+Marriott,Hospitality,US
+MasterCard,Financial Services,US
+McDonald's,Restaurants,US
+Mercedes-Benz,Automotive,DE
+"Merck & Co., Inc.",Pharmaceuticals,US
+Merrill Lynch,Financial Services,US
+Microsoft,Technology,US
+Mobil,Energy,US
+Moët & Chandon,Alcohol,FR
+Monster,Beverages,US
+Morgan Stanley,Financial Services,US
+Motorola,Electronics,US
+NVIDIA,Technology,US
+Nasdaq,Financial Services,US
+Nescafé,Beverages,CH
+Nespresso,Beverages,CH
+Nestlé,FMCG,CH
+Netflix,Media,US
+Nike,Sporting Goods,US
+Nintendo,Electronics,JP
+Nissan,Automotive,JP
+Nivea,FMCG,DE
+Nokia,Technology,FI
+Novartis,Pharmaceuticals,CH
+Oracle,Business Services,US
+Pampers,FMCG,US
+Pandora,Luxury,DK
+Panasonic,Electronics,JP
+PayPal,Financial Services,US
+Pepsi,Beverages,US
+Pfizer,Pharmaceuticals,US
+Philips,Electronics,NL
+Pizza Hut,Restaurants,US
+Porsche,Automotive,DE
+Prada,Luxury,IT
+Puma,Sporting Goods,DE
+Qualcomm,Technology,US
+Ralph Lauren,Apparel,US
+Range Rover,Automotive,GB
+Red Bull,Beverages,AT
+Reuters,Media,GB
+Rolex,Luxury,CH
+SAP,Business Services,DE
+Salesforce,Business Services,US
+Samsung,Technology,KR
+Santander,Financial Services,ES
+Schneider Electric,Diversified,FR
+Sephora,Retail,FR
+Shell,Energy,GB
+Shopify,Technology,CA
+Siemens,Diversified,DE
+Smirnoff,Alcohol,GB
+Sony,Electronics,JP
+Spotify,Media,SE
+Sprite,Beverages,US
+Starbucks,Restaurants,US
+Subaru,Automotive,JP
+Sun Microsystems,Business Services,US
+Swatch,FMCG,CH
+Tesla,Automotive,US
+Texas Instruments,Technology,US
+Thomson Reuters,Media,CA
+Tiffany & Co.,Luxury,US
+Time,Media,US
+Toyota,Automotive,JP
+UBS,Financial Services,CH
+UNIQLO,Apparel,JP
+UPS,Logistics,US
+Uber,Technology,US
+Visa,Financial Services,US
+Volkswagen,Automotive,DE
+Wall Street Journal,Media,US
+Wrigley,FMCG,US
+Xerox,Business Services,US
+Xiaomi,Electronics,CN
+YouTube,Media,US
+Yahoo!,Media,US
+ZURICH,Financial Services,CH
+Zara,Apparel,ES
+Zoom,Technology,US
+adidas,Sporting Goods,DE
+eBay,Retail,US
