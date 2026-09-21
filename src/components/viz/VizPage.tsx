@@ -41,18 +41,21 @@ export function VizPage({ id, params }: { id: string; params: VizParams }) {
 
   return (
     <article className="page viz">
-      <nav className="crumbs" aria-label={t(ui.breadcrumbs)}>
-        <a href={hrefCatalog()}>{t(ui.backToGallery)}</a>
-        <span aria-hidden="true"> / </span>
-        <a href={hrefCatalog(primary.id)}>{t(primary.title)}</a>
-      </nav>
-
-      <header className="page-head">
+      {/* CHANGED (S3-aa2): badges share the breadcrumb row — one row less above the title. */}
+      <div className="viz-top">
+        <nav className="crumbs" aria-label={t(ui.breadcrumbs)}>
+          <a href={hrefCatalog()}>{t(ui.backToGallery)}</a>
+          <span aria-hidden="true"> / </span>
+          <a href={hrefCatalog(primary.id)}>{t(primary.title)}</a>
+        </nav>
         <div className="card-badges">
           {meta.status === 'soon' && <span className="badge badge-soon">{t(ui.badgeSoon)}</span>}
           {meta.status === 'draft' && <span className="badge badge-draft">{t(ui.badgeDraft)}</span>}
           {isNew(meta, now) && <span className="badge badge-new">{t(ui.badgeNew)}</span>}
         </div>
+      </div>
+
+      <header className="page-head">
         <h1>{t(meta.title)}</h1>
         <p className="lede">{t(meta.subtitle)}</p>
         <p className="card-meta">

@@ -12,6 +12,10 @@ New and updated visualizations, newest first. / Нові й оновлені в�
   поглядах: запущено проти збитого чи подавленого й неперехопленого (за місяць, тиждень або добу), ракети за класами
   й моделями, частка перехоплених за місяць і клас, наймасованіші атаки (7.09.2025: 810 дронів + 13 ракет) і цивільні
   жертви за даними HRMMU.
+- **Updated:** all visualization pages are more compact — a narrower column, one-line titles, the “New” badge next
+  to the breadcrumbs, lower key-number tiles and controls; segmented controls no longer overlap. /
+  Усі сторінки візуалізацій компактніші: вужча колонка, заголовок в один рядок, бейдж «Нове» поруч із хлібними
+  крихтами, нижчі плитки й перемикачі; перемикачі більше не накладаються.
 - **New:** [Global brands race, 2000–2025 / Перегони глобальних брендів, 2000–2025](https://endorrfin.github.io/numbers-speak/#/v/global-brands-race) —
   26 Interbrand Best Global Brands rankings as a bar chart race with a year slider: Play / Pause, year by year,
   six sector groups to race separately, a strip with each group's share of the total and a table for every year.

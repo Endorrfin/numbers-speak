@@ -168,4 +168,6 @@
   --radius-sm: 8px;
   --gap: clamp(1rem, 0.6rem + 1.6vw, 1.75rem);
   --content: 1180px;
+  /* CHANGED (S3-aa2): visualization pages use a narrower reading column than the gallery. */
+  --content-viz: 1000px;
 }
