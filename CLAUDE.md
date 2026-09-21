@@ -37,7 +37,8 @@ src/
   charts/      renderRankedBar.ts (pure renderer) · RankedBar.tsx (wrapper) · renderYearChart.ts ·
                YearChart.tsx (S3‑bd) ·
                renderButterfly.ts · Butterfly.tsx (S3‑bdd) · renderWaffle.ts · Waffle.tsx · renderStrip.ts · Strip.tsx ·
-               tooltip.ts (S3‑tl) · renderBarRace.ts · BarRace.tsx (S3‑br) · hooks.ts · palette.ts
+               tooltip.ts (S3‑tl) · renderBarRace.ts · BarRace.tsx (S3‑br) · renderTimeSeries.ts · TimeSeries.tsx ·
+               renderStackedRows.ts · StackedRows.tsx (S3‑aa) · hooks.ts · palette.ts
   components/  layout/ (TopBar, Footer) · catalog/ (CatalogPage, FilterBar, VizCard)
                viz/ (VizPage, AboutData) · pages/ (AboutPage, NotFound) · AppStateProvider.tsx
   i18n/        lang.ts · LangProvider.tsx · ui.ts
@@ -77,7 +78,10 @@ notes over consecutive years — the `LineSeries` slot) · `Butterfly` (S3‑bdd
 scale, tinted/outlined rows) · `Waffle` (S3‑tl: unit grid, blocks end to end, direct labels) · `Strip` (S3‑tl:
 one 100 % bar, labels below) · `BarRace` (S3‑br: one frame per call, keyed rows slide in/out from below the
 last slot, fixed layout for the whole race, big year ticker; the page owns the clock — Play/Pause, year slider,
-‹ › year steps) · `HierarchyTree` + one‑offs. Every chart:
+‹ › year steps) · `TimeSeries` (S3‑aa: calendar buckets — day · week · month · year — on a UTC time scale, stacked
+panels sharing the time axis instead of a second y‑axis, stacked segments with an optional hatch texture, partial
+buckets drawn lighter, bands per panel, lines with null gaps, one hover layer across panels) · `StackedRows` (S3‑aa:
+ranked horizontal bars split into segments, date + sub‑label column) · `HierarchyTree` + one‑offs. Every chart:
 responsive width (ResizeObserver; labels stack above bars < 560 px), `role="img"` + a label that states the
 view, keyboard‑operable controls, a **table view** (the keyboard / screen‑reader path; tooltips are
 pointer‑only, text‑only), `prefers-reduced-motion` → no transitions, all settings in the URL query with
@@ -126,6 +130,8 @@ current. **Agent sessions never push.**
 - `catalog.generated.ts` is committed (typecheck needs it); `predev`/`prebuild` regenerate it; `check:catalog`
   guards staleness. Adding a visualization = new folder + `npm run gen:catalog`.
 - The SSR smoke runs under `tsx` (no Vite): keep `import.meta.env` access optional (`import.meta.env?.DEV`).
+- The device bridge rejects very long commands (`spawn E2BIG`): write big files in parts (`cat >` then `cat >>`).
+- `Intl` month abbreviations differ between ICU versions (`Sep` / `Sept` in en‑GB): tests match both.
 
 ## 13. Session roadmap
 S0 brief/catalog/plan → S1 scaffold + shell → S2 golden `gdp-by-country` + chart core → S3a/b/c MVP waves →
@@ -255,3 +261,23 @@ S4a/b/c full migration → S5 customize & share → S6 growth pipeline. Details:
   Open: brand home countries are editorial (HQ); Interbrand's terms for reuse of the ranking not verified (PLAN
   “Data terms”) — the page attributes and links every year; speed control and a “highlight one brand” search are
   candidates for S5.
+- **S3‑aa** (2026‑09‑21) — priority entry `air-attacks-on-ukraine` **published** (CATALOG #11, replaces `air-strikes`):
+  Russian missile and drone attacks on Ukraine, 28 Sep 2022 – 19 Sep 2026, five angles by sub‑tabs
+  (`?show=timeline|types|interception|largest|civilians`) × year (`?year=2022…2026`) × step (`?step=month|week|day`)
+  × mode (`?mode=share`) × rank (`?rank=missiles|drones`) × people (`?who=killed|injured`) + table view for every angle;
+  KPI row per period. Owner decisions: Kaggle dataset (P. Ivaniuk, CC BY‑NC‑SA 4.0 — derived JSON under the same
+  licence, code MIT); tag `war`, no new tab until the 4th war entry; v1 = timeline + types + interception + largest +
+  civilians (calendar heatmap → backlog); strict style, no emoji.
+  Data: `data-raw/air-attacks-on-ukraine/` (CSV unchanged + sha256, `prep.ts`, HRMMU CSV) → 1,236 reports, 52 models.
+  Rules found in the data: national reports only (regional commands overlap — 1,742 rows); long-range weapons only
+  (tactical/recon drones and guided bombs out); one report = one Air Force post per day (drones and missiles of one
+  night carry different windows); `hidden` (from 10 Aug 2026) → `launched-hidden`, out of rates; interception is ONE
+  measure — shot down + suppressed + locationally lost — because "lost" was a separate number only Jul 2024 – Jul 2025.
+  Legacy page's casualty lines were HRMMU all‑weapon totals plotted against weapon counts on a second axis — dropped.
+  New chart cores `TimeSeries` + `StackedRows` (jsdom tests); tokens `--c-air-*` (status = the validated birth/death
+  pair + hatch texture; classes = the six validated sector marks) and `--c-harm-*` (two neutrals).
+  Tests: `test-air-attacks.ts` (13 groups), `test-time-series.ts` (6); smoke covers every angle in EN + UK and every
+  table. `verify` green; chunk 19.8 kB gzip. Branch `viz/2026-09-air-attacks-on-ukraine`.
+  Open: HRMMU weapon breakdown is annual only for 2025 (2026 = sum of monthly updates, revised later); the Air Force
+  withholds some missile counts from 10 Aug 2026 (lower bounds); calendar heatmap and a map by oblast → backlog;
+  monthly refresh is an owner step (Kaggle login).

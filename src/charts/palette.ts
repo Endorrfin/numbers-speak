@@ -47,3 +47,18 @@ export const SECTOR_COLOR = {
   fashion: 'var(--c-sector-fashion)',
   industry: 'var(--c-sector-industry)',
 } as const;
+
+// CHANGED (S3-aa): air attacks — interception status (timeline), weapon classes, civilian-harm context
+// (values and validation notes in theme/tokens.css). Colour follows the class or the status, never the rank.
+export const AIR_COLOR = {
+  down: 'var(--c-air-down)',
+  through: 'var(--c-air-through)',
+  cruise: 'var(--c-air-cruise)',
+  ballistic: 'var(--c-air-ballistic)',
+  antiship: 'var(--c-air-antiship)',
+  other: 'var(--c-air-other)',
+  mixed: 'var(--c-air-mixed)',
+  drones: 'var(--c-air-drones)',
+  harmShort: 'var(--c-harm-short)',
+  harmOther: 'var(--c-harm-other)',
+} as const;

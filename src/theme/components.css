@@ -1439,3 +1439,85 @@
     flex: 1 0 100%;
   }
 }
+
+/* ── Air attacks (S3-aa): renderTimeSeries.ts · renderStackedRows.ts ─────── */
+.ts-baseline {
+  stroke: var(--line2);
+  stroke-width: 1;
+}
+.ts-seg.has-gap {
+  stroke: var(--surface);
+  stroke-width: 1;
+}
+.ts-seg.is-partial {
+  opacity: 0.5;
+}
+.ts-hatch-bg {
+  fill: transparent;
+}
+.ts-dot {
+  stroke: var(--surface);
+  stroke-width: 1.5;
+}
+.ts-hover-band {
+  fill: var(--chart-hover);
+}
+.ts-band-label {
+  pointer-events: none;
+}
+.chart-ts .chart-tip,
+.chart-rows .chart-tip {
+  min-width: 14rem;
+}
+.sr-hit {
+  fill: transparent;
+}
+.sr-row.is-hover .sr-hit {
+  fill: var(--chart-hover);
+}
+.sr-seg {
+  stroke: var(--surface);
+  stroke-width: 1;
+}
+.sr-label {
+  fill: var(--tx);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.sr-sublabel {
+  fill: var(--tx3);
+  font-size: 11px;
+}
+.sr-value {
+  fill: var(--tx2);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.sr-label,
+.sr-sublabel,
+.sr-seg,
+.sr-value {
+  pointer-events: none;
+}
+.key-hatch {
+  display: inline-block;
+  flex: none;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 3px;
+  background: repeating-linear-gradient(45deg, currentColor 0 2px, transparent 2px 4px);
+}
+.field-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  align-items: flex-end;
+}
+.data-table .cls {
+  white-space: nowrap;
+}
+.data-table tfoot th,
+.data-table tfoot td {
+  border-top: 1px solid var(--line2);
+  font-weight: 700;
+}
