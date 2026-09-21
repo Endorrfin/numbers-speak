@@ -61,6 +61,7 @@ export const CHART_LABELS: Readonly<Record<ChartKind, Localized>> = {
   combo: { en: 'Bars + lines', uk: 'Стовпці + лінії' },
   bar: { en: 'Bar chart', uk: 'Стовпчикова діаграма' },
   'grouped-bar': { en: 'Grouped bars', uk: 'Згруповані стовпці' },
+  butterfly: { en: 'Butterfly bars', uk: 'Дзеркальні стовпці' }, // CHANGED (S3-bdd2)
   pyramid: { en: 'Population pyramid', uk: 'Вікова піраміда' },
   donut: { en: 'Donut chart', uk: 'Кільцева діаграма' },
   lollipop: { en: 'Lollipop chart', uk: 'Lollipop‑діаграма' },

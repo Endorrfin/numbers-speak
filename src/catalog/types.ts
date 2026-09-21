@@ -17,6 +17,7 @@ export const CHART_KINDS = [
   'combo',
   'bar',
   'grouped-bar',
+  'butterfly', // CHANGED (S3-bdd2)
   'pyramid',
   'donut',
   'lollipop',

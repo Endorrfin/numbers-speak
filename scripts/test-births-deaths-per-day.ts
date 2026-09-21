@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   DATA_FILE,
+  applyView,
   countSince,
   parsePerDayDataset,
   rankPerDay,
@@ -92,11 +93,56 @@ test('countSince: whole persons, never negative, linear in time', () => {
 });
 
 test('URL state: defaults omitted, junk falls back, round-trips', () => {
-  assert.deepEqual(parsePerDayState({}), { region: 'all', page: 1, view: 'chart' });
+  assert.deepEqual(parsePerDayState({}), { region: 'all', only: 'all', sort: 'births', page: 1, view: 'chart' });
   assert.deepEqual(toPerDayParams(parsePerDayState({})), {});
-  const s = parsePerDayState({ region: 'africa', page: '3', view: 'table' });
-  assert.deepEqual(toPerDayParams(s), { region: 'africa', page: '3', view: 'table' });
-  assert.deepEqual(parsePerDayState({ region: '<x>', page: '-1', view: 'pie' }), { region: 'all', page: 1, view: 'chart' });
+  const s = parsePerDayState({ region: 'africa', only: 'shrinking', sort: 'net', page: '3', view: 'table' });
+  assert.deepEqual(toPerDayParams(s), { region: 'africa', only: 'shrinking', sort: 'net', page: '3', view: 'table' });
+  assert.deepEqual(parsePerDayState({ region: '<x>', only: 'yes', sort: 'alpha', page: '-1', view: 'pie' }), {
+    region: 'all',
+    only: 'all',
+    sort: 'births',
+    page: 1,
+    view: 'chart',
+  });
+});
+
+// CHANGED (S3-bdd2): region chips, the "deaths > births" filter and the three sort keys.
+const view = (o: Partial<Parameters<typeof applyView>[1]>) =>
+  applyView(ranked, { region: 'all', onlyShrinking: false, sort: 'births', ...o });
+
+test('applyView: region filter keeps the global rank and only that region', () => {
+  const europe = view({ region: 'europe' });
+  assert.ok(europe.every((r) => r.region === 'europe'));
+  assert.equal(europe.length, ranked.filter((r) => r.region === 'europe').length);
+  assert.equal(europe[0]!.code, 'RU');
+  assert.ok(europe[0]!.rank > 1, 'rank stays global');
+});
+
+test('applyView: the shrinking filter keeps exactly the 47 countries where deaths > births', () => {
+  const only = view({ onlyShrinking: true, sort: 'ratio' });
+  assert.equal(only.length, world.shrinking);
+  assert.ok(only.every((r) => r.deaths > r.births));
+  assert.equal(only[0]!.code, 'UA', 'Ukraine has the highest deaths per birth');
+  for (let i = 1; i < only.length; i++) assert.ok(only[i - 1]!.ratio! >= only[i]!.ratio!, 'descending');
+});
+
+test('applyView: sort keys order as documented and combine with the filters', () => {
+  const births = view({});
+  assert.equal(births[0]!.code, 'IN');
+  const net = view({ sort: 'net' });
+  assert.equal(net[0]!.code, 'CN', 'biggest daily loss first');
+  assert.ok(net[0]!.net < 0);
+  const ratio = view({ sort: 'ratio' });
+  assert.equal(ratio.at(-1)!.ratio, null, 'countries without births go last');
+  const europeShrinking = view({ region: 'europe', onlyShrinking: true, sort: 'net' });
+  assert.ok(europeShrinking.every((r) => r.region === 'europe' && r.deaths > r.births));
+  assert.ok(europeShrinking.length > 0 && europeShrinking.length < world.shrinking);
+});
+
+test('applyView is pure: it never reorders or mutates the input', () => {
+  const before = ranked.map((r) => r.code);
+  view({ sort: 'net' });
+  assert.deepEqual(ranked.map((r) => r.code), before);
 });
 
 test('pageOf finds Ukraine in the full and the Europe-filtered lists', () => {
