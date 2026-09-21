@@ -3,11 +3,12 @@
 // fails the build when this file is stale. Source of truth: src/viz/<id>/meta.ts.
 import type { ComponentType } from 'react';
 import type { VizBodyProps, VizMeta } from './types';
-import meta0 from '../viz/births-deaths-per-day/meta';
-import meta1 from '../viz/births-deaths-ua/meta';
-import meta2 from '../viz/gdp-by-country/meta';
-import meta3 from '../viz/global-brands-race/meta';
-import meta4 from '../viz/time-of-life/meta';
+import meta0 from '../viz/air-attacks-on-ukraine/meta';
+import meta1 from '../viz/births-deaths-per-day/meta';
+import meta2 from '../viz/births-deaths-ua/meta';
+import meta3 from '../viz/gdp-by-country/meta';
+import meta4 from '../viz/global-brands-race/meta';
+import meta5 from '../viz/time-of-life/meta';
 
 export type VizLoader = () => Promise<{ default: ComponentType<VizBodyProps> }>;
 
@@ -17,9 +18,11 @@ export const VIZ_METAS: readonly VizMeta[] = [
   meta2,
   meta3,
   meta4,
+  meta5,
 ];
 
 export const VIZ_LOADERS: Readonly<Record<string, VizLoader>> = {
+  'air-attacks-on-ukraine': () => import('../viz/air-attacks-on-ukraine/index'),
   'births-deaths-per-day': () => import('../viz/births-deaths-per-day/index'),
   'births-deaths-ua': () => import('../viz/births-deaths-ua/index'),
   'gdp-by-country': () => import('../viz/gdp-by-country/index'),

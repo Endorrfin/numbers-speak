@@ -4,7 +4,7 @@
  * Text/background pairs are checked for WCAG AA (≥ 4.5:1; lowest pair 4.87:1).
  * Chart colours (S2): --c-region-* (validated all-pairs for colour-vision deficiency — see src/charts/palette.ts)
  * and --chart-* (axis, grid, hover) are defined per theme below; --c-birth / --c-death (S3-bd) and
- * --c-life-* / --c-women / --c-men (S3-tl) and --c-sector-* (S3-br) likewise.
+ * --c-life-* / --c-women / --c-men (S3-tl), --c-sector-* (S3-br) and --c-air-* / --c-harm-* (S3-aa) likewise.
  */
 :root,
 :root[data-theme='dark'] {
@@ -70,6 +70,20 @@
   --c-sector-fashion: #9e5b8a;
   --c-sector-finance: #32a0ce;
   --c-sector-industry: #b8bfc8;
+  /* CHANGED (S3-aa): air attacks. Status (timeline): shot down = the validated cool hue, not intercepted = the
+     warm one (the --c-birth / --c-death pair: CVD ΔE 24.4, normal 32.3); "lost in flight" = the cool hue as a
+     hatch texture (secondary encoding, no third hue). Weapon classes = the six sector marks above (validated
+     all-pairs); harm context (short-range drones, other weapons) = two recessive neutrals, always labelled. */
+  --c-air-down: #4a90f0;
+  --c-air-through: #f2554a;
+  --c-air-cruise: #546ce7;
+  --c-air-ballistic: #9e5b8a;
+  --c-air-antiship: #32a0ce;
+  --c-air-other: #1cb070;
+  --c-air-drones: #936d13;
+  --c-air-mixed: #b8bfc8;
+  --c-harm-short: #7d8793;
+  --c-harm-other: #3b4652;
 }
 
 :root[data-theme='light'] {
@@ -131,6 +145,17 @@
   --c-sector-fashion: #824b82;
   --c-sector-finance: #5ea4ec;
   --c-sector-industry: #383e45;
+  /* CHANGED (S3-aa): air attacks on #ffffff — the same roles as in the dark theme (validation there). */
+  --c-air-down: #1f63d6;
+  --c-air-through: #d0342c;
+  --c-air-cruise: #2364ed;
+  --c-air-ballistic: #824b82;
+  --c-air-antiship: #5ea4ec;
+  --c-air-other: #54c28c;
+  --c-air-drones: #b54f02;
+  --c-air-mixed: #383e45;
+  --c-harm-short: #6b7480;
+  --c-harm-other: #cfd4da;
 }
 
 :root {

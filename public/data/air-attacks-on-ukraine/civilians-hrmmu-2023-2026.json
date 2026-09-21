@@ -1,0 +1,9 @@
+{
+  "unit": "persons",
+  "years": [
+    {"year":2023,"fromMonth":1,"toMonth":12,"total":{"killed":1974,"injured":6651},"source":"https://ukraine.ohchr.org/en/2025-deadliest-year-for-civilians-in-Ukraine-since-2022-UN-human-rights-monitors-find"},
+    {"year":2024,"fromMonth":1,"toMonth":12,"total":{"killed":2088,"injured":9138},"source":"https://ukraine.ohchr.org/en/2025-deadliest-year-for-civilians-in-Ukraine-since-2022-UN-human-rights-monitors-find","shortDrones":{"killed":226,"injured":1528}},
+    {"year":2025,"fromMonth":1,"toMonth":12,"total":{"killed":2514,"injured":12142},"source":"https://ukraine.ohchr.org/en/2025-deadliest-year-for-civilians-in-Ukraine-since-2022-UN-human-rights-monitors-find","longRange":{"killed":682,"injured":4443},"shortDrones":{"killed":577,"injured":3288}},
+    {"year":2026,"fromMonth":1,"toMonth":8,"total":{"killed":2222,"injured":13058},"source":"https://ukraine.ohchr.org/en/Protection-of-Civilians-in-Armed-Conflict-August-2026","longRange":{"killed":877,"injured":5411},"shortDrones":{"killed":607,"injured":3843},"note":"monthly-sum"}
+  ]
+}

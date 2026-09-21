@@ -3,6 +3,15 @@
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
 ## 2026‑09‑21
+- **New:** [Russian missile and drone attacks on Ukraine, 2022–2026 / Російські ракетні й дронові атаки на Україну, 2022–2026](https://endorrfin.github.io/numbers-speak/#/v/air-attacks-on-ukraine) —
+  every national Air Force report since 28 Sep 2022 (1,236 reports, 119,405 drones, 7,639 missiles) in five angles:
+  launched against shot down or suppressed and not intercepted (by month, week or day), missiles by class and model,
+  the interception rate per month and class, the largest attacks (7 Sep 2025: 810 drones + 13 missiles) and civilian
+  casualties from the UN HRMMU. Data: Petro Ivaniuk's Kaggle compilation (CC BY‑NC‑SA 4.0). /
+  Усі загальнонаціональні звіти Повітряних сил з 28.09.2022 (1 236 звітів, 119 405 дронів, 7 639 ракет) у п’яти
+  поглядах: запущено проти збитого чи подавленого й неперехопленого (за місяць, тиждень або добу), ракети за класами
+  й моделями, частка перехоплених за місяць і клас, наймасованіші атаки (7.09.2025: 810 дронів + 13 ракет) і цивільні
+  жертви за даними HRMMU.
 - **New:** [Global brands race, 2000–2025 / Перегони глобальних брендів, 2000–2025](https://endorrfin.github.io/numbers-speak/#/v/global-brands-race) —
   26 Interbrand Best Global Brands rankings as a bar chart race with a year slider: Play / Pause, year by year,
   six sector groups to race separately, a strip with each group's share of the total and a table for every year.

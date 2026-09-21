@@ -334,6 +334,41 @@ async function main(): Promise<void> {
     check('ready:brands table uk', h(Br, { params: { view: 'table' }, setParams: noop }), 'uk', 5000, ['Сполучені Штати', 'Технології', 'новий']);
   }
 
+  // CHANGED (S3-aa): air attacks — every angle in EN + UK, KPIs, every table, a single year.
+  if (CATALOG.some((m) => m.id === 'air-attacks-on-ukraine')) {
+    const { default: Aa } = await import('../src/viz/air-attacks-on-ukraine/index');
+    const { SHOWS: AA_SHOWS } = await import('../src/viz/air-attacks-on-ukraine/state');
+    check('ready:air chart', h(Aa, { params: {}, setParams: noop }), 'en', 1500, [
+      'role="img"',
+      '119,405',
+      '7,639',
+      '87%',
+      '61%',
+      '823',
+      'Launched and stopped',
+      'Locationally lost (reported separately)',
+      'How the numbers are counted',
+    ]);
+    check('ready:air uk', h(Aa, { params: {}, setParams: noop }), 'uk', 1500, ['Запущено й зупинено', 'Як пораховано числа', 'Збито або подавлено']);
+    for (const show of AA_SHOWS) {
+      for (const lang of langs) {
+        const html = check(`ready:air ${show}`, h(Aa, { params: { show }, setParams: noop }), lang, 1500, ['role="img"']);
+        ok(html.includes('class="is-on"'), `ready:air ${show} [${lang}] marks the active angle`);
+      }
+    }
+    check('ready:air 2025', h(Aa, { params: { year: '2025' }, setParams: noop }), 'en', 1500, ['54,536', 'In 2025']);
+    check('ready:air week', h(Aa, { params: { step: 'week', year: '2026' }, setParams: noop }), 'en', 1500, ['per week']);
+    check('ready:air timeline table', h(Aa, { params: { view: 'table' }, setParams: noop }), 'en', 5000, ['<table', 'September 2022 · partial', 'May 2026']);
+    const types = check('ready:air types table', h(Aa, { params: { show: 'types', view: 'table' }, setParams: noop }), 'en', 3000, ['<table', 'Kh-101/Kh-555', 'Kalibr', 'Iskander-M']);
+    ok(!types.includes('Shahed-136/131 &amp; decoys'), 'ready:air types table lists missiles only');
+    check('ready:air types share', h(Aa, { params: { show: 'types', mode: 'share' }, setParams: noop }), 'en', 1500, ['Missiles by model']);
+    check('ready:air rates table', h(Aa, { params: { show: 'interception', view: 'table' }, setParams: noop }), 'en', 2000, ['<table', 'Cruise missiles', 'All years']);
+    check('ready:air largest table', h(Aa, { params: { show: 'largest', view: 'table' }, setParams: noop }), 'en', 2000, ['<table', '823', '17:00–09:30']);
+    check('ready:air largest missiles', h(Aa, { params: { show: 'largest', rank: 'missiles' }, setParams: noop }), 'en', 1500, ['127']);
+    check('ready:air civilians table', h(Aa, { params: { show: 'civilians', view: 'table' }, setParams: noop }), 'en', 2000, ['<table', '2,514', 'not published', '2026 (Jan–Aug)']);
+    check('ready:air civilians uk', h(Aa, { params: { show: 'civilians', who: 'killed' }, setParams: noop }), 'uk', 1500, ['Далекобійні ракети й дрони']);
+  }
+
   // ── Sanity: the language switch took ───────────────────────────────────────────────────────────
   ok(ssr(h(AboutPage), 'en') !== ssr(h(AboutPage), 'uk'), 'EN and UK renders differ (language toggle works)');
 
