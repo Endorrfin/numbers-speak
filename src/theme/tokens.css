@@ -4,7 +4,7 @@
  * Text/background pairs are checked for WCAG AA (≥ 4.5:1; lowest pair 4.87:1).
  * Chart colours (S2): --c-region-* (validated all-pairs for colour-vision deficiency — see src/charts/palette.ts)
  * and --chart-* (axis, grid, hover) are defined per theme below; --c-birth / --c-death (S3-bd) and
- * --c-life-* / --c-women / --c-men (S3-tl) likewise.
+ * --c-life-* / --c-women / --c-men (S3-tl) and --c-sector-* (S3-br) likewise.
  */
 :root,
 :root[data-theme='dark'] {
@@ -60,6 +60,16 @@
   --c-life-other: #6f7a88;
   --c-women: #c0569a;
   --c-men: #5b7ff0;
+
+  /* CHANGED (S3-br): brand sector groups — the five region hues (validated all-pairs above) re-used under
+     sector names, plus a neutral for "industry, logistics & travel". Six marks all-pairs on #171d25:
+     CVD ΔE 11.3, normal 15.0, all ≥ 3:1. The neutral sits outside the hue band on purpose (L 0.80). */
+  --c-sector-tech: #546ce7;
+  --c-sector-auto: #936d13;
+  --c-sector-consumer: #1cb070;
+  --c-sector-fashion: #9e5b8a;
+  --c-sector-finance: #32a0ce;
+  --c-sector-industry: #b8bfc8;
 }
 
 :root[data-theme='light'] {
@@ -112,6 +122,15 @@
   --c-life-other: #8a939e;
   --c-women: #b0407f;
   --c-men: #3a5fd6;
+
+  /* CHANGED (S3-br): brand sector groups on #ffffff — six marks all-pairs: CVD ΔE 12.2, normal 17.2; the
+     neutral is dark (L 0.36) to separate from the hues; consumer and finance < 3:1 → value labels + table. */
+  --c-sector-tech: #2364ed;
+  --c-sector-auto: #b54f02;
+  --c-sector-consumer: #54c28c;
+  --c-sector-fashion: #824b82;
+  --c-sector-finance: #5ea4ec;
+  --c-sector-industry: #383e45;
 }
 
 :root {

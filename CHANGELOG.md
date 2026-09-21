@@ -3,6 +3,13 @@
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
 ## 2026‑09‑21
+- **New:** [Global brands race, 2000–2025 / Перегони глобальних брендів, 2000–2025](https://endorrfin.github.io/numbers-speak/#/v/global-brands-race) —
+  26 Interbrand Best Global Brands rankings as a bar chart race with a year slider: Play / Pause, year by year,
+  six sector groups to race separately, a strip with each group's share of the total and a table for every year.
+  In 2000 Coca-Cola led; in 2025 Apple, Microsoft, Amazon and Google hold 42 % of the value of all 100. /
+  26 рейтингів Interbrand як перегони стовпців із повзунком року: відтворення, крок за роком, шість груп секторів,
+  смуга з часткою кожної групи й таблиця за кожен рік. У 2000 році лідирувала Coca-Cola; у 2025-му Apple,
+  Microsoft, Amazon і Google мають 42 % вартості всієї сотні.
 - **Updated:** [Born and died per day, 2026 / Народжуються й помирають щодня, 2026](https://endorrfin.github.io/numbers-speak/#/v/births-deaths-per-day) —
   regions in one click, a filter for the 47 countries where deaths outnumber births, and three orders
   (births · deaths per birth · biggest daily loss); its own chart kind and card glyph. /

@@ -1339,3 +1339,103 @@
   border-top: 2px solid var(--line2);
   font-weight: 700;
 }
+
+/* CHANGED (S3-br): bar chart race — player row (Play · ‹ · year slider · › · year), race marks, share strip. */
+.race-player {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.6rem;
+}
+.race-play {
+  min-width: 7.5rem;
+  height: 2.6rem;
+  justify-content: center;
+}
+.race-icon {
+  flex: none;
+  fill: currentColor;
+}
+.race-icon-stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.race-slider {
+  flex: 1 1 12rem;
+  min-width: 0;
+  height: 2.6rem;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.race-slider:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.race-year {
+  min-width: 3.2em;
+  color: var(--tx);
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.br-ticker {
+  fill: var(--tx3);
+  opacity: 0.35;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+.br-axis .tick line {
+  stroke: var(--chart-grid);
+  stroke-width: 1;
+}
+.br-axis .tick text {
+  fill: var(--chart-axis);
+  font-size: 11px;
+}
+.br-hit {
+  fill: transparent;
+}
+.br-row.is-hover .br-hit {
+  fill: var(--chart-hover);
+}
+.br-label {
+  fill: var(--tx);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.br-value {
+  fill: var(--tx2);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.br-flag,
+.br-bar,
+.br-label,
+.br-value {
+  pointer-events: none;
+}
+.race-share {
+  display: grid;
+  gap: 0.4rem;
+}
+.race-share-title {
+  margin: 0;
+  color: var(--tx2);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+@media (max-width: 560px) {
+  .race-play {
+    min-width: 0;
+    flex: 1 0 100%;
+  }
+}

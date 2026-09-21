@@ -306,6 +306,34 @@ async function main(): Promise<void> {
     ok(!gender.includes('Japan · 2021'), 'ready:time-of-life gender hides the country picker');
   }
 
+  // CHANGED (S3-br): global brands race — player, groups, table, strip, URL year, EN + UK.
+  if (CATALOG.some((m) => m.id === 'global-brands-race')) {
+    const { default: Br } = await import('../src/viz/global-brands-race/index');
+    check('ready:brands chart', h(Br, { params: {}, setParams: noop }), 'en', 1500, [
+      'role="img"',
+      'type="range"',
+      'Replay',
+      '2025 · #1 Apple, $471bn · 100 brands ranked',
+      'Technology &amp; media',
+      'Share of the ranking',
+    ]);
+    check('ready:brands 2000', h(Br, { params: { year: '2000' }, setParams: noop }), 'en', 1500, ['Play', '#1 Coca-Cola', '75 brands ranked']);
+    check('ready:brands uk', h(Br, { params: { year: '2010' }, setParams: noop }), 'uk', 1500, ['Відтворити', 'Технології й медіа', '№1 Coca-Cola']);
+    check('ready:brands table', h(Br, { params: { view: 'table' }, setParams: noop }), 'en', 5000, [
+      '<table',
+      'Apple',
+      '470.9',
+      '−3.7%',
+      'BlackRock',
+      'new',
+      'United States',
+    ]);
+    check('ready:brands table 2000', h(Br, { params: { view: 'table', year: '2000' }, setParams: noop }), 'en', 3000, ['72.5', 'Coca-Cola']);
+    const auto = check('ready:brands auto table', h(Br, { params: { group: 'auto', view: 'table' }, setParams: noop }), 'en', 2000, ['Toyota', 'in Automotive']);
+    ok(!auto.includes('>Apple<'), 'ready:brands group filter hides other groups');
+    check('ready:brands table uk', h(Br, { params: { view: 'table' }, setParams: noop }), 'uk', 5000, ['Сполучені Штати', 'Технології', 'новий']);
+  }
+
   // ── Sanity: the language switch took ───────────────────────────────────────────────────────────
   ok(ssr(h(AboutPage), 'en') !== ssr(h(AboutPage), 'uk'), 'EN and UK renders differ (language toggle works)');
 
