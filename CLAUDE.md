@@ -281,3 +281,15 @@ S4a/b/c full migration → S5 customize & share → S6 growth pipeline. Details:
   Open: HRMMU weapon breakdown is annual only for 2025 (2026 = sum of monthly updates, revised later); the Air Force
   withholds some missile counts from 10 Aug 2026 (lower bounds); calendar heatmap and a map by oblast → backlog;
   monthly refresh is an owner step (Kaggle login).
+- **S3‑aa2** (2026‑09‑21) — owner review of S3‑aa, site‑wide layout fixes. (1) Segmented groups overlapped
+  ("Period" under "Step"): `.controls .field` caps fields at 16rem and `.field-auto` inherited the cap → `.field-auto`
+  uncapped, segmented labels `nowrap`, groups wrap on phones; controls 2.25rem high. (2) Visualization pages use a
+  narrower column `--content-viz: 1000px` (gallery stays 1180px). (3) Page title `clamp(1.4rem, …, 2rem)` +
+  `text-wrap: balance` — every current title fits one line at 1000px. (4) Compact head: the New/Soon badge moved
+  into the breadcrumb row (`.viz-top` in `VizPage.tsx`), tighter spacing, lower KPI tiles and sub‑tabs, smaller
+  status line and intro (rules scoped to `.viz`, end of `components.css`). (5) Bundle: the claim that
+  `d3-time-format` sat in the page chunk was wrong — `manualChunks` already sends every `d3-*` to `d3-vendor`; the
+  19.8 kB gzip chunk is the page's own code (index 17 kB · copy 11 kB · specs 9 kB · new chart cores 10 kB raw).
+  No change: the chart cores move to a shared chunk by themselves once a second page imports them.
+  `verify` green. Branch `viz/2026-09-air-attacks-on-ukraine` (same PR) or `s3aa2-compact-layout`.
+  Backlog (owner): calendar heatmap of days (maybe later), map by oblast.
