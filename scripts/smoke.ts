@@ -258,6 +258,25 @@ async function main(): Promise<void> {
     ok(!africa.includes('>India<') && !africa.includes(' India<'), 'ready:per-day africa filter excludes Asia');
     const asia = check('ready:per-day asia', h(Pd, { params: { region: 'asia' }, setParams: noop }), 'en', 1000);
     ok(!asia.includes('Find Ukraine'), 'ready:per-day hides "Find Ukraine" when Ukraine is filtered out');
+    // CHANGED (S3-bdd2): region chips, the "deaths > births" filter and the sort keys.
+    const chips = check('ready:per-day chips', h(Pd, { params: {}, setParams: noop }), 'en', 1500, [
+      'aria-pressed="true"',
+      'Deaths &gt; births (47)',
+      'Sort',
+    ]);
+    ok(chips.includes('Africa') && chips.includes('Oceania'), 'ready:per-day offers every region in one click');
+    const shrinking = check(
+      'ready:per-day shrinking',
+      h(Pd, { params: { only: 'shrinking', sort: 'ratio' }, setParams: noop }),
+      'en',
+      1500,
+      ['47 countries and territories where more people die than are born', 'Ukraine'],
+    );
+    ok(!shrinking.includes('>1  India<') && !shrinking.includes('1  India'), 'ready:per-day shrinking drops growing countries');
+    check('ready:per-day sort net', h(Pd, { params: { sort: 'net', view: 'table' }, setParams: noop }), 'en', 5000, ['China']);
+    check('ready:per-day shrinking uk', h(Pd, { params: { only: 'shrinking' }, setParams: noop }), 'uk', 1500, [
+      'Смертей більше (47)',
+    ]);
   }
 
   // CHANGED (S3-tl): human life in numbers — every angle, both tables, filters and both languages.

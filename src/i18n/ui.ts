@@ -74,6 +74,8 @@ export const ui = {
   share: { en: 'Copy link', uk: 'Копіювати посилання' },
   shareDone: { en: 'Link copied — it keeps the current settings.', uk: 'Посилання скопійовано — з поточними налаштуваннями.' },
   shareFailed: { en: 'Copy failed — copy the address bar instead.', uk: 'Не вдалося скопіювати — скопіюйте адресний рядок.' },
+  // CHANGED (S3-bdd2): a stale tab after a deploy — the reload is one click away.
+  reloadPage: { en: 'Reload the page', uk: 'Оновити сторінку' },
   chartError: {
     en: 'This chart failed to load. Reload the page; if it keeps failing, please report it.',
     uk: 'Графік не завантажився. Оновіть сторінку; якщо не допоможе — повідомте, будь ласка.',

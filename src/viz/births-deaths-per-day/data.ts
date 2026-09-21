@@ -119,6 +119,40 @@ export function countSince(seconds: number, perDay: number): number {
   return Math.floor((seconds * perDay) / SECONDS_PER_DAY);
 }
 
+// CHANGED (S3-bdd2): the page's view = region filter + "only shrinking" + sort key, as one pure function.
+export const SORTS = ['births', 'ratio', 'net'] as const;
+export type Sort = (typeof SORTS)[number];
+
+export type ViewOptions = {
+  /** 'all' or one UN M49 region. */
+  region: string;
+  /** true = keep only countries where deaths exceed births. */
+  onlyShrinking: boolean;
+  sort: Sort;
+};
+
+/**
+ * Filters and orders the ranked rows for the chart and the table. Pure and total:
+ * - `births` — as in the file (births per day, descending);
+ * - `ratio`  — deaths per birth, descending; countries without births (ratio null) go last;
+ * - `net`    — natural change ascending, so the biggest losses come first.
+ * Ties break on the ISO code, so the order never depends on the input order.
+ */
+export function applyView(rows: readonly RankedPerDayRow[], options: ViewOptions): RankedPerDayRow[] {
+  const out = rows.filter(
+    (r) => (options.region === 'all' || r.region === options.region) && (!options.onlyShrinking || r.deaths > r.births),
+  );
+  const byCode = (a: RankedPerDayRow, b: RankedPerDayRow): number => a.code.localeCompare(b.code);
+  if (options.sort === 'ratio') {
+    out.sort((a, b) => (b.ratio ?? -1) - (a.ratio ?? -1) || byCode(a, b));
+  } else if (options.sort === 'net') {
+    out.sort((a, b) => a.net - b.net || byCode(a, b));
+  } else {
+    out.sort((a, b) => b.births - a.births || byCode(a, b));
+  }
+  return out;
+}
+
 /** check:data hook (scripts/check-data.ts): validates every file listed in `meta.data`. */
 export function validateDataFile(file: string, json: unknown): void {
   if (file !== DATA_FILE) fail(file, `no parser for this file (expected ${DATA_FILE})`);

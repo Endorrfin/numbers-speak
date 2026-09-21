@@ -2,6 +2,16 @@
 
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
+## 2026‑09‑21
+- **Updated:** [Born and died per day, 2026 / Народжуються й помирають щодня, 2026](https://endorrfin.github.io/numbers-speak/#/v/births-deaths-per-day) —
+  regions in one click, a filter for the 47 countries where deaths outnumber births, and three orders
+  (births · deaths per birth · biggest daily loss); its own chart kind and card glyph. /
+  Регіони одним кліком, фільтр 47 країн, де смертей більше, ніж народжень, і три порядки сортування;
+  власний вид чарту та іконка картки.
+- **Fixed:** a tab left open across a deploy could fail to load a visualization ("Failed to fetch dynamically
+  imported module") — the site now reloads once and recovers. / Виправлено збій завантаження візуалізації у
+  вкладці, відкритій до нового деплою.
+
 ## 2026‑09‑20
 - **New:** [Human life in numbers / Людське життя в цифрах](https://endorrfin.github.io/numbers-speak/#/v/time-of-life) —
   the OECD average day stretched over the 50 years from 15 to 64, in six angles: life in weeks (2,600 squares),

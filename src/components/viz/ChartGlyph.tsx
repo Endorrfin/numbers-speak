@@ -101,6 +101,24 @@ const GLYPHS: Readonly<Record<ChartKind, ReactElement>> = {
       ))}
     </g>
   ),
+  // CHANGED (S3-bdd2): butterfly — bars back to back around a centre line (births ← | → deaths).
+  butterfly: (
+    <g className="g-fill">
+      <path className="g-stroke" d="M50 8v64" />
+      {[
+        [30, 18],
+        [22, 12],
+        [16, 26],
+        [11, 8],
+        [7, 15],
+      ].map(([l, r], i) => (
+        <g key={i}>
+          <rect x={46 - l!} y={14 + i * 11} width={l} height={8} rx={2} />
+          <rect className="g-dim" x={54} y={14 + i * 11} width={r} height={8} rx={2} />
+        </g>
+      ))}
+    </g>
+  ),
 };
 
 export function ChartGlyph({ kind }: { kind: ChartKind }) {

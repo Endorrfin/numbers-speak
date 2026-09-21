@@ -72,6 +72,10 @@ export function VizPage({ id, params }: { id: string; params: VizParams }) {
             fallback={
               <p className="notice notice-warn">
                 {t(ui.chartError)}{' '}
+                {/* CHANGED (S3-bdd2): a failed chunk after a deploy is fixed by a reload, so offer it here. */}
+                <button type="button" className="btn btn-ghost" onClick={() => window.location.reload()}>
+                  {t(ui.reloadPage)}
+                </button>{' '}
                 <a href={ISSUES_URL} target="_blank" rel="noopener noreferrer">
                   {t(ui.reportIssue)}
                 </a>

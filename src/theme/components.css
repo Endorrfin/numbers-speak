@@ -1122,6 +1122,55 @@
   background: var(--accent-soft);
 }
 
+/* CHANGED (S3-bdd2): one-click region chips + the KPI that toggles its own filter. */
+.field-chips {
+  display: grid;
+  gap: 0.35rem;
+  max-width: none;
+}
+.chip-row {
+  gap: 0.4rem;
+}
+.legend-item-shrinking {
+  font-weight: 600;
+}
+.kpi-action {
+  padding: 0;
+}
+.kpi-action.is-on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.kpi-button {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.kpi-button:hover .kpi-cta {
+  color: var(--tx);
+}
+.kpi-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.kpi-cta {
+  margin-top: 0.15rem;
+  color: var(--link);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
 /* ── About ─────────────────────────────────────────────────────────────── */
 .principles {
   list-style: none;

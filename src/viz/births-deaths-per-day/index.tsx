@@ -13,10 +13,10 @@ import { formatNumber } from '../../lib/format';
 import { hrefViz } from '../../lib/hashRouter';
 import { paginate } from '../../lib/paginate';
 import { REGIONS, REGION_LABELS } from '../../lib/regions';
-import type { Region } from '../../lib/regions';
 import { dataUrl, useDataset } from '../../lib/useDataset';
-import { DATA_FILE, countSince, parsePerDayDataset, rankPerDay, summarizeWorld } from './data';
-import type { PerDayDataset, RankedPerDayRow, WorldSummary } from './data';
+// CHANGED (S3-bdd2): applyView (region + "only shrinking" + sort) replaces the inline filter.
+import { DATA_FILE, SORTS, applyView, countSince, parsePerDayDataset, rankPerDay, summarizeWorld } from './data';
+import type { PerDayDataset, RankedPerDayRow, Sort, WorldSummary } from './data';
 import { PAGE_SIZE, pageOf, parsePerDayState, toPerDayParams } from './state';
 import type { PerDayState } from './state';
 
@@ -65,8 +65,8 @@ const txt = {
   keyTint: { en: 'Tinted row — more deaths than births', uk: 'Тонований рядок — смертей більше, ніж народжень' },
   keyHome: { en: 'Outlined — {name}', uk: 'В рамці — {name}' },
   chartLabel: {
-    en: 'Butterfly bar chart: births (left) and deaths (right) per day, {region}, {year}, ranks {from} to {to} of {total} by births. Most births on this page: {top}. The table view lists every value.',
-    uk: 'Діаграма-метелик: народження (ліворуч) і смерті (праворуч) за добу, {region}, {year}, місця {from}–{to} з {total} за народженнями. Найбільше народжень на сторінці: {top}. Таблиця містить усі значення.',
+    en: 'Butterfly bar chart: births (left) and deaths (right) per day, {region}, {year}, rows {from} to {to} of {total}, sorted by {order}. First on this page: {top}. The table view lists every value.',
+    uk: 'Діаграма-метелик: народження (ліворуч) і смерті (праворуч) за добу, {region}, {year}, рядки {from}–{to} з {total}, сортування: {order}. Перша на сторінці: {top}. Таблиця містить усі значення.',
   },
   regionTotal: {
     en: '{region}: {b} born · {d} die per day',
@@ -94,11 +94,32 @@ const txt = {
     uk: 'Для України зареєстровані дані значно нижчі — 168,8 тис. народжень і 485,3 тис. смертей у 2025 році (≈ 462 і 1 330 за добу) на території, де працює реєстрація.',
   },
   noteLink: { en: 'Births and deaths in Ukraine, 1990–2025 →', uk: 'Народжуваність і смертність в Україні, 1990–2025 →' },
+  regions: { en: 'Regions', uk: 'Регіони' },
+  sort: { en: 'Sort', uk: 'Сортування' },
+  sortBirths: { en: 'Births ↓', uk: 'Народження ↓' },
+  sortRatio: { en: 'Deaths per birth ↓', uk: 'Смертей на 1 народження ↓' },
+  sortNet: { en: 'Natural change: biggest loss first', uk: 'Природний приріст: найбільші втрати' },
+  onlyShrinking: { en: 'Only where deaths > births', uk: 'Лише де смертей більше' },
+  onlyShrinkingOn: { en: 'Deaths > births ({n})', uk: 'Смертей більше ({n})' },
+  filterNote: {
+    en: '{n} countries and territories where more people die than are born, {order}.',
+    uk: '{n} країн і територій, де помирає більше людей, ніж народжується, {order}.',
+  },
+  orderRatio: { en: 'most deaths per birth first', uk: 'спершу найбільше смертей на одне народження' },
+  orderNet: { en: 'biggest daily loss first', uk: 'спершу найбільші добові втрати' },
+  orderBirths: { en: 'most births first', uk: 'спершу найбільше народжень' },
   rankNote: {
     en: 'Rank is the global rank by births per day, also when a region is selected. Ten small territories have 0 births per day after rounding.',
     uk: 'Місце — глобальне, за кількістю народжень на добу, навіть коли вибрано регіон. Десять малих територій після округлення мають 0 народжень на добу.',
   },
 } as const satisfies Record<string, Localized>;
+
+/** Sort keys: the label in the control and the phrase used in the chart's accessible name. */
+const SORT_TEXT: Readonly<Record<Sort, { option: Localized; order: Localized }>> = {
+  births: { option: txt.sortBirths, order: txt.orderBirths },
+  ratio: { option: txt.sortRatio, order: txt.orderRatio },
+  net: { option: txt.sortNet, order: txt.orderNet },
+};
 
 // ── Formatters (cached per language) ─────────────────────────────────────────────────────────────
 const cache = new Map<string, Intl.NumberFormat>();
@@ -161,18 +182,28 @@ function PerDayView({ dataset, settings, update }: ViewProps) {
   const home = ranked.find((r) => r.code === HOME);
   const homeName = countryName(HOME, lang);
   const filtered = useMemo(
-    () => (settings.region === 'all' ? ranked : ranked.filter((r) => r.region === settings.region)),
-    [ranked, settings.region],
+    () =>
+      applyView(ranked, {
+        region: settings.region,
+        onlyShrinking: settings.only === 'shrinking',
+        sort: settings.sort,
+      }),
+    [ranked, settings.region, settings.only, settings.sort],
   );
   const page = useMemo(() => paginate(filtered, settings.page, PAGE_SIZE), [filtered, settings.page]);
   const pageItems = page.items;
   const total = ranked.length;
+  const shrinkingOn = settings.only === 'shrinking';
+  // CHANGED (S3-bdd2): with the "deaths > births" filter on every row qualifies, so the tint says nothing.
   const rows = useMemo(
-    () => pageItems.map((r) => toButterflyRow(r, lang, total, dataset.year, t)),
-    [pageItems, lang, total, dataset.year, t],
+    () => pageItems.map((r) => toButterflyRow(r, lang, total, dataset.year, t, !shrinkingOn)),
+    [pageItems, lang, total, dataset.year, t, shrinkingOn],
   );
   const tickFormat = useCallback((v: number) => tick(v, lang), [lang]);
   const homePage = pageOf(filtered, HOME);
+  // Turning the filter on also switches to the order that makes it readable; turning it off restores births.
+  const toggleShrinking = (): void =>
+    update(shrinkingOn ? { only: 'all', sort: 'births', page: 1 } : { only: 'shrinking', sort: 'ratio', page: 1 });
 
   const regionName = settings.region === 'all' ? t(ui.allRegions) : t(REGION_LABELS[settings.region]);
   const sum = (k: 'births' | 'deaths'): number => filtered.reduce((s, r) => s + r[k], 0);
@@ -184,6 +215,7 @@ function PerDayView({ dataset, settings, update }: ViewProps) {
     to: page.to,
     total: page.total,
     top: top ? `${countryName(top.code, lang)}, ${persons(top.births, lang)} / ${persons(top.deaths, lang)}` : '—',
+    order: t(SORT_TEXT[settings.sort].order),
   });
   const pageOptions = Array.from({ length: page.pages }, (_, i) => {
     const from = i * PAGE_SIZE + 1;
@@ -209,9 +241,13 @@ function PerDayView({ dataset, settings, update }: ViewProps) {
             {fill(t(txt.kpiNet), { year: fill(t(txt.million), { v: oneDecimal((world.net * 365) / 1e6, lang) }) })}
           </span>
         </li>
-        <li className="kpi">
-          <span className="kpi-value">{world.shrinking}</span>
-          <span className="kpi-label">{fill(t(txt.kpiShrinking), { total: world.countries })}</span>
+        <li className={`kpi kpi-action${shrinkingOn ? ' is-on' : ''}`}>
+          {/* CHANGED (S3-bdd2): the KPI is the shortcut to the filter it describes. */}
+          <button type="button" className="kpi-button" aria-pressed={shrinkingOn} onClick={toggleShrinking}>
+            <span className="kpi-value">{world.shrinking}</span>
+            <span className="kpi-label">{fill(t(txt.kpiShrinking), { total: world.countries })}</span>
+            <span className="kpi-cta">{shrinkingOn ? t(ui.clearFilters) : t(txt.onlyShrinking)}</span>
+          </button>
         </li>
         {home && (
           <li className="kpi kpi-home">
@@ -223,18 +259,60 @@ function PerDayView({ dataset, settings, update }: ViewProps) {
         )}
       </ul>
 
+      {/* CHANGED (S3-bdd2): regions in one click (buttons, not a select) + the "deaths > births" filter. */}
+      <div className="field field-chips">
+        <span className="field-label" id={`${base}-regions`}>
+          {t(txt.regions)}
+        </span>
+        <ul className="legend chip-row" aria-labelledby={`${base}-regions`}>
+          <li>
+            <button
+              type="button"
+              className="legend-item"
+              aria-pressed={settings.region === 'all'}
+              onClick={() => update({ region: 'all', page: 1 })}
+            >
+              {t(ui.allRegions)}
+            </button>
+          </li>
+          {REGIONS.map((r) => (
+            <li key={r}>
+              <button
+                type="button"
+                className="legend-item"
+                aria-pressed={settings.region === r}
+                onClick={() => update({ region: settings.region === r ? 'all' : r, page: 1 })}
+              >
+                <span className="swatch" style={{ background: REGION_COLOR[r] }} aria-hidden="true" />
+                {t(REGION_LABELS[r])}
+              </button>
+            </li>
+          ))}
+          <li>
+            <button
+              type="button"
+              className="legend-item legend-item-shrinking"
+              aria-pressed={shrinkingOn}
+              onClick={toggleShrinking}
+            >
+              <span className="swatch swatch-tint" aria-hidden="true" />
+              {fill(t(txt.onlyShrinkingOn), { n: world.shrinking })}
+            </button>
+          </li>
+        </ul>
+      </div>
+
       <div className="controls" role="group" aria-label={t(ui.chartSettings)}>
         <div className="field">
-          <label htmlFor={`${base}-region`}>{t(ui.region)}</label>
+          <label htmlFor={`${base}-sort`}>{t(txt.sort)}</label>
           <select
-            id={`${base}-region`}
-            value={settings.region}
-            onChange={(e) => update({ region: e.target.value as Region | 'all', page: 1 })}
+            id={`${base}-sort`}
+            value={settings.sort}
+            onChange={(e) => update({ sort: e.target.value as Sort, page: 1 })}
           >
-            <option value="all">{t(ui.allRegions)}</option>
-            {REGIONS.map((r) => (
-              <option key={r} value={r}>
-                {t(REGION_LABELS[r])}
+            {SORTS.map((k) => (
+              <option key={k} value={k}>
+                {t(SORT_TEXT[k].option)}
               </option>
             ))}
           </select>
@@ -319,9 +397,11 @@ function PerDayView({ dataset, settings, update }: ViewProps) {
           ? fill(t(ui.showingRange), { from: page.from, to: page.to, total: page.total })
           : fill(t(ui.showingAll), { total: page.total })}
         {' · '}
-        {settings.region === 'all'
-          ? fill(t(txt.worldTotal), { b: persons(world.births, lang), d: persons(world.deaths, lang) })
-          : fill(t(txt.regionTotal), { region: regionName, b: persons(sum('births'), lang), d: persons(sum('deaths'), lang) })}
+        {shrinkingOn
+          ? fill(t(txt.filterNote), { n: page.total, order: t(SORT_TEXT[settings.sort].order) })
+          : settings.region === 'all'
+            ? fill(t(txt.worldTotal), { b: persons(world.births, lang), d: persons(world.deaths, lang) })
+            : fill(t(txt.regionTotal), { region: regionName, b: persons(sum('births'), lang), d: persons(sum('deaths'), lang) })}
       </p>
 
       {settings.view === 'chart' ? (
@@ -335,10 +415,12 @@ function PerDayView({ dataset, settings, update }: ViewProps) {
               <span className="swatch" style={{ background: DEMO_COLOR.deaths }} aria-hidden="true" />
               {t(txt.keyDeaths)}
             </li>
-            <li>
-              <span className="swatch swatch-tint" aria-hidden="true" />
-              {t(txt.keyTint)}
-            </li>
+            {!shrinkingOn && (
+              <li>
+                <span className="swatch swatch-tint" aria-hidden="true" />
+                {t(txt.keyTint)}
+              </li>
+            )}
             <li>
               <span className="swatch swatch-home" aria-hidden="true" />
               {fill(t(txt.keyHome), { name: homeName })}
@@ -376,7 +458,14 @@ function PerDayView({ dataset, settings, update }: ViewProps) {
 
 type T = (v: Localized) => string;
 
-function toButterflyRow(r: RankedPerDayRow, lang: Lang, total: number, year: number, t: T): ButterflyRow {
+function toButterflyRow(
+  r: RankedPerDayRow,
+  lang: Lang,
+  total: number,
+  year: number,
+  t: T,
+  tintShrinking: boolean,
+): ButterflyRow {
   const name = countryName(r.code, lang);
   return {
     key: r.code,
@@ -386,7 +475,7 @@ function toButterflyRow(r: RankedPerDayRow, lang: Lang, total: number, year: num
     leftLabel: persons(r.births, lang),
     rightLabel: persons(r.deaths, lang),
     imageUrl: flagUrl(r.code),
-    tint: r.deaths > r.births,
+    tint: tintShrinking && r.deaths > r.births,
     highlight: r.code === HOME,
     tooltip: {
       title: name,

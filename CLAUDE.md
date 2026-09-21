@@ -212,3 +212,23 @@ S4a/b/c full migration → S5 customize & share → S6 growth pipeline. Details:
   Branch `viz/2026-09-time-of-life`.
   Open: Ukraine has no survey in the database (said on the page); surveys span 1998–2024; the OECD average is
   our unweighted mean; childhood and 65+ not covered — a “your remaining weeks” calculator stays for S5.
+- **S3‑bdd2** (2026‑09‑21) — `births-deaths-per-day` follow‑up (owner requests) + a site‑wide fix.
+  (1) **Regions in one click**: the region `<select>` became a chip row (`legend-item`, `aria-pressed`, region
+  swatches) with an "All regions" chip. (2) **New filter** `?only=shrinking` — the 47 countries where deaths
+  outnumber births; the KPI tile "47 of 235" is the button that toggles it (and clears it), and the row tint
+  and its legend entry switch off while the filter is on (every row would carry it). (3) **Sort** `?sort=births|
+  ratio|net` — births ↓ (default) · deaths per birth ↓ · natural change ascending ("biggest loss first");
+  turning the filter on switches to `ratio`, turning it off restores `births`. Filter + sort live in `data.ts`
+  as the pure `applyView(rows, {region, onlyShrinking, sort})`. (4) **Own chart kind** `butterfly` (label
+  "Butterfly bars / Дзеркальні стовпці" + card glyph), so the gallery card and the Chart facet no longer look
+  like `gdp-by-country`; `meta.chart` updated.
+  Site‑wide: **stale‑deploy recovery** — a tab opened before a deploy asked for chunk files the new build no
+  longer has ("Failed to fetch dynamically imported module" in the console, "This chart failed to load" on the
+  page). `src/lib/chunkReload.ts` listens for Vite's `vite:preloadError` and reloads once (guarded by
+  `sessionStorage`, 30 s window, no reload when storage is blocked); the error boundary also offers a
+  "Reload the page" button. The second console error the owner saw (`reportAllChanges` / `startTime`) comes
+  from an injected script (React DevTools / a web‑vitals extension), not from this site.
+  Tests: `test-chunk-reload.ts` (4), `test-births-deaths-per-day.ts` 8 → 12 (applyView: regions, filter, three
+  orders, purity); smoke covers the chips, the filter and the sort keys in EN + UK. `verify` green.
+  Branch `viz/2026-09-births-deaths-per-day-filters`.
+  Open: the sort control is a `<select>` — if more angles appear it should become sub‑tabs like #31/#26.
