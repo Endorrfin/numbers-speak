@@ -9,9 +9,10 @@ import meta2 from '../viz/births-deaths-ua/meta';
 import meta3 from '../viz/donations/meta';
 import meta4 from '../viz/gdp-by-country/meta';
 import meta5 from '../viz/global-brands-race/meta';
-import meta6 from '../viz/time-of-life/meta';
-import meta7 from '../viz/volunteers-by-region/meta';
-import meta8 from '../viz/volunteers-growth/meta';
+import meta6 from '../viz/land-area/meta';
+import meta7 from '../viz/time-of-life/meta';
+import meta8 from '../viz/volunteers-by-region/meta';
+import meta9 from '../viz/volunteers-growth/meta';
 
 export type VizLoader = () => Promise<{ default: ComponentType<VizBodyProps> }>;
 
@@ -25,6 +26,7 @@ export const VIZ_METAS: readonly VizMeta[] = [
   meta6,
   meta7,
   meta8,
+  meta9,
 ];
 
 export const VIZ_LOADERS: Readonly<Record<string, VizLoader>> = {
@@ -34,6 +36,7 @@ export const VIZ_LOADERS: Readonly<Record<string, VizLoader>> = {
   'donations': () => import('../viz/donations/index'),
   'gdp-by-country': () => import('../viz/gdp-by-country/index'),
   'global-brands-race': () => import('../viz/global-brands-race/index'),
+  'land-area': () => import('../viz/land-area/index'),
   'time-of-life': () => import('../viz/time-of-life/index'),
   'volunteers-by-region': () => import('../viz/volunteers-by-region/index'),
   'volunteers-growth': () => import('../viz/volunteers-growth/index'),

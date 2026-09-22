@@ -83,3 +83,29 @@ export function formatMultiple(ratio: number, lang: Lang): string {
       : nf(lang, 'mult', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
   return `${f.format(ratio)}×`;
 }
+
+// CHANGED (land-area, 2026-09-22): area formatters. Intl's sanctioned unit list has no area unit
+// (no "square-kilometer"), so these format the number and append the symbol as plain text — the same
+// approach the legacy page used, just without its emoji globe.
+const KM2 = ' km²'; // non-breaking space, so the unit never wraps onto its own line
+
+/** 17_098_242 → '17.1M km²' / '17,1 млн км²' (always 3 significant digits, like formatUsdCompact). */
+export function formatAreaCompact(value: number, lang: Lang): string {
+  return (
+    nf(lang, 'area-compact', {
+      notation: 'compact',
+      minimumSignificantDigits: 3,
+      maximumSignificantDigits: 3,
+    }).format(value) + KM2
+  );
+}
+
+/** Axis ticks: fewer digits, same unit. */
+export function formatAreaTick(value: number, lang: Lang): string {
+  return nf(lang, 'area-tick', { notation: 'compact', maximumFractionDigits: 1 }).format(value) + KM2;
+}
+
+/** Tables: exact whole km² — 17_098_242 → '17,098,242 km²'. */
+export function formatAreaWhole(value: number, lang: Lang): string {
+  return nf(lang, 'area-whole', { maximumFractionDigits: 0 }).format(value) + KM2;
+}
