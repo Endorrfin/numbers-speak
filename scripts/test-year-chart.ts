@@ -124,4 +124,17 @@ await test('hover shows the nearest year in a text-only tooltip; cleanup hides i
   assert.equal(tip.hidden, true, 'listeners detached');
 });
 
+await test('xFormat labels the x-axis from the index (CHANGED (S3-cd)); default stays the raw value', () => {
+  const svg = freshSvg();
+  renderYearChart(svg, spec({ years: [1, 2, 3], xTicks: [1, 2, 3] }), wide);
+  const labels = [...svg.querySelectorAll('.yc-axis-x .tick text')].map((t) => t.textContent);
+  assert.deepEqual(labels, ['1', '2', '3']);
+
+  const svg2 = freshSvg();
+  const monthName = (i: number) => ['Jan', 'Feb', 'Mar'][i - 1] ?? String(i);
+  renderYearChart(svg2, spec({ years: [1, 2, 3], xTicks: [1, 2, 3], xFormat: monthName }), wide);
+  const labels2 = [...svg2.querySelectorAll('.yc-axis-x .tick text')].map((t) => t.textContent);
+  assert.deepEqual(labels2, ['Jan', 'Feb', 'Mar']);
+});
+
 console.log(`✓ year-chart: ${passed} tests passed.`);

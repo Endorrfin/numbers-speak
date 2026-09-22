@@ -293,3 +293,37 @@ S4a/b/c full migration → S5 customize & share → S6 growth pipeline. Details:
   No change: the chart cores move to a shared chunk by themselves once a second page imports them.
   `verify` green. Branch `viz/2026-09-air-attacks-on-ukraine` (same PR) or `s3aa2-compact-layout`.
   Backlog (owner): calendar heatmap of days (maybe later), map by oblast.
+- **S3‑cd** (2026‑09‑22) — three volunteering/donations entries published (CATALOG #10, #12, #13 —
+  the three legacy `Contribution/volunteering/*` pages, out of wave). The two line-chart entries share a new
+  pattern: `TimeSeries` for a continuous monthly line + `YearChart` for a year‑over‑year seasonal
+  overlay, switched by `?show=timeline|seasonal` (default timeline) and `?view=chart|table`.
+  `renderYearChart` got one small, backward‑compatible addition — `xFormat?: (v: number) => string` on
+  `YearChartSpec`, for month‑indexed (1–12) axis labels — instead of a new chart core (own earlier
+  read of the code was wrong: its docstring already anticipated “donations, volunteers” as a reuse
+  case). It can't draw a null gap — a missing month renders as 0 — so the seasonal view is restricted to
+  complete calendar years via a `fullYears()` helper in each entry's `data.ts`. New palette aliases
+  `--c-series-primary`/`-1..4` (5 tokens, reusing the validated `--c-region-*` hues) as `SERIES_COLOR` in
+  `palette.ts` — no new CVD validation needed.
+  - `volunteers-by-region` (#10): registered volunteers by oblast, Nov 2024, `RankedBar`. Owner corrections
+    from planning: the id `278` is Zhytomyr, not a duplicate Zaporizka row (owner fixed the source CSV before
+    this session; `prep.ts` maps it accordingly); Kyiv city + oblast stay combined (the source page lists them
+    separately but this export doesn't — noted on the page, not guessed at); AR of Crimea = 0 is explained
+    on the page (registry run by Ukraine's State Tax Service, unreachable under occupation) rather than hidden
+    or left as a bare, unexplained number.
+  - `volunteers-growth` (#13): registered volunteers, Jan 2022 – Nov 2025 (320 → 11,792, ×37). Owner
+    supplied a fresher export reaching Nov 2025 — the CATALOG‑listed data stopped Nov 2024, and per the
+    owner an entry that couldn't reach 2025–2026 wasn't worth building. Seasonal overlay: 2022–2024
+    (complete years); 2025 (partial, through Nov) stays on the timeline only.
+  - `donations` (#12): re‑scoped from the CATALOG's original metric (average people donating/month —
+    stops Nov 2024, no way to extend) to monobank's monthly UAH totals (owner export, Feb 2022 – Nov 2025;
+    UAH 112.7 bn total, peak UAH 4.71 bn in Dec 2023, 2025 pace down to ~UAH 2.95 bn/mo from 2024's ~3.6).
+    Two reference tables below the chart, from owner‑supplied files the CATALOG entry didn't have: three
+    major funds' annual totals (United24 / Come Back Alive / Prytula Foundation — UAH 105.9 bn combined in
+    the first 11 months of 2025 alone, more than their combined 2022–2024 total) and Nova Poshta's
+    humanitarian logistics (247,727 → 1.9 M parcels, 2022 → 2024). The old person‑count series survives
+    as one context KPI only (its last point, Nov 2024: 2,029,928) — not as a plotted series.
+  No preview/screenshots taken this session (owner runs the dev server locally and reviews there); `npm run
+  prep -- <id>` (×3) / `gen:catalog` / `check:data` / `test` / `verify` are owner steps, not run from here.
+  Branch `viz/2026-09-volunteering-contribution` (all three, one PR).
+  Open: a map of volunteer organizations/people was floated by the owner as a possible future angle — not
+  built (recommendation only, no source lined up yet); owner review of the rendered pages is pending.

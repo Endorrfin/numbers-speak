@@ -170,4 +170,14 @@
   --content: 1180px;
   /* CHANGED (S3-aa2): visualization pages use a narrower reading column than the gallery. */
   --content-viz: 1000px;
+
+  /* CHANGED (S3-cd): contribution/volunteering — reuses the five S2-validated region hues (charts/palette.ts,
+     CVD all-pairs) as a generic single "primary" line colour plus a four-way year/series set for seasonal
+     overlays (2022..2025+), so no new CVD validation pass is needed. var() refs are late-bound: each resolves
+     to the active theme's --c-region-* value. */
+  --c-series-primary: var(--c-region-asia);
+  --c-series-1: var(--c-region-europe);
+  --c-series-2: var(--c-region-americas);
+  --c-series-3: var(--c-region-africa);
+  --c-series-4: var(--c-region-oceania);
 }

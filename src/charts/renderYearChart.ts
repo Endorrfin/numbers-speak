@@ -67,6 +67,10 @@ export type YearChartSpec = {
   yLabel?: string;
   xTicks?: readonly number[];
   xTicksNarrow?: readonly number[];
+  /** CHANGED (S3-cd): format an x tick label from its raw index value (default: the index itself, e.g. a
+   *  year). Lets the same renderer index by month (1..12, "Jan".."Dec") for a seasonal year-overlay, not
+   *  only by calendar year. */
+  xFormat?: (value: number) => string;
   bands?: readonly YearBand[];
   gaps?: readonly YearGap[];
   areas?: readonly YearArea[];
@@ -192,7 +196,12 @@ export function renderYearChart(svgEl: SVGSVGElement, spec: YearChartSpec, optio
     .append('g')
     .attr('class', 'yc-axis yc-axis-x')
     .attr('transform', `translate(0,${H - bottom})`)
-    .call(axisBottom(x).tickValues([...xTicks]).tickFormat((d) => String(d)).tickSizeOuter(0));
+    .call(
+      axisBottom(x)
+        .tickValues([...xTicks])
+        .tickFormat((d) => (spec.xFormat ? spec.xFormat(Number(d)) : String(d)))
+        .tickSizeOuter(0),
+    );
 
   const plot = root.append('g').attr('class', 'yc-plot');
   const defs = svg.append('defs');

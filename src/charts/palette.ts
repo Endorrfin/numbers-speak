@@ -50,6 +50,17 @@ export const SECTOR_COLOR = {
 
 // CHANGED (S3-aa): air attacks — interception status (timeline), weapon classes, civilian-harm context
 // (values and validation notes in theme/tokens.css). Colour follows the class or the status, never the rank.
+// CHANGED (S3-cd): contribution/volunteering — donations & volunteers-growth reuse the five S2 region hues
+// (validated all-pairs) as a generic single "primary" line colour plus a four-way year/series set for the
+// seasonal-overlay angle (2022..2025+), rather than a new hue set (values in theme/tokens.css).
+export const SERIES_COLOR = {
+  primary: 'var(--c-series-primary)',
+  s1: 'var(--c-series-1)',
+  s2: 'var(--c-series-2)',
+  s3: 'var(--c-series-3)',
+  s4: 'var(--c-series-4)',
+} as const;
+
 export const AIR_COLOR = {
   down: 'var(--c-air-down)',
   through: 'var(--c-air-through)',
