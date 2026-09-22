@@ -1,0 +1,31 @@
+{
+  "unit": "people",
+  "asOf": "2024-11",
+  "rows": [
+    {"id":"odeska","count":341},
+    {"id":"khersonska","count":130},
+    {"id":"kyivska","count":2529},
+    {"id":"zhytomyrska","count":278},
+    {"id":"sumska","count":301},
+    {"id":"donetska","count":190},
+    {"id":"dnipropetrovska","count":789},
+    {"id":"kharkivska","count":951},
+    {"id":"luhanska","count":73},
+    {"id":"poltavska","count":318},
+    {"id":"zaporizka","count":357},
+    {"id":"chernihivska","count":342},
+    {"id":"rivnenska","count":238},
+    {"id":"chernivetska","count":148},
+    {"id":"ivano-frankivska","count":343},
+    {"id":"khmelnytska","count":372},
+    {"id":"lvivska","count":721},
+    {"id":"ternopilska","count":175},
+    {"id":"zakarpatska","count":197},
+    {"id":"volynska","count":331},
+    {"id":"cherkaska","count":415},
+    {"id":"kirovohradska","count":255},
+    {"id":"mykolaivska","count":321},
+    {"id":"vinnytska","count":339},
+    {"id":"crimea","count":0}
+  ]
+}
