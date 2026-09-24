@@ -2,6 +2,44 @@
 
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
+## 2026‑09‑24
+- **Updated:** [Russian missile and drone attacks on Ukraine, 2022–2026 / Російські ракетні й дронові атаки на Україну, 2022–2026](https://endorrfin.github.io/numbers-speak/#/v/air-attacks-on-ukraine?show=calendar) —
+  a sixth angle, a calendar heatmap: one square per day since 28 Sep 2022, one grid per year, shaded by quantile
+  of the day's launches — all, missiles only or drones only — so a few record nights don't wash out ordinary
+  days; tooltip and table view. /
+  Шостий погляд — календарна теплова карта: квадрат на кожну добу з 28.09.2022, окрема сітка на кожен рік,
+  відтінок за квантилями запущеного за добу (усього, лише ракет чи лише дронів), щоб кілька рекордних ночей не
+  затьмарили звичайні дні; підказка й таблиця.
+
+## 2026‑09‑22
+- **New:** [Land area by country / Площа країн світу](https://endorrfin.github.io/numbers-speak/#/v/land-area) —
+  land area and total area of 234 countries and territories: a ranking, each region's share and a sort by how
+  much of a country is water or ice (Greenland's ice sheet is not counted as land). Borders as internationally
+  recognized: Ukraine's 603,500 km² include Crimea and the territories occupied since 2022 — second in Europe
+  after Russia. Data: Worldometers. /
+  Площа суходолу й загальна площа 234 країн і територій: рейтинг, частка кожного регіону й сортування за часткою
+  води чи льоду (льодовий щит Гренландії не враховано як суходіл). Кордони — міжнародно визнані: 603 500 км²
+  України включають Крим і території, окуповані з 2022 року, — друге місце в Європі після Росії.
+- **New:** [Wartime donations, 2022–2025 / Пожертви воєнного часу, 2022–2025](https://endorrfin.github.io/numbers-speak/#/v/donations) —
+  UAH 112.7 billion through monobank jars, February 2022 – November 2025, month by month and year over year: the
+  peak was UAH 4.71 billion in December 2023; 2025 averages UAH 2.95 billion a month (2024: 3.6). Two reference
+  tables: three major funds (UAH 105.9 billion in the first eleven months of 2025 — more than in 2022–2024
+  combined) and Nova Poshta's humanitarian parcels (247,727 in 2022 → 1.9 million in 2024). Data: Opendatabot. /
+  112,7 млрд грн через «банки» monobank з лютого 2022 до листопада 2025 — помісячно й у порівнянні років: пік —
+  4,71 млрд грн у грудні 2023-го, у 2025-му в середньому 2,95 млрд грн на місяць (у 2024-му — 3,6). Дві довідкові
+  таблиці: три великі фонди (105,9 млрд грн за 11 місяців 2025-го — більше, ніж за 2022–2024 разом) і гуманітарні
+  посилки «Нової пошти» (247 727 у 2022-му → 1,9 млн у 2024-му).
+- **New:** [Growth of registered volunteers, 2022–2025 / Динаміка кількості волонтерів, 2022–2025](https://endorrfin.github.io/numbers-speak/#/v/volunteers-growth) —
+  the official registry month by month: 320 people in January 2022, 11,792 in November 2025 (×37); December 2022
+  alone added 1,681 as wartime tax relief took effect; a seasonal view compares 2022–2024. Data: Opendatabot. /
+  Офіційний реєстр помісячно: 320 осіб у січні 2022-го, 11 792 — у листопаді 2025-го (×37); лише грудень 2022-го
+  додав 1 681 особу, коли запрацювали податкові пільги; сезонний погляд порівнює 2022–2024 роки.
+- **New:** [Registered volunteers by region, 2024 / Волонтери за областями, 2024](https://endorrfin.github.io/numbers-speak/#/v/volunteers-by-region) —
+  the 10,454 registered volunteers of November 2024 by region: Kyiv (city and oblast together, 2,529) and Kharkiv
+  Oblast (951) lead; Crimea shows zero because the registry is unreachable under occupation. Data: Opendatabot. /
+  10 454 зареєстровані волонтери (листопад 2024) за областями: лідирують Київ (місто й область разом, 2 529) і
+  Харківщина (951); у Криму — нуль, бо реєстр недоступний на окупованій території.
+
 ## 2026‑09‑21
 - **New:** [Russian missile and drone attacks on Ukraine, 2022–2026 / Російські ракетні й дронові атаки на Україну, 2022–2026](https://endorrfin.github.io/numbers-speak/#/v/air-attacks-on-ukraine) —
   every national Air Force report since 28 Sep 2022 (1,236 reports, 119,405 drones, 7,639 missiles) in five angles:
