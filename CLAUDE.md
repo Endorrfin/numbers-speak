@@ -20,7 +20,8 @@ to its sources. Quality bar: the Definition of Done in `PROJECT-BRIEF.md` §9, t
   string for filters and chart settings. Hash routing + `vite base: './'` = works under any Pages sub‑path.
 - **Catalog = data.** One folder per visualization (`src/viz/<id>/meta.ts` + `index.tsx`).
   `scripts/gen-catalog.ts` writes `src/catalog/catalog.generated.ts` (eager manifests + lazy page loaders);
-  `check:catalog` fails when it is stale. The shell never imports a page body eagerly.
+  `check:catalog` fails when it is stale or when a `published` entry has no CHANGELOG line that links
+  `#/v/<id>` (S3‑cl). The shell never imports a page body eagerly.
 - **Bilingual at the data layer:** `Localized {en, uk}` everywhere; `check:data` rejects empty strings.
 - **Deviation from the guides' Tier‑1 content model:** no `Section → Module → Topic → Block`; the unit is a
   visualization entry (`VizMeta`). Candidate for a "Tier 3 — Visualization gallery" section in `_standard`
@@ -49,7 +50,8 @@ public/        favicon.svg · .nojekyll · data/<id>/*.json · flags/ (GENERATED
                thumbs/<id>.webp (from S5)
 data-raw/      <id>/ raw files + prep.ts + README.md · _shared/m49.ts (committed, not deployed)
 scripts/       gen-catalog.ts · check-catalog.ts · check-data.ts · prep.ts · sync-flags.ts · run-tests.ts ·
-               test-*.ts (incl. jsdom render tests) · smoke.ts · css-stub-hooks.mjs
+               test-*.ts (incl. jsdom render tests) · smoke.ts · css-stub-hooks.mjs ·
+               lib/ (viz-folders.ts · changelog.ts — the CHANGELOG check, S3‑cl)
 _examples/     legacy D3 pages being ported (gitignored — never committed)
 .github/       workflows/deploy.yml · dependabot.yml
 ```
@@ -322,11 +324,25 @@ S4a/b/c full migration → S5 customize & share → S6 growth pipeline. Details:
     the first 11 months of 2025 alone, more than their combined 2022–2024 total) and Nova Poshta's
     humanitarian logistics (247,727 → 1.9 M parcels, 2022 → 2024). The old person‑count series survives
     as one context KPI only (its last point, Nov 2024: 2,029,928) — not as a plotted series.
-  No preview/screenshots taken this session (owner runs the dev server locally and reviews there); `npm run
+    No preview/screenshots taken this session (owner runs the dev server locally and reviews there); `npm run
   prep -- <id>` (×3) / `gen:catalog` / `check:data` / `test` / `verify` are owner steps, not run from here.
-  Branch `viz/2026-09-volunteering-contribution` (all three, one PR).
-  Open: a map of volunteer organizations/people was floated by the owner as a possible future angle — not
-  built (recommendation only, no source lined up yet); owner review of the rendered pages is pending.
+    Branch `viz/2026-09-volunteering-contribution` (all three, one PR).
+    Open: a map of volunteer organizations/people was floated by the owner as a possible future angle — not
+    built (recommendation only, no source lined up yet); owner review of the rendered pages is pending.
+- **S3‑la** (2026‑09‑22; logged retroactively in S3‑cl — its code markers read `CHANGED (session 2026-09-22)`) —
+  `land-area` **published** (CATALOG #3, P3a; replaces the legacy `Demographics/land area` page): land area and
+  total area of 234 countries and territories as sub‑tabs (`?metric=land|total`, land = default) on `RankedBar`,
+  a `Strip` with each region's share, table view and — for land only — a "By non‑land share" sort
+  (`?sort=nonland`) by how much of a country is water or ice. Data: Worldometers (retrieved 2026‑09‑19) →
+  `data-raw/land-area/prep.ts` → `public/data/land-area/land-area.json`. Decisions (`data-raw/land-area/README.md`):
+  internationally recognized borders — the source's Ukraine row (603,500 / land 579,320 km²) already includes
+  Crimea and the territories occupied since 2022, Russia's excludes them (both `recognized-borders` *, checked
+  against Wikipedia 2026‑09‑22); 5 rows whose land area exceeds total area by more than rounding are kept +
+  marked `definition`, not corrected; Greenland's land area excludes the ice sheet (`ice-sheet`); the Holy See,
+  rounded to 0 km² in the source, gets the cited figure (`AREA_OVERRIDE`, `corrected`); world totals = Σ of the
+  234 rows. Status went `draft` → `published` in the same session (drafts are dev-only, so the production smoke
+  rendered NotFound). Tests: `test-land-area.ts` (29); smoke 6 checks. Branch `viz/2026-09-land-area`.
+  Open: Worldometers not independently verified (secondary route, like #1/#15).
 - **S3‑aa3** (2026‑09‑24) — `air-attacks-on-ukraine` gets a sixth angle, calendar heatmap (CATALOG #11,
   `?show=calendar`, key **F**): one square per day since 28 Sep 2022, shaded by a quantile of the day's
   launches — Monday‑start week columns, one grid per calendar year, "Fewer → More" legend, hover tooltip +
@@ -351,7 +367,36 @@ S4a/b/c full migration → S5 customize & share → S6 growth pipeline. Details:
   Branch (proposed) `viz/2026-09-air-attacks-on-ukraine-calendar-heatmap` (agent sessions never commit or
   push — owner commits). Commit (proposed): `🔢 Numbers Speak S3-aa3: air-attacks-on-ukraine calendar
   heatmap (angle F, ?show=calendar)`.
-  Open: map by oblast is still backlog (unchanged since S3‑aa/S3‑aa2). This session also left two stray
+  Open: map by oblast — investigated this session (owner asked), still backlog, owner decision to leave it.
+  `target_main` in the raw Kaggle CSV covers only 86 of 2,410 kept (national) rows (3.6%, mixing city and
+  oblast names, typos, and free-text multi-oblast values with no way to split `launched` between them); the
+  1,742 regional-command rows S3‑aa already dropped for overlapping national totals are worse (6/1,742,
+  0.3%) and only cleanly identify 5 broad reporting zones (PvK South/East/West/Centre + Kharkiv oblast
+  admin), not the oblast actually hit. HRMMU civilians has no regional field either. Not buildable from data
+  already in the repo without misrepresenting ~4% coverage as the picture — needs a different source (ISW,
+  HRMMU's narrative reports) first.
+  This session also left two stray
   files the device sandbox couldn't remove itself (no delete permission there) — an empty
   `src/viz/air-attacks-on-ukraine/.tmp-marker` and a stale `.git/index.lock` from a `git status` call; both
   are safe to `rm` (the lock file before your next git command, if it's still there).
+- **S3‑cl** (2026‑09‑24) — CHANGELOG sync + guard (owner request). `CHANGELOG.md` gained the lines missing
+  since 2026‑09‑21: 2026‑09‑22 — `land-area`, `donations`, `volunteers-growth`, `volunteers-by-region` (New);
+  2026‑09‑24 — `air-attacks-on-ukraine` calendar heatmap (Updated, deep link `?show=calendar`); every number
+  re-checked against `public/data`. `check:catalog` now also fails when a `published` entry has no CHANGELOG line
+  linking `#/v/<id>` (`scripts/lib/changelog.ts`, pure; a bare id in prose does not count; the staleness and
+  CHANGELOG failures are reported in one run) + `scripts/test-changelog.ts` (4). §14 gained the missing
+  `land-area` entry (S3‑la). The stray `src/viz/air-attacks-on-ukraine/.tmp-marker` (S3‑aa3) was already gone;
+  no `.git/index.lock` either. Verified in a scratch copy outside the live folder (`npm ci` on Linux arm64):
+  typecheck · lint · check:catalog (green; red with both messages when a link is removed and the generated
+  file is stale) · check:data (10 published, 15 files) · test 19 files (incl. S3‑aa3's never-run
+  `air-attacks` + `calendar-heatmap`) · smoke 622 checks · build — all green. Branch (proposed)
+  `s3cl-changelog-sync`.
+  Follow‑up (owner request, same session): `air-attacks-on-ukraine` `meta.updated` 2026‑09‑21 → 2026‑09‑24
+  (the heatmap's date); `land-area` UA description: «щит» had been typed with a Latin "it" — fixed; a scan of every
+  `src` string for Latin letters inside Cyrillic words found no other case. The November 2024 volunteer count gap
+  is **not an error**: Opendatabot's article (5 Dec 2024) gives 10,454 registered "at the end of November 2024" —
+  exactly the regional CSV's sum shown on `volunteers-by-region`; `volunteers-growth` shows 10,466 for 2024‑11
+  from the owner's later export (a different cut). Pages unchanged. Re‑verified in a fresh scratch copy:
+  typecheck · lint · check:catalog · check:data · test (19 files) · smoke · build — green.
+  Open (owner decisions): an optional one‑line note on `volunteers-growth` about that cut difference; extending
+  `check:catalog` so an entry's latest CHANGELOG date must be ≥ its `meta.updated` (≈ 30 min).

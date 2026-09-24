@@ -47,6 +47,7 @@ export default defineViz({
   data: ['attacks-2022-2026.json', 'civilians-hrmmu-2023-2026.json'],
   status: 'published',
   added: '2026-09-21',
-  updated: '2026-09-21',
+  // CHANGED (S3-cl): the calendar heatmap (angle F) landed 2026-09-24 — `updated` now says so.
+  updated: '2026-09-24',
   d3Modules: ['d3-selection', 'd3-scale', 'd3-axis', 'd3-shape', 'd3-transition', 'd3-time'],
 });
