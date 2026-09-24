@@ -4,7 +4,9 @@
 import type { SrRow, SrSpec } from '../../charts/renderStackedRows';
 import type { TsBand, TsPanel, TsSpec } from '../../charts/renderTimeSeries';
 import type { YearTooltip } from '../../charts/renderYearChart';
-import { AIR_COLOR } from '../../charts/palette';
+import { calendarYearCells, quantizeLevels } from '../../charts/renderCalendarHeatmap'; // CHANGED (S3-aa3): new
+import type { ChGrid, ChSpec } from '../../charts/renderCalendarHeatmap';
+import { AIR_COLOR, HEAT_COLOR } from '../../charts/palette';
 import type { Lang, Localized } from '../../catalog/types';
 import { localeOf } from '../../i18n/lang';
 import { fill } from '../../i18n/ui';
@@ -91,6 +93,8 @@ export const s = {
   killed: { en: 'Killed', uk: 'Загиблі' },
   injured: { en: 'Injured', uk: 'Поранені' },
   killedInjured: { en: 'Killed and injured', uk: 'Загиблі й поранені' },
+  fewer: { en: 'Fewer', uk: 'Менше' }, // CHANGED (S3-aa3): calendar scale legend
+  more: { en: 'More', uk: 'Більше' },
 } as const;
 
 export const STEP_UNIT: Readonly<Record<Step, Localized>> = {
@@ -369,3 +373,49 @@ export function perHundred(c: CivilianYear, launched: number): number | null {
 }
 
 export const classLabel = (c: WeaponClass, t: T): string => t(CLASS_LABEL[c]);
+
+// ── F · Calendar heatmap: one square per day, shaded by a quantile of the chosen metric ───────────────
+export function calendarSpec(buckets: readonly Bucket[], rank: Rank, lang: Lang, t: T): ChSpec {
+  const valueOf = (b: Bucket): number =>
+    rank === 'missiles' ? b.missiles.launched : rank === 'drones' ? b.drones.launched : b.missiles.launched + b.drones.launched;
+  const byDate = new Map(buckets.map((b) => [b.start, b]));
+  const levelOf = quantizeLevels(buckets.map(valueOf), HEAT_COLOR.length - 1);
+  const years = Array.from(new Set(buckets.map((b) => Number(b.start.slice(0, 4))))).sort((a, b) => a - b);
+  const grids: ChGrid[] = years.map((year) => {
+    const { cells, cols } = calendarYearCells(
+      year,
+      (date) => {
+        const b = byDate.get(date);
+        return b ? valueOf(b) : 0;
+      },
+      levelOf,
+    );
+    const monthCols = new Map<string, number>();
+    for (const c of cells) {
+      const key = c.date.slice(0, 7);
+      if (!monthCols.has(key)) monthCols.set(key, c.col);
+    }
+    return {
+      year,
+      label: String(year),
+      cols,
+      cells,
+      months: Array.from(monthCols.entries()).map(([key, col]) => ({ col, label: monthOnly(toMs(`${key}-01`), lang) })),
+    };
+  });
+  return {
+    grids,
+    levelColors: [...HEAT_COLOR],
+    scaleLabel: { less: t(s.fewer), more: t(s.more) },
+    tooltip: (cell) => {
+      const b = byDate.get(cell.date);
+      return {
+        title: dateLabel(cell.date, lang),
+        lines: [
+          { label: t(s.missiles), value: int(b?.missiles.launched ?? 0, lang) },
+          { label: t(s.drones), value: int(b?.drones.launched ?? 0, lang) },
+        ],
+      };
+    },
+  };
+}

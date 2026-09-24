@@ -3,6 +3,7 @@
 // → specs.ts (chart specs, formatters) → text.ts (page copy) → this page. CHANGED (S3-aa): new.
 import { useCallback, useId, useMemo } from 'react';
 import type { ReactNode } from 'react';
+import { CalendarHeatmap } from '../../charts/CalendarHeatmap'; // CHANGED (S3-aa3): new
 import { StackedRows } from '../../charts/StackedRows';
 import { TimeSeries } from '../../charts/TimeSeries';
 import { AIR_COLOR } from '../../charts/palette';
@@ -35,6 +36,7 @@ import { CLASS_LABEL, CLASS_MEMBERS, CLASS_SHORT, modelLabel } from './labels';
 import {
   RATE_CLASSES,
   bucketLabel,
+  calendarSpec,
   civiliansSpec,
   dateLabel,
   dec1,
@@ -101,7 +103,7 @@ function AirView({ ds, civ, settings, update }: ViewProps) {
   const { show, period, step, mode, rank, who, view } = settings;
   const years = useMemo(() => yearsOf(ds), [ds]);
   const summary = useMemo(() => summarize(ds, period), [ds, period]);
-  const effStep: Step = show === 'interception' ? 'month' : step;
+  const effStep: Step = show === 'interception' ? 'month' : show === 'calendar' ? 'day' : step; // CHANGED (S3-aa3): day buckets for the calendar
   const buckets = useMemo(() => aggregate(ds, effStep, period), [ds, effStep, period]);
   const scope =
     period === 'all'
@@ -162,7 +164,7 @@ function AirView({ ds, civ, settings, update }: ViewProps) {
             onChange={(v) => update({ mode: v as Mode })}
           />
         )}
-        {show === 'largest' && (
+        {(show === 'largest' || show === 'calendar') && ( // CHANGED (S3-aa3): calendar also keys off rank
           <Segmented
             id={`${base}-rank`}
             label={t(txt.rank)}
@@ -201,6 +203,7 @@ function AirView({ ds, civ, settings, update }: ViewProps) {
       {show === 'interception' && <InterceptionAngle {...angle} />}
       {show === 'largest' && <LargestAngle {...angle} />}
       {show === 'civilians' && <CiviliansAngle ds={ds} civ={civ} who={who} view={view} />}
+      {show === 'calendar' && <CalendarAngle {...angle} />}
 
       <div className="notice coverage-note">
         <p>
@@ -699,3 +702,49 @@ function CiviliansTable({ rows }: { rows: readonly CivRow[] }) {
   );
 }
 
+// ── F · Calendar heatmap ────────────────────────────────────────────────────────────────────────────
+function CalendarAngle({ buckets, settings, scope, scopeLc }: AngleProps) {
+  const { t, lang } = useLang();
+  const { rank, view } = settings;
+  const spec = useMemo(() => calendarSpec(buckets, rank, lang, t), [buckets, rank, lang, t]);
+  const rankWord = t(txt.rankLabel[rank]).toLowerCase();
+  const values = { scope, rank: rankWord };
+  if (view === 'table') return <CalendarTable buckets={buckets} caption={fill(t(txt.capCalendar), { rank: rankWord, scope: scopeLc })} />;
+  return (
+    <>
+      <p className="show-intro">{fill(t(SHOW_TEXT.calendar.intro), values)}</p>
+      <CalendarHeatmap spec={spec} label={fill(t(txt.labelCalendar), { rank: rankWord, scope: scopeLc })} />
+      <Explain show="calendar" values={values} />
+    </>
+  );
+}
+
+function CalendarTable({ buckets, caption }: { buckets: readonly Bucket[]; caption: string }) {
+  const { t, lang } = useLang();
+  const rows = buckets.filter((b) => b.missiles.launched + b.drones.launched > 0);
+  return (
+    <div className="table-wrap">
+      <table className="data-table">
+        <caption>{caption}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{t(txt.tDate)}</th>
+            <th scope="col" className="num">{t(txt.tMissiles)}</th>
+            <th scope="col" className="num">{t(txt.tDrones)}</th>
+            <th scope="col" className="num">{t(txt.tTotal)}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((b) => (
+            <tr key={b.start}>
+              <th scope="row">{dateLabel(b.start, lang)}</th>
+              <td className="num">{int(b.missiles.launched, lang)}</td>
+              <td className="num">{int(b.drones.launched, lang)}</td>
+              <td className="num">{int(b.missiles.launched + b.drones.launched, lang)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}

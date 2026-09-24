@@ -73,3 +73,10 @@ export const AIR_COLOR = {
   harmShort: 'var(--c-harm-short)',
   harmOther: 'var(--c-harm-other)',
 } as const;
+
+// CHANGED (S3-aa3): calendar heatmap — one-hue sequential ramp for daily intensity, validated with the
+// dataviz skill's ordinal check (monotone L, adjacent ΔL ≥ 0.06, light-end contrast ≥ 2:1, single hue —
+// not the categorical six, which does not apply to a magnitude ramp; values and results in tokens.css).
+// Index 0 = no data / zero (the existing --s2 token); the top step reuses --c-air-through (same hue:
+// "not intercepted"), so the ramp reads as "this hue = attack intensity" across the whole page.
+export const HEAT_COLOR = ['var(--c-heat-0)', 'var(--c-heat-1)', 'var(--c-heat-2)', 'var(--c-heat-3)', 'var(--c-heat-4)'] as const;

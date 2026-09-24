@@ -29,6 +29,7 @@ import {
 import { hasModelLabel, modelLabel } from '../src/viz/air-attacks-on-ukraine/labels';
 import { SHOWS, parseAirState, toAirParams } from '../src/viz/air-attacks-on-ukraine/state';
 import {
+  calendarSpec, // CHANGED (S3-aa3): new
   civiliansSpec,
   compact,
   dateLabel,
@@ -263,6 +264,30 @@ test('spec B–E: shares sum to 1, rates need ≥ RATE_MIN, largest rows, civili
   assert.deepEqual(cs.partial, [false, false, false, true]);
   assert.deepEqual(cs.panels[0]!.notes!.map((n) => n.index), [2, 3]);
   assert.equal(cs.xFormat(cs.xTicks[3]!), '2026*');
+});
+
+test('spec F: calendar heatmap — full-year Monday grids per year, quantile levels, tooltip', () => {
+  const days = aggregate(ds, 'day', 'all');
+  const cs = calendarSpec(days, 'total', 'en', en);
+  assert.deepEqual(cs.grids.map((g) => g.year), yearsOf(ds));
+  const isLeap = (y: number): boolean => (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0;
+  for (const g of cs.grids) assert.equal(g.cells.length, isLeap(g.year) ? 366 : 365, `${g.year} cell count`);
+  assert.equal(cs.levelColors.length, 5);
+
+  const allCells = cs.grids.flatMap((g) => g.cells);
+  const known = allCells.find((c) => c.date === '2025-09-07')!;
+  assert.equal(known.value, 823); // the single largest report in the dataset (see 'largest reports' test above)
+
+  const peak = allCells.reduce((a, b) => (b.value > a.value ? b : a));
+  assert.equal(peak.level, cs.levelColors.length - 1); // the busiest day quantizes to the top level
+  assert.ok(peak.value >= known.value);
+
+  const tt = cs.tooltip(known);
+  assert.equal(tt.title, dateLabel('2025-09-07', 'en'));
+  assert.deepEqual(
+    tt.lines.map((l) => l.value),
+    [int(13, 'en'), int(810, 'en')],
+  );
 });
 
 console.log(`✓ air-attacks — ${passed} test groups passed.`);

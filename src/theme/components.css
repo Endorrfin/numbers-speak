@@ -1502,6 +1502,37 @@
 .sr-value {
   pointer-events: none;
 }
+
+/* ── Calendar heatmap (S3-aa3): renderCalendarHeatmap.ts ──────────────────── */
+.chart-calendar .chart-tip {
+  min-width: 11rem;
+}
+.ch-cell {
+  cursor: default;
+}
+.ch-cell.is-hover {
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+.ch-year-label {
+  fill: var(--tx);
+  font-size: 13px;
+  font-weight: 700;
+}
+.ch-month-label {
+  fill: var(--chart-axis);
+  font-size: 11px;
+}
+.ch-legend-word {
+  fill: var(--tx3);
+  font-size: 11px;
+}
+.ch-year-label,
+.ch-month-label,
+.ch-legend-word {
+  pointer-events: none;
+}
+
 .key-hatch {
   display: inline-block;
   flex: none;

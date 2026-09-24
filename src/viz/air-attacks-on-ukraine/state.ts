@@ -5,8 +5,8 @@ import type { VizParams } from '../../catalog/types';
 import { RANKS, STEPS, WHO } from './data';
 import type { Period, Rank, Step, Who } from './data';
 
-/** The five angles, in display order; the first is the default. */
-export const SHOWS = ['timeline', 'types', 'interception', 'largest', 'civilians'] as const;
+/** The six angles, in display order; the first is the default. */
+export const SHOWS = ['timeline', 'types', 'interception', 'largest', 'civilians', 'calendar'] as const; // CHANGED (S3-aa3): + calendar
 export type Show = (typeof SHOWS)[number];
 export const MODES = ['count', 'share'] as const;
 export type Mode = (typeof MODES)[number];

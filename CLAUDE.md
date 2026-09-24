@@ -327,3 +327,31 @@ S4a/b/c full migration → S5 customize & share → S6 growth pipeline. Details:
   Branch `viz/2026-09-volunteering-contribution` (all three, one PR).
   Open: a map of volunteer organizations/people was floated by the owner as a possible future angle — not
   built (recommendation only, no source lined up yet); owner review of the rendered pages is pending.
+- **S3‑aa3** (2026‑09‑24) — `air-attacks-on-ukraine` gets a sixth angle, calendar heatmap (CATALOG #11,
+  `?show=calendar`, key **F**): one square per day since 28 Sep 2022, shaded by a quantile of the day's
+  launches — Monday‑start week columns, one grid per calendar year, "Fewer → More" legend, hover tooltip +
+  table view. Reuses the existing `rank` state (`total|missiles|drones`, already wired for the "largest"
+  angle) as the colour metric — no new URL parameter. New chart core `renderCalendarHeatmap.ts` +
+  `CalendarHeatmap.tsx` (day buckets from `aggregate(ds,'day',period)`; quantile breakpoints over positive
+  values only, so a few record nights don't wash out ordinary days). `HEAT_COLOR` (5 steps, `--c-heat-0..4`
+  in `tokens.css`): one‑hue sequential ramp, dataviz skill's `--ordinal` check (not the categorical six,
+  which doesn't apply to a magnitude ramp) — both themes `ALL CHECKS PASS` (monotone L, adjacent ΔL ≈
+  0.067–0.071, light‑end contrast 2.16:1 → top step ≈4.98:1; level 4's hex matches the existing
+  `--c-air-through`, so the ramp reads as "this hue = attack intensity" across the whole page). `.ch-*`
+  rules in `components.css`.
+  Tests: `test-calendar-heatmap.ts` (8 groups — Monday‑start grid math, quantile levels, layout never
+  overflows at any width, draw/hover/cleanup/redraw, safety); `test-air-attacks.ts` +1 group (`calendarSpec`
+  against the real dataset — grid years match `yearsOf`, full calendar‑year cell counts incl. leap years,
+  the known 7 Sep 2025 report (823) lands on the right cell, the busiest *day* — 24 Mar 2026 at 980, several
+  reports that day — quantizes to the top level, tooltip formatting).
+  `typecheck` + `lint` green. `test` and `build` could **not** be run this session: this shell is a Linux VM
+  and `node_modules` only has `@esbuild/darwin-arm64` (installed natively on the owner's Mac) — `vite build`
+  and `tsx` (which `npm test` uses) both need `@esbuild/linux-arm64` there. Not a code issue — run `npm run
+  verify` locally before merging.
+  Branch (proposed) `viz/2026-09-air-attacks-on-ukraine-calendar-heatmap` (agent sessions never commit or
+  push — owner commits). Commit (proposed): `🔢 Numbers Speak S3-aa3: air-attacks-on-ukraine calendar
+  heatmap (angle F, ?show=calendar)`.
+  Open: map by oblast is still backlog (unchanged since S3‑aa/S3‑aa2). This session also left two stray
+  files the device sandbox couldn't remove itself (no delete permission there) — an empty
+  `src/viz/air-attacks-on-ukraine/.tmp-marker` and a stale `.git/index.lock` from a `git status` call; both
+  are safe to `rm` (the lock file before your next git command, if it's still there).
