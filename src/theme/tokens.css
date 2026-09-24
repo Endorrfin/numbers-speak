@@ -84,6 +84,14 @@
   --c-air-mixed: #b8bfc8;
   --c-harm-short: #7d8793;
   --c-harm-other: #3b4652;
+
+  /* CHANGED (S3-aa3): calendar heatmap — one-hue sequential ramp, validated with the dataviz skill's
+     ordinal check on #171d25 (not the categorical six): monotone L, adjacent ΔL ≥ 0.06, light-end contrast
+     ≥ 2:1 (level 1 at 2.16:1), single hue (spread 4°). Level 4 = --c-air-through (same hue/value). */
+  --c-heat-1: #863a38;
+  --c-heat-2: #aa423e;
+  --c-heat-3: #ce4c44;
+  --c-heat-4: #f2554a;
 }
 
 :root[data-theme='light'] {
@@ -156,6 +164,13 @@
   --c-air-mixed: #383e45;
   --c-harm-short: #6b7480;
   --c-harm-other: #cfd4da;
+
+  /* CHANGED (S3-aa3): calendar heatmap on #ffffff — ordinal check: monotone L, adjacent ΔL ≥ 0.06,
+     light-end contrast ≥ 2:1 (level 1 at 2.16:1), single hue (spread 5°). Level 4 = --c-air-through. */
+  --c-heat-1: #e89d99;
+  --c-heat-2: #e17e79;
+  --c-heat-3: #d95d57;
+  --c-heat-4: #d0342c;
 }
 
 :root {
@@ -180,4 +195,7 @@
   --c-series-2: var(--c-region-americas);
   --c-series-3: var(--c-region-africa);
   --c-series-4: var(--c-region-oceania);
+  /* CHANGED (S3-aa3): calendar heatmap's "no data / zero" cell — the existing secondary-surface token,
+     not a new colour (it isn't part of the magnitude ramp). */
+  --c-heat-0: var(--s2);
 }

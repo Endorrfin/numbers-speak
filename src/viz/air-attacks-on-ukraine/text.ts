@@ -86,6 +86,22 @@ export const SHOW_TEXT: Readonly<Record<Show, ShowText>> = {
       uk: 'HRMMU рахує лише верифіковані випадки, тож це нижня межа. Для 2023 року розбивку за зброєю річними числами не опубліковано, для 2024-го — лише дрони малої дальності; 2026 (*) — січень–серпень, розбивка — сума щомісячних оновлень. «Жертв на 100 запущених» ставить поруч два джерела — це масштаб, а не виміряна ймовірність.',
     },
   },
+  calendar: { // CHANGED (S3-aa3): new
+    key: 'F',
+    tab: { en: 'Calendar', uk: 'Календар' },
+    intro: {
+      en: 'Every day since the invasion, one square per day, shaded by how many {rank} were launched that day — a quantile scale, so an ordinary day and a record night stay visually apart.',
+      uk: 'Кожна доба з початку вторгнення, один квадрат на добу, за інтенсивністю запусків ({rank}) того дня — квантильна шкала, тож звичайний день і рекордна ніч виразно відрізняються.',
+    },
+    see: {
+      en: '{scope}: the darkest squares mark the heaviest days by {rank} in this view; hover a square or use the table for the exact count.',
+      uk: '{scope}: найтемніші клітинки — найважчі дні за показником «{rank}» у цьому вікні; точні числа — під курсором або в таблиці.',
+    },
+    mind: {
+      en: 'Colour bands are quantiles of the period shown, not fixed counts — the same shade means “one of the busiest days in this view,” not the same absolute number across different years or periods.',
+      uk: 'Кольорові смуги — квантилі показаного періоду, а не фіксовані числа: однаковий відтінок означає «один із найактивніших днів у цьому вікні», а не однакове число в різних періодах.',
+    },
+  },
 };
 
 export const STEP_WORD: Readonly<Record<Step, Localized>> = {
@@ -174,5 +190,10 @@ export const txt = {
   labelCivilians: {
     en: 'Stacked bars: civilians {who} per year, 2023–2026, by weapon where published.',
     uk: 'Складені стовпці: цивільні ({who}) за рік, 2023–2026, за зброєю, де опубліковано.',
+  },
+  capCalendar: { en: 'Weapons launched per day, by {rank} {scope}', uk: 'Зброя, запущена за добу, за показником «{rank}» {scope}' }, // CHANGED (S3-aa3): new
+  labelCalendar: {
+    en: 'Calendar heatmap: one square per day, shaded by {rank} launched, {scope}.',
+    uk: 'Теплова карта: один квадрат на добу, колір — запущено ({rank}), {scope}.',
   },
 } as const;
