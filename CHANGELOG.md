@@ -3,6 +3,11 @@
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
 ## 2026‑09‑25
+- **Fixed:** [Russian missile and drone attacks on Ukraine / Російські ракетні й дронові атаки на Україну](https://endorrfin.github.io/numbers-speak/#/v/air-attacks-on-ukraine?show=largest) —
+  “Largest attacks” now counts locationally lost drones (electronic warfare, reported separately from July 2024 to
+  July 2025) as shot down or suppressed, like the timeline and the interception angle: 9 July 2025 is 97 %, not 41 %. /
+  «Наймасованіші атаки» тепер зараховують локаційно втрачені дрони (РЕБ, окремим числом з липня 2024 до липня
+  2025) до збитих або придушених, як хронологія й погляд «Перехоплення»: 9 липня 2025 — 97 %, а не 41 %.
 - **Updated:** the site now counts page views anonymously with GoatCounter — which pages are opened, no cookies,
   nothing stored in your browser to identify you, no banner; nothing is sent when your browser asks not to be
   tracked (Do Not Track, Global Privacy Control). Details on the About page and in the README. /
@@ -102,7 +107,7 @@ New and updated visualizations, newest first. / Нові й оновлені в�
   the interception rate per month and class, the largest attacks (7 Sep 2025: 810 drones + 13 missiles) and civilian
   casualties from the UN HRMMU. Data: Petro Ivaniuk's Kaggle compilation (CC BY‑NC‑SA 4.0). /
   Усі загальнонаціональні звіти Повітряних сил з 28.09.2022 (1 236 звітів, 119 405 дронів, 7 639 ракет) у п’яти
-  поглядах: запущено проти збитого чи подавленого й неперехопленого (за місяць, тиждень або добу), ракети за класами
+  поглядах: запущено проти збитого чи придушеного й неперехопленого (за місяць, тиждень або добу), ракети за класами
   й моделями, частка перехоплених за місяць і клас, наймасованіші атаки (7.09.2025: 810 дронів + 13 ракет) і цивільні
   жертви за даними HRMMU.
 - **Updated:** all visualization pages are more compact — a narrower column, one-line titles, the “New” badge next

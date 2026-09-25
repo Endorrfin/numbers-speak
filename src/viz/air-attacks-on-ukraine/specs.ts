@@ -60,11 +60,13 @@ const monthOnly = (ms: number, lang: Lang): string => df(lang, 'mo', { month: 's
 /** '2025-09-06 17:00' → '17:00'; a date without time → ''. */
 const timeOf = (stamp: string): string => stamp.slice(11, 16);
 
+// CHANGED (S3-aa fix): UA «подавлено» → «придушено» throughout the page (owner).
 // ── Strings used inside charts ──────────────────────────────────────────────────────────────────────
 export const s = {
-  down: { en: 'Shot down or suppressed', uk: 'Збито або подавлено' },
+  down: { en: 'Shot down or suppressed', uk: 'Збито або придушено' },
   lost: { en: 'Locationally lost (reported separately)', uk: 'Локаційно втрачено (окремим числом)' },
   lostShort: { en: 'Locationally lost', uk: 'Локаційно втрачено' },
+  lostOf: { en: 'of them locationally lost', uk: 'з них локаційно втрачено' }, // CHANGED (S3-aa fix)
   through: { en: 'Not intercepted', uk: 'Не перехоплено' },
   launched: { en: 'Launched', uk: 'Запущено' },
   missiles: { en: 'Missiles', uk: 'Ракети' },
@@ -76,7 +78,7 @@ export const s = {
   dronesPer: { en: 'Drones launched per {step}', uk: 'Дрони, запущено за {step}' },
   classesPer: { en: 'Missiles launched per {step}, by class', uk: 'Ракети, запущено за {step}, за класами' },
   classesShare: { en: 'Share of missiles launched, by class', uk: 'Частка запущених ракет за класами' },
-  rateTitle: { en: 'Shot down or suppressed, % of launched, per month', uk: 'Збито або подавлено, % від запущених, за місяць' },
+  rateTitle: { en: 'Shot down or suppressed, % of launched, per month', uk: 'Збито або придушено, % від запущених, за місяць' },
   peak: { en: 'Peak: {n}', uk: 'Пік: {n}' },
   weekOf: { en: 'Week of {date}', uk: 'Тиждень від {date}' },
   tooFew: { en: 'fewer than {n}', uk: 'менше {n}' },
@@ -296,7 +298,13 @@ export function largestSpec(list: readonly ReportTotals[], rank: Rank, lang: Lan
           lines: [
             ...CLASSES.filter((c) => r.byClass[c] > 0).map((c) => ({ label: t(CLASS_SHORT[c]), value: int(r.byClass[c], lang), color: AIR_COLOR[c] })),
             { label: t(s.total), value: int(r.total, lang) },
-            { label: t(s.down), value: `${int(r.destroyed, lang)} · ${pct(r.total > 0 ? r.destroyed / r.total : 0, lang)}` },
+            // CHANGED (S3-aa fix): shot down or suppressed = destroyed + locationally lost, share over rated items —
+            // the measure of angles A and C (was destroyed only: 9 Jul 2025 showed 41 % instead of 97 %).
+            {
+              label: t(s.down),
+              value: r.stoppedShare === null ? int(r.stopped, lang) : `${int(r.stopped, lang)} · ${pct(r.stoppedShare, lang)}`,
+            },
+            ...(r.lost > 0 ? [{ label: t(s.lostOf), value: int(r.lost, lang) }] : []),
           ],
         },
       };

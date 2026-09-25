@@ -313,18 +313,37 @@ export type ReportTotals = {
   drones: number;
   total: number;
   destroyed: number;
+  /** CHANGED (S3-aa fix): locationally lost (reported separately Jul 2024 – Jul 2025). */
+  lost: number;
+  /** CHANGED (S3-aa fix): shot down or suppressed = destroyed + lost — the one measure of angles A and C. */
+  stopped: number;
+  /**
+   * CHANGED (S3-aa fix): `rate()` of the report — (destroyed + lost) / launched over rated items only, exactly
+   * like angle C; null when no item is rated (e.g. launched numbers withheld from 10 Aug 2026).
+   */
+  stoppedShare: number | null;
 };
 
 export function reportTotals(report: Report): ReportTotals {
   const byClass = Object.fromEntries(CLASSES.map((c) => [c, 0])) as Record<WeaponClass, number>;
-  let destroyed = 0;
+  const totals = emptyTotals(); // CHANGED (S3-aa fix): the same accumulator as the buckets of A and C
   for (const it of report.items) {
     byClass[it.class] += it.launched;
-    destroyed += it.destroyed;
+    addItem(totals, it);
   }
   const drones = byClass.drones;
   const missiles = MISSILE_CLASSES.reduce((s, c) => s + byClass[c], 0);
-  return { report, byClass, missiles, drones, total: missiles + drones, destroyed };
+  return {
+    report,
+    byClass,
+    missiles,
+    drones,
+    total: missiles + drones,
+    destroyed: totals.destroyed,
+    lost: totals.lost,
+    stopped: totals.destroyed + totals.lost,
+    stoppedShare: rate(totals),
+  };
 }
 
 export const RANKS = ['total', 'missiles', 'drones'] as const;

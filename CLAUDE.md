@@ -604,3 +604,10 @@ S4a/b/c full migration → S5 customize & share → S6 growth pipeline. Details:
   Open: only Chromium was driven end to end (Safari's no‑`requestIdleCallback` path is covered in jsdom); ad blockers
   that list goatcounter.com make the numbers a lower bound; the shell writes the lang/theme preferences on first load
   (pre‑existing, not identifiers).
+- **S3‑aa fix** (2026‑09‑25, owner report) — `air-attacks-on-ukraine` angle D (largest attacks) showed “shot down or
+  suppressed” as `destroyed` only, so reports from Jul 2024 – Jul 2025 lost their locationally lost drones (9 Jul 2025:
+  303 of 741 = 41 % instead of 718 = 97 %), unlike A and C. `ReportTotals` now carries `lost`, `stopped` and
+  `stoppedShare = rate()` of the report's own items (rated items only, as in C); tooltip, intro sentence and table use
+  it; the tooltip adds “of them locationally lost”. Only 2 of the all‑time top 15 changed (9 Jul 2025, 23 Dec 2025).
+  Test group added to `test-air-attacks.ts` (the 9 Jul numbers; every largest report equals `rate()` of its items).
+  CHANGELOG “Fixed” line. `verify` green in a scratch copy.

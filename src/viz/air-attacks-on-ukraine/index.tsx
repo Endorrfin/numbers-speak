@@ -570,7 +570,7 @@ function LargestAngle({ ds, settings, scope, scopeLc }: AngleProps) {
     total: top ? int(top.total, lang) : '—',
     drones: top ? int(top.drones, lang) : '—',
     missiles: top ? int(top.missiles, lang) : '—',
-    down: top && top.total > 0 ? pct(top.destroyed / top.total, lang) : '—',
+    down: top?.stoppedShare != null ? pct(top.stoppedShare, lang) : '—', // CHANGED (S3-aa fix): incl. locationally lost
   };
   if (list.length === 0) return <p className="muted">{t(txt.noData)}</p>;
   if (view === 'table') return <LargestTable list={list} caption={fill(t(txt.capLargest), { n: list.length, scope: scopeLc })} />;
@@ -611,7 +611,7 @@ function LargestTable({ list, caption }: { list: readonly ReportTotals[]; captio
               <td className="num">{int(r.missiles, lang)}</td>
               <td className="num">{int(r.drones, lang)}</td>
               <td className="num">{int(r.total, lang)}</td>
-              <td className="num">{r.total > 0 ? pct(r.destroyed / r.total, lang) : '—'}</td>
+              <td className="num">{r.stoppedShare !== null ? pct(r.stoppedShare, lang) : '—'}</td>{/* CHANGED (S3-aa fix) */}
             </tr>
           ))}
         </tbody>

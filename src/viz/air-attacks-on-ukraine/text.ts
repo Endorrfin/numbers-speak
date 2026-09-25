@@ -1,4 +1,5 @@
 // text.ts — the page copy of air-attacks-on-ukraine (bilingual; {placeholders} filled by the page). CHANGED (S3-aa): new.
+// CHANGED (S3-aa fix): UA «подавлено» → «придушено» throughout the page (owner).
 import type { Localized } from '../../catalog/types';
 import type { Step } from './data';
 import type { Show } from './state';
@@ -11,7 +12,7 @@ export const SHOW_TEXT: Readonly<Record<Show, ShowText>> = {
     tab: { en: 'Launched and stopped', uk: 'Запущено й зупинено' },
     intro: {
       en: 'Each bar is one {step}: missiles (top) and drones (bottom) launched at Ukraine — shot down or suppressed, locationally lost, or not intercepted.',
-      uk: 'Кожен стовпець — {step}: ракети (вгорі) і дрони (внизу), запущені по Україні, — збиті чи подавлені, локаційно втрачені або не перехоплені.',
+      uk: 'Кожен стовпець — {step}: ракети (вгорі) і дрони (внизу), запущені по Україні, — збиті чи придушені, локаційно втрачені або не перехоплені.',
     },
     see: {
       en: '{scope}: {drones} drones and {missiles} missiles. Stopped: {dRate} of drones, {mRate} of missiles. The peak {step}: {peakDrones} drones ({peakWhen}).',
@@ -19,7 +20,7 @@ export const SHOW_TEXT: Readonly<Record<Show, ShowText>> = {
     },
     mind: {
       en: '“Not intercepted” is not “hit a target”: it also covers weapons that fell without effect. Locationally lost drones (electronic warfare, hatched) were reported as a separate number only from July 2024 to July 2025; from August 2025 they are part of “shot down or suppressed”.',
-      uk: '«Не перехоплено» — не те саме, що «влучило»: сюди входить і зброя, що впала без наслідків. Локаційно втрачені дрони (РЕБ, штрихування) подавали окремим числом лише з липня 2024 до липня 2025 року; з серпня 2025-го вони входять у «збито або подавлено».',
+      uk: '«Не перехоплено» — не те саме, що «влучило»: сюди входить і зброя, що впала без наслідків. Локаційно втрачені дрони (РЕБ, штрихування) подавали окремим числом лише з липня 2024 до липня 2025 року; з серпня 2025-го вони входять у «збито або придушено».',
     },
   },
   types: {
@@ -43,7 +44,7 @@ export const SHOW_TEXT: Readonly<Record<Show, ShowText>> = {
     tab: { en: 'Interception rate', uk: 'Частка перехоплених' },
     intro: {
       en: 'Share of launched weapons shot down or suppressed, per month and class. A month with fewer than {min} weapons of a class has no point.',
-      uk: 'Частка запущеної зброї, яку збито або подавлено, за місяць і клас. Місяць, коли зброї класу було менше {min}, точки не має.',
+      uk: 'Частка запущеної зброї, яку збито або придушено, за місяць і клас. Місяць, коли зброї класу було менше {min}, точки не має.',
     },
     see: {
       en: '{scope}: drones {dRate}, cruise missiles {cRate}, ballistic {bRate}, anti-ship {aRate}.',
@@ -51,7 +52,7 @@ export const SHOW_TEXT: Readonly<Record<Show, ShowText>> = {
     },
     mind: {
       en: 'One measure on purpose — shot down, suppressed and locationally lost together — because the Air Force changed how it splits them. Counts without a number launched (from 10 August 2026) or without a number destroyed are left out.',
-      uk: 'Один показник свідомо — збито, подавлено й локаційно втрачено разом, — бо Повітряні сили змінювали, як їх розділяють. Звіти без кількості запущених (з 10 серпня 2026) або без кількості знищених не враховано.',
+      uk: 'Один показник свідомо — збито, придушено й локаційно втрачено разом, — бо Повітряні сили змінювали, як їх розділяють. Звіти без кількості запущених (з 10 серпня 2026) або без кількості знищених не враховано.',
     },
   },
   largest: {
@@ -63,7 +64,7 @@ export const SHOW_TEXT: Readonly<Record<Show, ShowText>> = {
     },
     see: {
       en: 'The largest: {date} — {total} ({drones} drones, {missiles} missiles); {down} shot down or suppressed.',
-      uk: 'Наймасованіша: {date} — {total} ({drones} дронів, {missiles} ракет); збито або подавлено {down}.',
+      uk: 'Наймасованіша: {date} — {total} ({drones} дронів, {missiles} ракет); збито або придушено {down}.',
     },
     mind: {
       en: 'Numbers are per report, not per calendar day: a long night can be split over two posts, and a daytime attack gets its own report.',
@@ -131,8 +132,8 @@ export const txt = {
   scopeAllLc: { en: 'since {from}', uk: 'з {from}' },
   kpiDrones: { en: 'Shahed-type and decoy drones launched', uk: 'дронів типу Shahed та імітаторів запущено' },
   kpiMissiles: { en: 'missiles launched', uk: 'ракет запущено' },
-  kpiDronesRate: { en: 'of drones shot down or suppressed', uk: 'дронів збито або подавлено' },
-  kpiMissilesRate: { en: 'of missiles shot down or suppressed', uk: 'ракет збито або подавлено' },
+  kpiDronesRate: { en: 'of drones shot down or suppressed', uk: 'дронів збито або придушено' },
+  kpiMissilesRate: { en: 'of missiles shot down or suppressed', uk: 'ракет збито або придушено' },
   kpiLargest: { en: 'weapons in the largest attack, {date}', uk: 'одиниць зброї в наймасованішій атаці, {date}' },
   status: { en: '{key} · {name} · {scope}', uk: '{key} · {name} · {scope}' },
   byStep: { en: ' · per {step}', uk: ' · за {step}' },
@@ -161,7 +162,7 @@ export const txt = {
   tDate: { en: 'Date', uk: 'Дата' },
   tWindow: { en: 'Time (Kyiv)', uk: 'Час (Київ)' },
   tTotal: { en: 'Total', uk: 'Разом' },
-  tStoppedPct: { en: 'Shot down or suppressed', uk: 'Збито або подавлено' },
+  tStoppedPct: { en: 'Shot down or suppressed', uk: 'Збито або придушено' },
   tYear: { en: 'Year', uk: 'Рік' },
   tAll: { en: 'All years', uk: 'Усі роки' },
   tKilled: { en: 'Killed', uk: 'Загиблі' },
@@ -175,17 +176,17 @@ export const txt = {
   capModels: { en: 'Missiles by model {scope}', uk: 'Ракети за моделями {scope}' },
   capRates: {
     en: 'Share shot down or suppressed, by class and year (weapons counted in brackets)',
-    uk: 'Частка збитих або подавлених за класом і роком (у дужках — скільки зброї враховано)',
+    uk: 'Частка збитих або придушених за класом і роком (у дужках — скільки зброї враховано)',
   },
   capLargest: { en: 'The {n} largest attacks {scope}', uk: '{n} наймасованіших атак {scope}' },
   capCivilians: { en: 'Civilian casualties in Ukraine (HRMMU) and long-range weapons launched', uk: 'Цивільні жертви в Україні (HRMMU) і запущені ракети й дрони' },
   labelTimeline: {
     en: 'Stacked bars in two panels: missiles and drones launched per {step} {scope}, split into shot down or suppressed, locationally lost and not intercepted.',
-    uk: 'Складені стовпці у двох панелях: ракети й дрони, запущені за {step} {scope}, поділені на збиті чи подавлені, локаційно втрачені й неперехоплені.',
+    uk: 'Складені стовпці у двох панелях: ракети й дрони, запущені за {step} {scope}, поділені на збиті чи придушені, локаційно втрачені й неперехоплені.',
   },
   labelTypes: { en: 'Stacked bars: missiles launched per {step} by class {scope}.', uk: 'Складені стовпці: ракети, запущені за {step}, за класами {scope}.' },
   labelModels: { en: 'Bars: missiles launched by model {scope}.', uk: 'Стовпці: запущені ракети за моделями {scope}.' },
-  labelRates: { en: 'Lines: share of launched weapons shot down or suppressed per month, by class, {scope}.', uk: 'Лінії: частка збитих або подавлених за місяць за класами {scope}.' },
+  labelRates: { en: 'Lines: share of launched weapons shot down or suppressed per month, by class, {scope}.', uk: 'Лінії: частка збитих або придушених за місяць за класами {scope}.' },
   labelLargest: { en: 'Bars: the {n} largest attacks {scope}, by {rank}.', uk: 'Стовпці: {n} наймасованіших атак {scope}, за показником «{rank}».' },
   labelCivilians: {
     en: 'Stacked bars: civilians {who} per year, 2023–2026, by weapon where published.',

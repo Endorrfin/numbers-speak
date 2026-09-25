@@ -400,7 +400,7 @@ async function main(): Promise<void> {
       'Locationally lost (reported separately)',
       'How the numbers are counted',
     ]);
-    check('ready:air uk', h(Aa, { params: {}, setParams: noop }), 'uk', 1500, ['Запущено й зупинено', 'Як пораховано числа', 'Збито або подавлено']);
+    check('ready:air uk', h(Aa, { params: {}, setParams: noop }), 'uk', 1500, ['Запущено й зупинено', 'Як пораховано числа', 'Збито або придушено']);
     for (const show of AA_SHOWS) {
       for (const lang of langs) {
         const html = check(`ready:air ${show}`, h(Aa, { params: { show }, setParams: noop }), lang, 1500, ['role="img"']);

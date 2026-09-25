@@ -10,6 +10,7 @@ import {
   MISSILE_CLASSES,
   RATE_MIN,
   STEPS,
+  addItem,
   aggregate,
   bucketStart,
   coversAttackData,
@@ -288,6 +289,23 @@ test('spec F: calendar heatmap — full-year Monday grids per year, quantile lev
     tt.lines.map((l) => l.value),
     [int(13, 'en'), int(810, 'en')],
   );
+});
+
+// CHANGED (S3-aa fix): angle D used destroyed only; locationally lost (Jul 2024 – Jul 2025) belongs to the measure.
+test('angle D: shot down or suppressed includes locationally lost, share over rated items (as in C)', () => {
+  const r = largestReports(ds, 2025, 'total', 15).find((x) => x.report.date === '2025-07-09')!;
+  assert.ok(r, '9 Jul 2025 is among the largest reports of 2025');
+  assert.deepEqual([r.total, r.destroyed, r.lost, r.stopped], [741, 303, 415, 718]);
+  assert.ok(Math.abs(r.stoppedShare! - 718 / 741) < 1e-9);
+  const tip = largestSpec([r], 'total', 'en', en).rows[0]!.tooltip!.lines;
+  assert.ok(tip.some((l) => l.value === '718 · 97%'), JSON.stringify(tip));
+  assert.ok(tip.some((l) => l.value === '415'));
+  // Every largest report agrees with the rate of its own items (the measure of angle C).
+  for (const x of largestReports(ds, 'all', 'total', 50)) {
+    const t = emptyTotals();
+    for (const it of x.report.items) addItem(t, it);
+    assert.equal(x.stoppedShare, rate(t));
+  }
 });
 
 console.log(`✓ air-attacks — ${passed} test groups passed.`);

@@ -30,7 +30,7 @@ export function preview(dataset: AttacksDataset): CardPreview {
       max: Math.max(...stacks.map((s) => s[0]! + s[1]!)),
       tones: ['air-down', 'air-through'],
       legend: [
-        { en: 'shot down or suppressed', uk: 'збито або подавлено' },
+        { en: 'shot down or suppressed', uk: 'збито або придушено' },
         { en: 'not intercepted', uk: 'не перехоплено' },
       ],
       from: buckets[0]!.start.slice(0, 7),
