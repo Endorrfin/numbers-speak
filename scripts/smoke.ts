@@ -370,6 +370,129 @@ async function main(): Promise<void> {
   }
 
   // ── Sanity: the language switch took ───────────────────────────────────────────────────────────
+  // CHANGED (S3-rb): population by country — population and density metrics, table, region filter, EN + UK.
+  if (CATALOG.some((m) => m.id === 'population-by-country')) {
+    const { default: Pop } = await import('../src/viz/population-by-country/index');
+    check('ready:population chart', h(Pop, { params: {}, setParams: noop }), 'en', 1500, [
+      'role="img"',
+      'Showing 1–15 of 237',
+      'World population, 2025: 8.23bn',
+      'Share of world population by region',
+      '56.8%',
+      'Density',
+    ]);
+    check('ready:population uk', h(Pop, { params: {}, setParams: noop }), 'uk', 1500, ['8,23\u00a0млрд', 'Щільність', 'Частка населення світу']);
+    check('ready:population table', h(Pop, { params: { view: 'table' }, setParams: noop }), 'en', 5000, [
+      '<table',
+      '1,463,865,525',
+      'Ukraine',
+      '38,980,376*',
+      'the UN includes Crimea',
+      '237 rows',
+    ]);
+    const dens = check('ready:population density', h(Pop, { params: { metric: 'density' }, setParams: noop }), 'en', 1500, [
+      'Showing 1–15 of 234',
+      'Monaco',
+      'World: 63/km²',
+      'Land area by country',
+      'Densest',
+      'Sparsest',
+    ]);
+    ok(!dens.includes('Share of world population by region'), 'ready:population density has no share strip');
+    check('ready:population density table', h(Pop, { params: { metric: 'density', view: 'table' }, setParams: noop }), 'en', 5000, [
+      'Kosovo',
+      'No land-area figure',
+      'approximate',
+      'People per km²',
+    ]);
+    check('ready:population density uk', h(Pop, { params: { metric: 'density', view: 'table' }, setParams: noop }), 'uk', 5000, ['Осіб на км²', 'Косово']);
+    const europe = check('ready:population europe', h(Pop, { params: { region: 'europe', view: 'table' }, setParams: noop }), 'en', 2000, ['Germany']);
+    ok(!europe.includes(' India</th>'), 'ready:population europe filter excludes Asia (the global KPI still names India)');
+  }
+
+  // CHANGED (S3-rb): GDP (PPP) per capita — three years, "× world average", table, region filter, EN + UK.
+  if (CATALOG.some((m) => m.id === 'gdp-ppp-per-capita')) {
+    const { default: Ppp } = await import('../src/viz/gdp-ppp-per-capita/index');
+    check('ready:ppp chart', h(Ppp, { params: {}, setParams: noop }), 'en', 1500, [
+      'role="img"',
+      'Showing 1–15 of 185',
+      'World average, 2025: $25,704',
+      'Singapore',
+      '130.9×',
+      '80 / 185',
+      'GDP by country',
+    ]);
+    check('ready:ppp uk', h(Ppp, { params: {}, setParams: noop }), 'uk', 1500, ['Світове середнє', 'Сінгапур', 'ПКС']);
+    check('ready:ppp 2023 table', h(Ppp, { params: { year: '2023', view: 'table' }, setParams: noop }), 'en', 5000, [
+      '<table',
+      '197 rows',
+      'Luxembourg',
+      '152,596',
+      'Ukraine',
+      '0.76×',
+    ]);
+    const africa = check('ready:ppp africa', h(Ppp, { params: { region: 'africa', view: 'table' }, setParams: noop }), 'en', 2000, ['Burundi']);
+    ok(!africa.includes(' Singapore</th>'), 'ready:ppp africa filter excludes Asia');
+  }
+
+  // CHANGED (S3-rb): robotization — top 15, joint Belgium & Luxembourg row, table, region filter, EN + UK.
+  if (CATALOG.some((m) => m.id === 'robotization')) {
+    const { default: Rb } = await import('../src/viz/robotization/index');
+    check('ready:robots chart', h(Rb, { params: {}, setParams: noop }), 'en', 1500, [
+      'role="img"',
+      'Top 15 of the 22 economies',
+      '9.2×',
+      '9 / 15',
+      'rank 22 of 22',
+    ]);
+    check('ready:robots uk', h(Rb, { params: {}, setParams: noop }), 'uk', 1500, ['Світове середнє', 'Бельгію й Люксембург']);
+    const table = check('ready:robots table', h(Rb, { params: { view: 'table' }, setParams: noop }), 'en', 3000, [
+      '<table',
+      'South Korea',
+      '1,220',
+      'Belgium &amp; Luxembourg',
+      '232*',
+      'Taiwan',
+    ]);
+    ok(!table.includes(' China</th>'), 'ready:robots table shows the top 15 only (China is 22nd)');
+    check('ready:robots table uk', h(Rb, { params: { view: 'table' }, setParams: noop }), 'uk', 3000, ['Бельгія і Люксембург', 'Південна Корея']);
+    const asia = check('ready:robots asia', h(Rb, { params: { region: 'asia', view: 'table' }, setParams: noop }), 'en', 1500, ['Singapore']);
+    ok(!asia.includes(' Germany</th>'), 'ready:robots asia filter excludes Europe');
+  }
+
+  // CHANGED (S3-rb): crime index — UNODC homicide rate (+ Numbeo when its file ships), table, filter, EN + UK.
+  if (CATALOG.some((m) => m.id === 'crime-index')) {
+    const { default: Cr } = await import('../src/viz/crime-index/index');
+    const { default: crMeta } = await import('../src/viz/crime-index/meta');
+    for (const file of crMeta.data) {
+      primeDataset(dataUrl('crime-index', file), JSON.parse(readFileSync(`public/data/crime-index/${file}`, 'utf8')));
+    }
+    check('ready:crime chart', h(Cr, { params: {}, setParams: noop }), 'en', 1500, [
+      'role="img"',
+      'Showing 1–15 of 166',
+      'World estimate, 2024: 5.1 per 100,000',
+      'War deaths are not intentional homicides',
+    ]);
+    check('ready:crime uk', h(Cr, { params: {}, setParams: noop }), 'uk', 1500, ['Світова оцінка', 'на 100 000']);
+    check('ready:crime table', h(Cr, { params: { view: 'table' }, setParams: noop }), 'en', 5000, [
+      '<table',
+      'Haiti',
+      '7,574',
+      'United Kingdom',
+      'combined here',
+      'Central Iraq only',
+      'latest UNODC figure is for 2021',
+    ]);
+    const americas = check('ready:crime americas', h(Cr, { params: { region: 'americas', view: 'table' }, setParams: noop }), 'en', 2000, ['Haiti']);
+    ok(!americas.includes(' Germany</th>'), 'ready:crime americas filter excludes Europe (Haiti is in the Americas)');
+    if (crMeta.data.length > 1) {
+      check('ready:crime numbeo', h(Cr, { params: { show: 'numbeo', view: 'table' }, setParams: noop }), 'en', 3000, ['Safety Index', 'Numbeo']);
+    } else {
+      const fallback = check('ready:crime numbeo pending', h(Cr, { params: { show: 'numbeo' }, setParams: noop }), 'en', 1500, ['World estimate']);
+      ok(!fallback.includes('Crime Index (Numbeo)'), 'ready:crime hides the Numbeo tab while its file is not shipped');
+    }
+  }
+
   ok(ssr(h(AboutPage), 'en') !== ssr(h(AboutPage), 'uk'), 'EN and UK renders differ (language toggle works)');
 
   console.log('— SSR / render smoke —');

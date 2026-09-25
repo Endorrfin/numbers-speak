@@ -109,3 +109,34 @@ export function formatAreaTick(value: number, lang: Lang): string {
 export function formatAreaWhole(value: number, lang: Lang): string {
   return nf(lang, 'area-whole', { maximumFractionDigits: 0 }).format(value) + KM2;
 }
+
+// CHANGED (S3-rb): counts (population) and density. Compact counts use Intl's own unit words
+// ('1.46bn' / '1,46 млрд'); density is people per km² of land, written with the unit as plain text.
+/** 1_463_865_525 → '1.46bn' / '1,46 млрд' (always 3 significant digits, like formatUsdCompact). */
+export function formatCountCompact(value: number, lang: Lang): string {
+  return nf(lang, 'count-compact', {
+    notation: 'compact',
+    minimumSignificantDigits: 3,
+    maximumSignificantDigits: 3,
+  }).format(value);
+}
+
+/** Axis ticks: fewer digits. */
+export function formatCountTick(value: number, lang: Lang): string {
+  return nf(lang, 'count-tick', { notation: 'compact', maximumFractionDigits: 1 }).format(value);
+}
+
+/** People per km²: 482.4 → '482/km²' / '482/км²', 3.17 → '3.2/km²' (one decimal below 10, never '0/km²'). */
+export function formatDensity(value: number, lang: Lang): string {
+  const f =
+    value < 10
+      ? nf(lang, 'density-small', { maximumFractionDigits: 1 })
+      : nf(lang, 'density', { maximumFractionDigits: 0 });
+  const text = f.format(value);
+  return `${text === '0' ? `<${f.format(0.1)}` : text}${lang === 'uk' ? '/км²' : '/km²'}`;
+}
+
+/** Axis ticks for density. */
+export function formatDensityTick(value: number, lang: Lang): string {
+  return nf(lang, 'density-tick', { notation: 'compact', maximumFractionDigits: 1 }).format(value);
+}
