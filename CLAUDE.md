@@ -122,7 +122,11 @@ current. **Agent sessions never push.**
 
 ## 12. Gotchas / constraints
 - Never `npm install` or run git in the live folder from the agent sandbox (native macOS binaries, `.git`
-  locks). Verify in a scratch copy; build into `dist-sN` if `unlink` is blocked.
+  locks — even a plain `git status` leaves `.git/index.lock` behind — S3‑aa3 and S3‑rb both did). Verify in a scratch copy;
+  build into `dist-sN` if `unlink` is blocked. For a change list, rsync the repo *with* `.git` to a scratch folder
+  and run `git status` there.
+- Device shell: every call runs in its own PID namespace — a `nohup … &` job dies when the call returns. Run
+  `npm ci` in the foreground (≈ 3 s with the npm cache; `timeout 170`).
 - `_examples/` is gitignored — do not import from it at runtime; copy data through `data-raw/` prep scripts.
   `vite.config.ts` limits the dependency scan to `index.html` (legacy HTML there broke `npm run dev`).
 - **Case-insensitive file systems** (the owner's Mac): two modules in one folder must never differ only in
@@ -433,7 +437,7 @@ S4a/b/c full migration → S5 customize & share → S6 growth pipeline. Details:
     China (largest stock) 22nd with 166 — stated from data. No paging (15 rows), region filter + table.
     Tests: `test-robotization.ts` (10); smoke 8 checks. `verify` green (22 test files · 782 smoke checks · build;
     chunk 4.0 kB gzip). Branch (proposed) `viz/2026-09-robotization`.
-  - `crime-index` **soon** (CATALOG #6; 2026‑09‑25): owner decision — both measures as sub‑tabs. UNODC tab done:
+  - `crime-index` **published** (CATALOG #6; 2026‑09‑25): owner decision — both measures as sub‑tabs. UNODC tab done:
     `data_cts_intentional_homicide.xlsx` (12 Jul 2026, sha256 in README) parsed in the in‑app browser (SheetJS) →
     `unodc-homicide-latest.csv` (latest year with a rate, ≥ 2015, + counts, + WLD 5.14 for 2024) → `prep.ts` →
     `homicide-rate.json`, 166 rows (95 for 2024, older marked with year). UK = E&W + Scotland + NI combined as
@@ -443,8 +447,27 @@ S4a/b/c full migration → S5 customize & share → S6 growth pipeline. Details:
     the table to `data-raw/crime-index/numbeo-crime-2026-mid.txt`; the tab appears once `numbeo-crime-2026-mid.json`
     is added to `meta.data` (`AVAILABLE` in index.tsx). `soon`, not `draft`: a draft fails the production smoke.
     Tests: `test-crime.ts` (8); smoke 12 checks. `verify` green (23 test files · 830 smoke checks · build).
-  - `global-peace-index` **not built**: owner answered "GPI — ні"; asked whether that means "no letter to IEP"
-    or "skip the entry" — no reply yet. `docs/data/Global-Peace-Index-2026-Report.pdf` (sha256 879c371e…) is ready;
-    the rankings table (pp. 10–11) parses with pdf.js.
-  Open (S3‑rb): Numbeo copy → publish crime-index + CHANGELOG line; GPI decision; UNODC/IEP/Numbeo terms were read
-  (links in READMEs) — none is an open licence, all used with attribution per their terms.
+    **Close‑out (2026‑09‑25):** the owner's copy landed in `docs/data/` → copied verbatim to
+    `data-raw/crime-index/numbeo-crime-2026-mid.txt` (sha256 7914a9fe…, 148 rows) → prep → 148 countries, every
+    name/value/rank checked against the copy. Fixes: alias "Us Virgin Islands" → VI; equal indexes keep Numbeo's
+    rank (was ISO order, which swapped Jamaica 9th / Guyana 10th at 67.4). File added to `meta.data` → tab on,
+    `published`, CHANGELOG line (UK 123rd by homicide rate vs 60th by perceived crime). Tests 9 (real Numbeo file
+    unconditional); smoke: both tabs, Numbeo chart, table order, UK.
+  - `global-peace-index` **published** (CATALOG #7; 2026‑09‑25). Owner: "build fully, no letter to IEP". IEP
+    terms (visionofhumanity.org/terms): §9.5 republishing needs written permission unless material is freely
+    available for re‑use; §12.5 maps — educational, non‑commercial use with acknowledgement; the ranking table sits
+    on the map spread → built on §12.5, the report's citation line + link on the page; if IEP objects, remove the
+    entry. Data: `extract-gpi.py` (poppler `pdftotext -layout`, stdlib) reads the ranking table (PDF pp. 12–13)
+    AND the nine regional tables (pp. 17–27) and fails unless all 163 countries match on score + rank → CSV
+    (rank, tie, score, rank change, score change) → `prep.ts` (CLDR names + 10 aliases, M49 regions) →
+    `gpi-2026.json`. The report contradicts itself once: Cambodia and Honduras both 2.075, ranking table 96 / 97,
+    regional table + text Honduras 96 → kept as printed, `regionalRank: 96` + a page note. Check against the
+    executive summary: 99 worse / 62 better (derived from score change) — matches. Page: 163 rows, 15 per page,
+    order switch `?order=least`, region filter, table (score · score change · ▲/▼ places), ties "=70".
+    Shared: `formatScore` / `formatScoreChange` in `format.ts`. Tests: `test-global-peace-index.ts` (8, incl. the
+    report's top/bottom five, ties, Ukraine 160 ▲2 −0.119); smoke: both orders, UK, table, region filter.
+  `verify` green in a scratch copy (24 test files · 898 smoke checks · build; GPI chunk 5.1 kB gzip); screenshots
+  (desktop, phone, table, Numbeo tab) checked with Playwright on the built site — no console errors.
+  Open (S3‑rb, owner decisions): (1) `RankedBar` bars start at 0 — on a 1–5 index page 1 (1.16–1.54) looks flat;
+  an optional baseline (bars from the scale minimum, 1) would show the differences; (2) IEP permission letter
+  remains an option if the entry ever needs a firmer basis.

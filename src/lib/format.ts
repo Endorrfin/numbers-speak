@@ -140,3 +140,14 @@ export function formatDensity(value: number, lang: Lang): string {
 export function formatDensityTick(value: number, lang: Lang): string {
   return nf(lang, 'density-tick', { notation: 'compact', maximumFractionDigits: 1 }).format(value);
 }
+
+// CHANGED (S3-rb): index scores printed to three decimals (the Global Peace Index publishes them so).
+/** 1.81 → '1.810' / '1,810' — always three decimals, so equal-looking scores line up in tables. */
+export function formatScore(value: number, lang: Lang): string {
+  return nf(lang, 'score', { minimumFractionDigits: 3, maximumFractionDigits: 3 }).format(value);
+}
+
+/** 0.016 → '+0.016', −0.032 → '-0.032' (the locale's minus), 0 → '0.000': a sign on every non-zero change. */
+export function formatScoreChange(value: number, lang: Lang): string {
+  return nf(lang, 'score-change', { minimumFractionDigits: 3, maximumFractionDigits: 3, signDisplay: 'exceptZero' }).format(value);
+}

@@ -32,9 +32,9 @@ export default defineViz({
     },
   ],
   origin: { kind: 'original' },
-  data: ['homicide-rate.json'],
-  // `soon` until the owner's Numbeo copy ships (then add NUMBEO_FILE to `data` — its tab turns on — and publish).
-  status: 'soon',
+  // CHANGED (S3-rb): the owner's Numbeo copy shipped (2026-09-25) — its file is listed, so its tab is on; published.
+  data: ['homicide-rate.json', 'numbeo-crime-2026-mid.json'],
+  status: 'published',
   added: '2026-09-25',
   updated: '2026-09-25',
   d3Modules: ['d3-selection', 'd3-scale', 'd3-axis', 'd3-transition', 'd3-interpolate', 'd3-array'],
