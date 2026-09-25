@@ -21,6 +21,7 @@ import {
   formatUsdWhole,
 } from '../../lib/format';
 import { paginate } from '../../lib/paginate';
+import { Pager } from '../../components/viz/Pager';
 import { REGIONS, REGION_LABELS } from '../../lib/regions';
 import type { Region } from '../../lib/regions';
 import { dataUrl, useDataset } from '../../lib/useDataset';
@@ -261,10 +262,6 @@ function GdpView({ dataset, settings, update }: ViewProps) {
     total: page.total,
     top: top ? `${countryName(top.code, lang)}, ${formatUsdCompact(top.value, lang)}` : '—',
   });
-  const pageOptions = Array.from({ length: page.pages }, (_, i) => {
-    const from = i * PAGE_SIZE + 1;
-    return { value: i + 1, label: `${from}–${Math.min(from + PAGE_SIZE - 1, page.total)}` };
-  });
 
   let summary: string;
   let rankNote: string;
@@ -309,40 +306,8 @@ function GdpView({ dataset, settings, update }: ViewProps) {
         </div>
 
         {settings.view === 'chart' && (
-          <div className="field">
-            <label htmlFor={`${base}-page`}>{t(ui.rows)}</label>
-            <div className="pager">
-              <button
-                type="button"
-                className="btn btn-ghost btn-icon"
-                aria-label={t(ui.prevPage)}
-                disabled={page.page <= 1}
-                onClick={() => update({ page: page.page - 1 })}
-              >
-                ‹
-              </button>
-              <select
-                id={`${base}-page`}
-                value={page.page}
-                onChange={(e) => update({ page: Number(e.target.value) })}
-              >
-                {pageOptions.map((o) => (
-                  <option key={o.value} value={o.value}>
-                    {o.label}
-                  </option>
-                ))}
-              </select>
-              <button
-                type="button"
-                className="btn btn-ghost btn-icon"
-                aria-label={t(ui.nextPage)}
-                disabled={page.page >= page.pages}
-                onClick={() => update({ page: page.page + 1 })}
-              >
-                ›
-              </button>
-            </div>
-          </div>
+          // CHANGED (S3-fx): shared Pager — the select no longer clips on phones
+          <Pager id={`${base}-page`} page={page} size={PAGE_SIZE} onPage={(p) => update({ page: p })} />
         )}
 
         <div className="field field-auto">

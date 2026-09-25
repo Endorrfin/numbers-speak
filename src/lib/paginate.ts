@@ -25,3 +25,17 @@ export function parsePage(raw: string | undefined): number {
   if (!raw || !/^[1-9]\d{0,3}$/.test(raw)) return 1;
   return Number(raw);
 }
+
+// CHANGED (S3-fx): one source for the pager labels ("1–15" … "151–163") — was copied into 7 pages.
+export type PageRange = { value: number; label: string };
+
+/** Every page of a ranked list as a rank range; an empty list is one page labelled "0". */
+export function pageRanges(total: number, size: number): PageRange[] {
+  if (total <= 0) return [{ value: 1, label: '0' }];
+  const pages = Math.ceil(total / size);
+  return Array.from({ length: pages }, (_, i) => {
+    const from = i * size + 1;
+    const to = Math.min(from + size - 1, total);
+    return { value: i + 1, label: from === to ? String(from) : `${from}–${to}` };
+  });
+}

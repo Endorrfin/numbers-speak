@@ -521,6 +521,7 @@ async function main(): Promise<void> {
     check('ready:crime chart', h(Cr, { params: {}, setParams: noop }), 'en', 1500, [
       'role="img"',
       'Showing 1–15 of 166',
+      '>166</option>', // CHANGED (S3-fx): a last page of one row is one number, not "166–166"
       'World estimate, 2024: 5.1 per 100,000',
       'War deaths are not intentional homicides',
     ]);
@@ -585,6 +586,27 @@ async function main(): Promise<void> {
     const europe = check('ready:gpi europe', h(Gp, { params: { region: 'europe', order: 'least', view: 'table' }, setParams: noop }), 'en', 2000, ['Russia', 'Ukraine']);
     ok(!europe.includes(' Japan</th>'), 'ready:gpi europe filter excludes Asia');
     ok(europe.indexOf('Russia') < europe.indexOf('Iceland'), 'ready:gpi least-peaceful order puts Russia before Iceland');
+    // CHANGED (S3-fx): the shared Pager (sized from its longest label) and the "bars start at 1" wording.
+    // The axis title itself is drawn by D3 in an effect — covered by the jsdom test (test-ranked-bar.ts).
+    check('ready:gpi pager', h(Gp, { params: {}, setParams: noop }), 'en', 1500, [
+      'class="field field-pager"',
+      'style="--pager-ch:7"',
+      '>1–15</option>',
+      '>151–163</option>',
+      'aria-label="Previous rows" disabled=""',
+      '(1–5, lower = more peaceful; bars start at 1)',
+    ]);
+    check('ready:gpi pager last', h(Gp, { params: { page: '11' }, setParams: noop }), 'en', 1500, [
+      'Showing 151–163 of 163',
+      'aria-label="Next rows" disabled=""',
+      '<option value="11" selected="">151–163</option>',
+    ]);
+    check('ready:gpi pager uk', h(Gp, { params: {}, setParams: noop }), 'uk', 1500, [
+      '>Рядки</label>',
+      'aria-label="Попередні рядки"',
+      '(1–5, нижчий = мирніше; стовпці від 1)',
+    ]);
+    ok(!table.includes('field-pager'), 'ready:gpi table view has no pager');
   }
 
   ok(ssr(h(AboutPage), 'en') !== ssr(h(AboutPage), 'uk'), 'EN and UK renders differ (language toggle works)');

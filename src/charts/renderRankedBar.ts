@@ -10,9 +10,12 @@
  *
  * Safety: every string from data is written with `.text()` / `textContent` — never `.html()`.
  * Motion: `reducedMotion` → every change is applied immediately (standard §3.9).
+ * Baseline (S3-fx): bars start at `baseline` (default 0). Only a scale whose floor is part of its
+ * definition opts in (GPI: 1–5, SCORE_MIN from the entry's data.ts) — never the data minimum, which would
+ * make the smallest bar vanish. The first axis tick is the baseline and `axisLabel` says so in words.
  */
 import { axisTop, interpolateNumber, max, scaleLinear, select } from 'd3';
-import type { BaseType, Selection } from 'd3';
+import type { BaseType, ScaleLinear, Selection } from 'd3';
 
 export type RankedBarRow = {
   /** Stable identity (e.g. an ISO code) — the join key. */
@@ -40,6 +43,11 @@ export type RankedBarOptions = {
   tooltip: HTMLElement | null;
   /** Below this width labels move above the bars (phones). Default 560. */
   stackBelow?: number;
+  // CHANGED (S3-fx): optional baseline + axis title; omitted = the chart is drawn exactly as before.
+  /** Where bars start (the scale's floor, e.g. 1 on GPI's 1–5 scale). Default 0. */
+  baseline?: number;
+  /** One line above the axis ticks, e.g. "Score on a 1–5 scale · bars start at 1". Plain text. */
+  axisLabel?: string;
 };
 
 /** Layout decisions, exported for tests. */
@@ -64,15 +72,24 @@ const FLAG_H = 15;
 const GAP = 8;
 const RADIUS = 4;
 const DURATION = 450;
+const AXIS_H = 24;
+const AXIS_LABEL_H = 16; // CHANGED (S3-fx): extra axis height, only when an axis label is drawn
+const AXIS_LABEL_FONT = 12;
+const MIN_TICK_GAP = 28; // px kept free right of the baseline tick
 
 const textWidth = (s: string, font: number): number => Math.ceil(s.length * font * CHAR);
 
-export function layoutRankedBar(rows: readonly RankedBarRow[], width: number, stackBelow = 560): RankedBarLayout {
+export function layoutRankedBar(
+  rows: readonly RankedBarRow[],
+  width: number,
+  stackBelow = 560,
+  withAxisLabel = false, // CHANGED (S3-fx)
+): RankedBarLayout {
   const stacked = width < stackBelow;
   const hasImages = rows.some((r) => r.imageUrl);
   const imageSpace = hasImages ? FLAG_W + 6 : 0;
   const valueSpace = (max(rows, (r) => textWidth(r.valueLabel, VALUE_FONT)) ?? 0) + GAP;
-  const axisHeight = 24;
+  const axisHeight = AXIS_H + (withAxisLabel ? AXIS_LABEL_H : 0); // CHANGED (S3-fx)
   if (stacked) {
     const rowHeight = 44;
     return {
@@ -109,6 +126,21 @@ export function barPath(width: number, height: number): string {
   return `M0,0H${w - r}A${r},${r} 0 0 1 ${w},${r}V${height - r}A${r},${r} 0 0 1 ${w - r},${height}H0Z`;
 }
 
+// CHANGED (S3-fx): x domain and ticks for an optional baseline (pure, exported for tests).
+/** [baseline, largest value]; an empty page or values that never pass the baseline → [baseline, baseline + 1]. */
+export function rankedBarDomain(rows: readonly RankedBarRow[], baseline = 0): [number, number] {
+  const top = max(rows, (r) => r.value);
+  return [baseline, top !== undefined && top > baseline ? top : baseline + 1];
+}
+
+/** d3's ticks with the baseline always first; ticks closer than MIN_TICK_GAP px to it are dropped. */
+export function axisTicks(scale: ScaleLinear<number, number>, count: number, baseline: number): number[] {
+  const ticks = scale.ticks(count);
+  if (ticks.length > 0 && Math.abs(ticks[0] - baseline) < 1e-9) return ticks;
+  const x0 = scale(baseline);
+  return [baseline, ...ticks.filter((t) => t > baseline && scale(t) - x0 >= MIN_TICK_GAP)];
+}
+
 /** Shortens a label to fit `maxWidth` (estimated), with an ellipsis. */
 export function fitLabel(label: string, maxWidth: number, font = FONT): string {
   const maxChars = Math.floor(maxWidth / (font * CHAR));
@@ -127,13 +159,14 @@ export function renderRankedBar(
   options: RankedBarOptions,
 ): () => void {
   const { width, reducedMotion, tickFormat, tooltip } = options;
-  const L = layoutRankedBar(rows, width, options.stackBelow);
+  const baseline = options.baseline ?? 0; // CHANGED (S3-fx)
+  const axisLabel = options.axisLabel?.trim() || ''; // CHANGED (S3-fx)
+  const L = layoutRankedBar(rows, width, options.stackBelow, axisLabel !== '');
   const svg = select(svgEl);
   svg.attr('width', width).attr('height', L.height).attr('viewBox', `0 0 ${width} ${L.height}`);
 
-  const x = scaleLinear()
-    .domain([0, max(rows, (r) => r.value) || 1])
-    .range([0, L.barWidth]);
+  // CHANGED (S3-fx): domain from the baseline (default 0, as before); clamp keeps a value below it at 0 px.
+  const x = scaleLinear().domain(rankedBarDomain(rows, baseline)).range([0, L.barWidth]).clamp(true);
   const yOf = (i: number): number => L.axisHeight + i * L.rowHeight;
   const barY = L.stacked ? 22 : (L.rowHeight - L.barHeight) / 2;
   const duration = reducedMotion ? 0 : DURATION;
@@ -146,7 +179,7 @@ export function renderRankedBar(
     .attr('transform', `translate(${L.barX},${L.axisHeight - 6})`);
   const ticks = Math.max(2, Math.floor(L.barWidth / 110));
   const axis = axisTop(x)
-    .ticks(ticks)
+    .tickValues(axisTicks(x, ticks, baseline)) // CHANGED (S3-fx): = d3's own ticks when the baseline is 0
     .tickFormat((d) => tickFormat(Number(d)))
     .tickSize(-(rows.length * L.rowHeight + 6))
     .tickSizeOuter(0);
@@ -154,6 +187,23 @@ export function renderRankedBar(
   else axisG.call(axis);
   axisG.select('.domain').remove();
   axisG.selectAll('.tick text').attr('dy', '-0.1em');
+
+  // CHANGED (S3-fx): axis title on its own line above the ticks, starting at the baseline tick.
+  const maxLabel = width - L.barX;
+  svg
+    .selectAll<SVGTextElement, string>('text.rb-axis-label')
+    .data(axisLabel ? [axisLabel] : [])
+    .join((enter) => enter.append('text').attr('class', 'rb-axis-label'))
+    .attr('x', L.barX)
+    .attr('y', AXIS_LABEL_FONT)
+    .text((d) => fitLabel(d, maxLabel, AXIS_LABEL_FONT))
+    .each(function (d) {
+      const el = select(this);
+      el.selectAll('title')
+        .data(el.text() === d ? [] : [d])
+        .join('title')
+        .text((t) => t);
+    });
 
   // ── Rows ─────────────────────────────────────────────────────────────────────────────────────
   const plot = svg
