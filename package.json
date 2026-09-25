@@ -17,22 +17,23 @@
   },
   "scripts": {
     "dev": "vite",
-    "predev": "npm run gen:catalog && npm run sync:flags",
+    "predev": "npm run gen:catalog && npm run gen:previews && npm run sync:flags",
     "build": "tsc -b && vite build",
-    "prebuild": "npm run gen:catalog && npm run sync:flags",
+    "prebuild": "npm run gen:catalog && npm run gen:previews && npm run sync:flags",
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "lint": "eslint .",
     "gen:catalog": "tsx scripts/gen-catalog.ts",
+    "gen:previews": "tsx scripts/gen-previews.ts",
     "check:catalog": "tsx scripts/check-catalog.ts",
     "check:data": "tsx scripts/check-data.ts",
     "prep": "tsx scripts/prep.ts",
     "sync:flags": "tsx scripts/sync-flags.ts",
     "test": "tsx scripts/run-tests.ts",
     "smoke": "tsx --tsconfig tsconfig.app.json scripts/smoke.ts",
-    "verify": "npm run typecheck && npm run lint && npm run check:catalog && npm run check:data && npm run test && npm run smoke && npm run build"
+    "verify": "npm run gen:catalog && npm run gen:previews && npm run typecheck && npm run lint && npm run check:catalog && npm run check:data && npm run test && npm run smoke && npm run build"
   },
-  "//catalog": "One folder per visualization: src/viz/<id>/meta.ts + index.tsx. gen:catalog writes src/catalog/catalog.generated.ts (committed; predev/prebuild refresh it); check:catalog fails when it is stale.",
+  "//catalog": "One folder per visualization: src/viz/<id>/meta.ts + index.tsx. gen:catalog writes src/catalog/catalog.generated.ts (committed; predev/prebuild refresh it); check:catalog fails when it is stale. Card previews (S3-th): src/viz/<id>/preview.ts → gen:previews → src/catalog/previews.generated.json (committed; predev/prebuild refresh it; check:catalog guards staleness, coverage of published entries and the 12 kB gzip budget).",
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.3.0",
     "@fontsource-variable/inter": "^5.3.0",

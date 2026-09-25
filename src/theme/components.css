@@ -1622,3 +1622,180 @@
 .viz .show-intro {
   font-size: 0.93rem;
 }
+
+/* ── Card previews ─────────────────────────────────────────────────────────────
+   CHANGED (S3-th): the card image drawn from the entry's data (CardPreview.tsx). Marks wear chart
+   tokens (both themes follow the variables); text wears text tokens only. Fixed 5:3 box as before. */
+.card-thumb--preview {
+  padding: 0.8rem 1rem 0.75rem;
+}
+.cp {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 0.45rem;
+}
+.cp-key {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  min-width: 0;
+  margin: 0;
+}
+.cp-value {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.55rem;
+  line-height: 1;
+  color: var(--tx);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.cp-label {
+  font-size: 0.76rem;
+  line-height: 1.25;
+  color: var(--tx2);
+  text-wrap: balance;
+}
+.cp-marks {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 3px;
+}
+.cp-marks--rows,
+.cp-marks--butterfly {
+  justify-content: center;
+}
+.cp-rows,
+.cp-bfly {
+  display: grid;
+  grid-template-columns: 16px max-content minmax(0, 1fr) max-content;
+  grid-auto-rows: 19px;
+  align-items: center;
+  column-gap: 0.45rem;
+}
+.cp-bfly {
+  grid-template-columns: 16px max-content minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: 0.35rem;
+}
+.cp-rows--noflags {
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
+}
+.cp-bfly.cp-rows--noflags {
+  grid-template-columns: max-content minmax(0, 1fr) minmax(0, 1fr);
+}
+.cp-flag-slot {
+  display: flex;
+}
+.cp-flag {
+  display: block;
+  width: 16px;
+  height: 12px;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px var(--line);
+}
+.cp-code,
+.cp-num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--tx2);
+  white-space: nowrap;
+}
+.cp-code {
+  max-width: 7.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cp-num {
+  text-align: right;
+}
+.cp-bar {
+  display: block;
+  width: 100%;
+  height: 9px;
+}
+.cp-gap {
+  grid-column: 1 / -1;
+  font-size: 0.7rem;
+  line-height: 1;
+  color: var(--tx3);
+  padding-left: calc(16px + 2.6rem);
+}
+.cp-rows--noflags .cp-gap {
+  padding-left: 0;
+}
+.cp-plot {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+.cp-plot svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.cp-line {
+  fill: none;
+  stroke-width: 2.25;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.cp-area {
+  opacity: 0.16;
+}
+.cp-partial {
+  opacity: 0.45;
+}
+.cp-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--surface);
+}
+.cp-axis {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  color: var(--tx3);
+}
+.cp-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.7rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.68rem;
+  color: var(--tx3);
+}
+.cp-legend i {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 4px;
+  border-radius: 2px;
+}
+.cp-marks--grid {
+  justify-content: stretch;
+}
+.cp-grid {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+.cp-grid svg {
+  height: 100%;
+  max-width: 62%;
+  flex: none;
+}
+.cp-grid .cp-legend {
+  flex-direction: column;
+}

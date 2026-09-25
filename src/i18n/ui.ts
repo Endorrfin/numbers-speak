@@ -59,6 +59,7 @@ export const ui = {
   badgeSoon: { en: 'Soon', uk: 'Незабаром' },
   badgeNew: { en: 'New', uk: 'Нове' },
   badgeDraft: { en: 'Draft', uk: 'Чернетка' },
+  previewMore: { en: '⋯ {n} more', uk: '⋯ ще {n}' }, // CHANGED (S3-th): card preview gap between extremes
   open: { en: 'Open', uk: 'Відкрити' },
 
   backToGallery: { en: 'Gallery', uk: 'Галерея' },

@@ -3,6 +3,10 @@
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
 ## 2026‑09‑25
+- **Updated:** gallery cards now show a preview drawn from each visualization's own data — a key figure and a
+  miniature of the chart, in both themes and both languages — instead of one icon per chart type. /
+  Картки галереї тепер показують прев’ю з власних даних кожної візуалізації — ключове число й мініатюру
+  графіка в обох темах і обох мовах — замість однієї іконки на тип графіка.
 - **New:** [Crime by country: homicides and perceived crime / Злочинність у країнах: убивства й відчуття небезпеки](https://endorrfin.github.io/numbers-speak/#/v/crime-index) —
   two measures side by side as sub-tabs. The official one: victims of intentional homicide per 100,000 people in
   166 countries and territories (UNODC, latest year since 2015; world estimate 5.1 in 2024) — the highest of any

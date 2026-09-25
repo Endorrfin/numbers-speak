@@ -80,16 +80,16 @@ build, and an Actions deploy. Automation lives in the `guide-factory` plugin (sk
 src/guides/numbers-speak/              ← repo numbers-speak (next to the guides)
   src/
     main.tsx · App.tsx
-    catalog/  types.ts · rubrics.ts · catalog.generated.ts (gen:catalog) · search.ts
-    viz/<id>/ meta.ts (manifest, SSOT) · index.tsx (page: controls + chart) · data.ts (load, parse, validate) · strings.ts
+    catalog/  types.ts · rubrics.ts · catalog.generated.ts (gen:catalog) · preview.ts + previews.generated.json (gen:previews, v0.4) · search.ts
+    viz/<id>/ meta.ts (manifest, SSOT) · index.tsx (page: controls + chart) · data.ts (load, parse, validate) · preview.ts (card preview) · strings.ts
     charts/   RankedBar · BarRace · HierarchyTree · LineSeries · ComboBarLine · Pyramid · Donut · Lollipop · MapTimeline
     ui/       TopBar (tabs, EN/UA, theme) · FilterBar · VizCard · VizPage (chart · settings · about · how it's built) · DataTable
     lib/      hashRouter.ts · urlState.ts · useElementWidth.ts · format.ts (Intl) · palette.ts · exportImage.ts
     i18n/     LangProvider.tsx · ui.ts
     theme/    tokens.css (light + dark; chart colours as CSS variables)
-  public/     data/<id>/*.json · thumbs/<id>.webp · .nojekyll
+  public/     data/<id>/*.json · og/<id>.webp (share images, P5) · .nojekyll
   data-raw/   <id>/ original files + prep script (not deployed)
-  scripts/    gen-catalog.ts · check-catalog.ts · check-data.ts · prep-*.ts · new-viz.ts · gen-share-pages.ts · gen-thumbs.ts · smoke.ts · run-tests.ts · test-*.ts
+  scripts/    gen-catalog.ts · check-catalog.ts · check-data.ts · prep-*.ts · new-viz.ts · gen-share-pages.ts · gen-previews.ts · gen-og.ts · smoke.ts · run-tests.ts · test-*.ts
   .github/workflows/deploy.yml
   CLAUDE.md · PROJECT-BRIEF.md · CATALOG.md · README.md (EN/UA) · CHANGELOG.md
 ```
@@ -221,7 +221,7 @@ flowchart LR
 | P2 | Golden visualization + chart core | GDP by country → `RankedBar`, width hook, reduced motion, text tooltips, Intl formatting, ISO names and flags, palette tokens; cleaned JSON; tests; jsdom smoke | Meets the A8 checklist; becomes the `new:viz` template | 6–8 h | `s2-golden-ranked-bar` · "📊 Numbers Speak S2: golden viz — GDP by country" |
 | P3 | MVP waves | **3a** nine `RankedBar` configs (GDP PPP, land area, population, births, crime index, GPI, robotization, real estate world, volunteers by region) · **3b** Ukraine: air strikes (`ComboBarLine`, EN/UA merged), donations and volunteers growth (`LineSeries`), real estate by city (`LineSeries` + sort) · **3c** `BarRace`: global brands 2000–2025 + Ukrainian companies | 16 entries live; a card on the portfolio landing; `js-24` README links the site | 10–14 h | `s3a-ranked-bar-wave` · `s3b-ukraine-wave` · `s3c-bar-race` |
 | P4 | Full migration | **4a** `HierarchyTree` (collapsible + indented): flare ×2, alphabet, design patterns (link to the DPP guide), settlements (one bilingual dataset, per‑region chunks, prep script in `data-raw/`) · **4b** Iceland ×2 (static snapshot, v3 → v7), donut, lollipop (v6 → v7), Chicago moving average, letter frequency · **4c** Walmart map (`d3-geo` + `us-atlas` from npm), books, time of life | 30 entries live; no CDN or runtime third‑party calls | 10–12 h | `s4a-trees` · `s4b-singles` · `s4c-map-life` |
-| P5 | Customize & inform | Shared settings, URL share, data table + download, SVG/PNG export, "How it's built", search (EN+UA), share pages with OG + thumbnails (Playwright, run locally), accessibility and performance pass | Every entry has a thumbnail and a share page; a keyboard‑only walkthrough passes | 6–8 h | `s5-customize-share` |
+| P5 | Customize & inform | Shared settings, URL share, data table + download, SVG/PNG export, "How it's built", search (EN+UA), share pages with OG images (Playwright webp, run locally — used only for OG; gallery cards use data previews since v0.4), accessibility and performance pass | Every entry has an OG image and a share page; a keyboard‑only walkthrough passes | 6–8 h | `s5-customize-share` |
 | P6 | Growth pipeline | `npm run new:viz`; Claude skill `add-visualization` in `guide-factory`; CHANGELOG + "New" badge; data refresh checklist; a "Tier 3 — Visualization gallery" section in `_standard` | One new visualization shipped end‑to‑end through the pipeline | 3–4 h | `s6-growth-pipeline` |
 
 **Why this order:**
@@ -241,7 +241,7 @@ flowchart LR
 1. Raw data → `data-raw/<id>/` with the source URL and retrieval date; `prep-<id>.ts` → `public/data/<id>/`.
 2. `npm run new:viz -- <id> --chart ranked-bar --rubric world` → folder, manifest stub, test stub.
 3. Fill the manifest (EN, then UA); pick or compose the chart; wire controls to URL state.
-4. `npm run verify` → `npm run thumbs -- <id>` → one CHANGELOG line.
+4. `src/viz/<id>/preview.ts` (card preview from the entry's own data) → `npm run verify` (regenerates the catalog and the previews first; `prep` also regenerates the previews) → one CHANGELOG line.
 5. Branch `viz/<yyyy-mm>-<id>` → PR → merge → Actions deploys.
 
 **Definition of Done per visualization:**
@@ -250,7 +250,7 @@ flowchart LR
 - [ ] responsive at 360 / 768 / 1280 px without horizontal page scroll
 - [ ] keyboard‑operable controls, visible focus, `role="img"` + label, reduced‑motion fallback
 - [ ] tooltips and labels written with `.text()` — no HTML built from data
-- [ ] state in the URL; thumbnail; share page; `verify` green
+- [ ] state in the URL; card preview (`preview.ts`, key figure picked by the owner, rows chosen by rank); share page; `verify` green
 
 **Capacity:** an existing chart component ≈ 2–3 h; a new chart type ≈ 4–6 h; data preparation varies
 (a settlements‑size dataset adds ≈ 2–4 h). 1–4 visualizations per month ≈ 2–24 h per month.
@@ -438,7 +438,7 @@ Actions. Автоматизація — плагін `guide-factory` (skills `ne
 | P2 | Golden‑візуалізація + ядро графіків | ВВП країн → `RankedBar`, хук ширини, reduced motion, текстові тултіпи, Intl‑форматування, ISO‑назви й прапорці, токени палітри; очищений JSON; тести; jsdom‑smoke | Виконано чек‑лист B8; стає шаблоном для `new:viz` | 6–8 год |
 | P3 | Хвилі MVP | **3a** дев’ять конфігурацій `RankedBar` (ВВП ПКС, площа, населення, народжуваність, індекс злочинності, GPI, роботизація, нерухомість світу, волонтери за областями) · **3b** Україна: повітряні удари (`ComboBarLine`, EN/UA об’єднано), донати й зростання кількості волонтерів (`LineSeries`), нерухомість у містах (`LineSeries` + сортування) · **3c** `BarRace`: глобальні бренди 2000–2025 + українські компанії | 16 записів онлайн; картка на портфоліо‑лендингу; README `js-24` посилається на сайт | 10–14 год |
 | P4 | Повна міграція | **4a** `HierarchyTree` (згортуване + з відступами): flare ×2, абетка, патерни (посилання на гайд DPP), населені пункти (один двомовний датасет, чанки по регіонах, prep‑скрипт у `data-raw/`) · **4b** Ісландія ×2 (статичний знімок, v3 → v7), donut, lollipop (v6 → v7), ковзне середнє Чикаго, частота літер · **4c** мапа Walmart (`d3-geo` + `us-atlas` з npm), книги, час життя | 30 записів онлайн; жодних CDN і runtime‑запитів до третіх сторін | 10–12 год |
-| P5 | Кастомізація й інформація | Спільні налаштування, поширення через URL, таблиця даних + завантаження, експорт SVG/PNG, «Як побудовано», пошук (EN+UA), share‑сторінки з OG і мініатюрами (Playwright, локально), перевірка доступності й продуктивності | Кожен запис має мініатюру й share‑сторінку; сайт повністю проходиться з клавіатури | 6–8 год |
+| P5 | Кастомізація й інформація | Спільні налаштування, поширення через URL, таблиця даних + завантаження, експорт SVG/PNG, «Як побудовано», пошук (EN+UA), share‑сторінки з OG‑зображеннями (Playwright webp, локально — лише для OG; картки галереї з v0.4 мають прев’ю з даних), перевірка доступності й продуктивності | Кожен запис має OG‑зображення й share‑сторінку; сайт повністю проходиться з клавіатури | 6–8 год |
 | P6 | Конвеєр зростання | `npm run new:viz`; Claude‑skill `add-visualization` у `guide-factory`; CHANGELOG + бейдж «Нове»; чек‑лист оновлення даних; розділ «Tier 3 — Visualization gallery» у `_standard` | Одну нову візуалізацію проведено через конвеєр від початку до кінця | 3–4 год |
 
 **Чому такий порядок:**
@@ -458,7 +458,7 @@ Actions. Автоматизація — плагін `guide-factory` (skills `ne
 1. Сирі дані → `data-raw/<id>/` з URL джерела й датою отримання; `prep-<id>.ts` → `public/data/<id>/`.
 2. `npm run new:viz -- <id> --chart ranked-bar --rubric world` → тека, заготовка маніфесту, заготовка тесту.
 3. Заповнити маніфест (спершу EN, потім UA); обрати чи скласти графік; під’єднати контроли до стану в URL.
-4. `npm run verify` → `npm run thumbs -- <id>` → рядок у CHANGELOG.
+4. `src/viz/<id>/preview.ts` (прев’ю картки з власних даних запису) → `npm run verify` (спершу перегенеровує каталог і прев’ю; `prep` теж перегенеровує прев’ю) → рядок у CHANGELOG.
 5. Гілка `viz/<yyyy-mm>-<id>` → PR → merge → деплой через Actions.
 
 **Definition of Done для візуалізації:**
@@ -467,7 +467,7 @@ Actions. Автоматизація — плагін `guide-factory` (skills `ne
 - [ ] адаптивність на 360 / 768 / 1280 px без горизонтальної прокрутки сторінки
 - [ ] контроли працюють із клавіатури, видимий фокус, `role="img"` + мітка, fallback для reduced motion
 - [ ] тултіпи й підписи — через `.text()`, жодного HTML, зібраного з даних
-- [ ] стан в URL; мініатюра; share‑сторінка; `verify` зелений
+- [ ] стан в URL; прев’ю картки (`preview.ts`, ключове число обирає власник, рядки — за місцем у рейтингу); share‑сторінка; `verify` зелений
 
 **Ресурс:** наявний chart‑компонент ≈ 2–3 год; новий тип графіка ≈ 4–6 год; підготовка даних — по‑різному
 (датасет розміру «населених пунктів» додає ≈ 2–4 год). 1–4 візуалізації на місяць ≈ 2–24 год на місяць.
@@ -602,6 +602,7 @@ By origin — own 16 · own data + gallery code 4 · adapted 10.
 ---
 
 ## Changelog
+- **v0.4** (2026‑09‑25) — S3‑th: DoD “thumbnail” → “card preview” (data‑driven, built at build time: `preview.ts` → `gen:previews`); Playwright webp stays only for OG images in P5. / DoD: «мініатюра» → «прев’ю картки»; webp через Playwright лишається лише для OG у P5.
 - **v0.3** (2026‑09‑18) — S2 done: A11 questions decided (see `CATALOG.md` §E); the separate colour‑blind palette setting (A6) is dropped — the default region palette is validated all‑pairs for CVD. / Питання A11 вирішено; окремої CVD‑палітри не потрібно.
 - **v0.2** (2026‑09‑17) — repo named `numbers-speak` (D1); location `src/guides/numbers-speak/` with the legacy copy in `_examples/` (D2); D3–D10 accepted; commit prefixes renamed. / Назва репо, розташування й рішення D3–D10 зафіксовано.
 - **v0.1** (2026‑09‑17) — initial plan: study of `src/guides` and `src/D3`; technology options; architecture;
