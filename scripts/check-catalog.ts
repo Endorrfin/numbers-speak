@@ -5,6 +5,8 @@
  * CHANGED (S3-cl): it also fails when a `published` entry has no CHANGELOG.md line that links it
  * (`…#/v/<id>`, PLAN A8 step 4) — that manual step was skipped for four entries on 2026-09-22.
  * All failures are reported in one run.
+ * CHANGED (S3-th): card previews — src/catalog/previews.generated.json must match src/viz/<id>/preview.ts,
+ * every published entry needs a preview, and all previews together stay within the gzip budget.
  */
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -12,6 +14,7 @@ import { pathToFileURL } from 'node:url';
 import type { VizMeta } from '../src/catalog/types';
 import { generate, readGenerated } from './gen-catalog';
 import { CHANGELOG_PATH, missingFromChangelog } from './lib/changelog';
+import { PREVIEWS_BUDGET_GZIP, generatePreviews, gzipSize } from './lib/previews'; // CHANGED (S3-th)
 import { listVizFolders } from './lib/viz-folders';
 
 // CHANGED (S3-cl): failures are collected and reported together.
@@ -50,6 +53,29 @@ if (missing.length > 0) {
   );
 }
 
+// CHANGED (S3-th): card previews — fresh, complete for published entries, within budget.
+try {
+  const previews = await generatePreviews();
+  const previewsOnDisk = readGenerated(previews.path);
+  if (previewsOnDisk !== previews.source) {
+    const where = previewsOnDisk === '' ? 'is MISSING' : 'is STALE';
+    errors.push(`src/catalog/previews.generated.json ${where}.\n  Fix: npm run gen:previews`);
+  }
+  const withoutPreview = published.filter((id) => !previews.ids.includes(id));
+  if (withoutPreview.length > 0) {
+    errors.push(
+      `These published entries have no card preview: ${withoutPreview.join(', ')}.\n` +
+        '  Fix: add src/viz/<id>/preview.ts (see src/catalog/preview.ts), then npm run gen:previews',
+    );
+  }
+  const size = gzipSize(previews.source);
+  if (size > PREVIEWS_BUDGET_GZIP) {
+    errors.push(`card previews are ${size} B gzip, over the ${PREVIEWS_BUDGET_GZIP} B budget.`);
+  }
+} catch (e) {
+  errors.push(`card previews could not be built — ${(e as Error).message}`);
+}
+
 // CHANGED (S3-cl): report every failure, then exit.
 if (errors.length > 0) {
   for (const message of errors) {
@@ -57,4 +83,7 @@ if (errors.length > 0) {
   }
   process.exit(1);
 }
-console.log('✓ check:catalog — the generated catalog matches src/viz; every published entry is in CHANGELOG.md.');
+console.log(
+  '✓ check:catalog — the generated catalog and card previews match src/viz; every published entry has a preview' +
+    ' and a CHANGELOG.md line.',
+); // CHANGED (S3-th)

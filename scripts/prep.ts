@@ -1,6 +1,8 @@
 /*
  * prep.ts — runs one dataset's prep script: `npm run prep -- <id>` → data-raw/<id>/prep.ts.
  * Prep scripts turn raw files into public/data/<id>/ once, at authoring time (CLAUDE.md §4 data rules).
+ * CHANGED (S3-th): a successful prep regenerates the card previews (src/catalog/previews.generated.json),
+ * because they are derived from the data it just wrote; a failed prep leaves them untouched.
  */
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
@@ -14,4 +16,7 @@ if (!ID_PATTERN.test(id) || !existsSync(script)) {
   process.exit(1);
 }
 const r = spawnSync(process.execPath, ['--import', 'tsx', script], { stdio: 'inherit' });
-process.exit(r.status ?? 1);
+if (r.status !== 0) process.exit(r.status ?? 1);
+// CHANGED (S3-th): keep the committed previews in step with the new data (commit the JSON with the data).
+const previews = spawnSync(process.execPath, ['--import', 'tsx', join(ROOT, 'scripts', 'gen-previews.ts')], { stdio: 'inherit' });
+process.exit(previews.status ?? 1);

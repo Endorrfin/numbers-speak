@@ -40,7 +40,7 @@ after the migration, add **1–4 visualizations per month** through a repeatable
   chunks, generated indexes, verify gate, bilingual model).
 - **Craft bar:** the D3 gallery on Observable (clear encodings, transitions with object constancy).
 - **"Golden" for one visualization** = the Definition of Done in §9: complete bilingual manifest, sourced
-  and validated data, responsive and accessible chart, settings in the URL, thumbnail + share page,
+  and validated data, responsive and accessible chart, settings in the URL, card preview + share page,
   `verify` green.
 
 ## 4. Scope
@@ -104,8 +104,8 @@ The site (primary) · bilingual `README.md` · `CLAUDE.md` (current) · `CATALOG
 ## 9. Definition of Done
 - **Per visualization:** manifest complete in EN and UA; ≥ 1 https source with a retrieval date; origin and
   licence; dataset passes its schema; responsive at 360 / 768 / 1280 px; keyboard‑operable controls,
-  visible focus, chart label, reduced‑motion fallback; text‑only tooltips; state in the URL; thumbnail and
-  share page; `verify` green.
+  visible focus, chart label, reduced‑motion fallback; text‑only tooltips; state in the URL; card preview
+  (`preview.ts`, S3‑th) and share page; `verify` green.
 - **Per session:** the session's scope meets the above + verification run + summary + `CLAUDE.md` log.
 - **Project:** 30 entries published; shared settings, export, search and share pages (P5); the monthly
   pipeline (P6); linked from the portfolio landing.

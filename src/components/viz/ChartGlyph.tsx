@@ -1,4 +1,5 @@
-// Decorative glyph per chart kind — the card thumbnail until real thumbnails arrive (P5).
+// Decorative glyph per chart kind — the card image for entries without a data preview (CHANGED (S3-th):
+// published entries show CardPreview; this stays the fallback, e.g. for "soon" entries).
 import type { ReactElement } from 'react';
 import type { ChartKind } from '../../catalog/types';
 

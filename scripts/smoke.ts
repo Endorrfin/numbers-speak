@@ -131,6 +131,30 @@ async function main(): Promise<void> {
   }
   check('catalog:search-miss', h(CatalogPage, { tab: 'all', params: { q: 'zzzz-no-match' } }), 'en', 500, ['Clear filters']);
   check('catalog:bad-params', h(CatalogPage, { tab: 'world', params: { chart: 'pie', origin: '<script>' } }), 'en', 500);
+
+  // CHANGED (S3-th): card previews — every published card shows its data preview with the key figure in the
+  // page language and at most three flags; an entry without a preview falls back to the chart-kind glyph.
+  const { getPreview } = await import('../src/catalog/previews');
+  const { formatKeyValue } = await import('../src/components/catalog/previewFormat');
+  const { VizCard } = await import('../src/components/catalog/VizCard');
+  const published = CATALOG.filter((m) => m.status === 'published');
+  for (const lang of langs) {
+    const html = check('catalog:previews', h(CatalogPage, { tab: 'all', params: {} }), lang, 800);
+    const count = (html.match(/class="cp"/g) ?? []).length;
+    ok(count === published.length, `catalog:previews [${lang}] ${count} previews for ${published.length} published entries`);
+    for (const m of published) {
+      const p = getPreview(m.id);
+      ok(Boolean(p), `a preview exists for ${m.id}`);
+      if (p) ok(html.includes(formatKeyValue(p.key, lang)), `catalog:previews [${lang}] shows the key figure of ${m.id}`);
+    }
+    ok(html.includes('flags/4x3/in.svg'), `catalog:previews [${lang}] draws flags`);
+  }
+  if (first) {
+    const fallback = check('card:fallback', h(VizCard, { meta: { ...first, id: 'no-preview-entry' }, isNew: false }), 'en', 100, [
+      'class="glyph"',
+    ]);
+    ok(!fallback.includes('class="cp"'), 'card:fallback shows no preview');
+  }
   for (const lang of langs) check('about', h(AboutPage), lang, 1500);
   check('about', h(AboutPage), 'en', 1500, ['Every number has a source']);
   check('about', h(AboutPage), 'uk', 1500, ['Кожне число має джерело']);

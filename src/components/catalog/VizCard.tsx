@@ -1,3 +1,4 @@
+import { getPreview } from '../../catalog/previews'; // CHANGED (S3-th)
 import { CHART_LABELS, GEO_LABELS } from '../../catalog/rubrics';
 import type { VizMeta } from '../../catalog/types';
 import { useLang } from '../../i18n/lang';
@@ -5,14 +6,16 @@ import { ui } from '../../i18n/ui';
 import { formatPeriod } from '../../lib/format';
 import { hrefViz } from '../../lib/hashRouter';
 import { ChartGlyph } from '../viz/ChartGlyph';
+import { CardPreview } from './CardPreview'; // CHANGED (S3-th)
 
 export function VizCard({ meta, isNew }: { meta: VizMeta; isNew: boolean }) {
   const { t } = useLang();
+  const preview = getPreview(meta.id); // CHANGED (S3-th): data-driven preview; the glyph stays as the fallback
   return (
     <article className={`card card--${meta.status}`}>
       <a className="card-link" href={hrefViz(meta.id)}>
-        <div className="card-thumb" aria-hidden="true">
-          <ChartGlyph kind={meta.chart} />
+        <div className={preview ? 'card-thumb card-thumb--preview' : 'card-thumb'} aria-hidden="true">
+          {preview ? <CardPreview preview={preview} /> : <ChartGlyph kind={meta.chart} />}
         </div>
         <div className="card-body">
           <div className="card-badges">

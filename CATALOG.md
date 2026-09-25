@@ -34,6 +34,13 @@ export). `id` is kebab‑case and equals the folder name and the URL slug `#/v/<
 
 `soon` and `published` entries need at least one https source with a retrieval date (`check:data`).
 
+**Card preview (S3‑th):** every `published` entry also has `src/viz/<id>/preview.ts` — a pure function of the
+entry's own data that returns the gallery card image: a key figure (the measure is the owner's pick, the value
+is computed) and kind‑specific marks (top‑N or extreme rows, a simplified series, monthly columns, a unit grid).
+Rows are chosen by rank, never by a named country; ≤ 3 flags per card, on the leaders or on the extremes.
+`gen:previews` writes `src/catalog/previews.generated.json`; `check:catalog` fails when it is stale, when a
+published entry has none, or when all previews exceed 12 kB gzip. Contract: `src/catalog/preview.ts`.
+
 ## C. The 31 entries
 
 Legacy sources are the copies in `_examples/` (the originals stay in `src/D3`). **Status** = current state in
