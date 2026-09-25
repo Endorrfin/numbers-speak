@@ -103,6 +103,7 @@ const NUMBEO_ALIASES: Record<string, string> = {
   'Taiwan': 'TW',
   'South Korea': 'KR',
   'North Korea': 'KP',
+  'Us Virgin Islands': 'VI', // CHANGED (S3-rb): Numbeo's capitalisation of "US"
 };
 const display = new Intl.DisplayNames(['en'], { type: 'region' });
 const byName = new Map<string, string>();
@@ -111,13 +112,15 @@ for (const c of M49_REGION.keys()) {
   if (n) byName.set(n, c);
 }
 let numbeo: NumbeoRow[] | null = null;
+// CHANGED (S3-rb): equal indexes (one decimal) keep Numbeo's published order — its rank column.
+const numbeoRank = new Map<string, number>();
 if (existsSync(NUMBEO_TXT)) {
   numbeo = [];
   const lines = readFileSync(NUMBEO_TXT, 'utf8').replace(/^\uFEFF/, '').split(/\r?\n/);
   for (const line of lines) {
     const cells = line.split('\t').map((c) => c.trim()).filter(Boolean);
     if (cells.length < 3 || !/^\d+$/.test(cells[0]!)) continue; // header, blank or wrapped lines
-    const [, name, crime, safety] = cells;
+    const [rank, name, crime, safety] = cells;
     const at = `numbeo-crime-2026-mid.txt "${name}"`;
     const code = NUMBEO_ALIASES[name!] ?? byName.get(name!) ?? '';
     if (!code) {
@@ -128,6 +131,8 @@ if (existsSync(NUMBEO_TXT)) {
     if (safety !== undefined && Math.abs(100 - crimeIndex - Number(safety)) > 0.11) {
       problems.push(`${at}: safety ${safety} ≠ 100 − crime ${crime} — the page derives safety, revisit`);
     }
+    if (numbeoRank.has(code)) problems.push(`${at}: ${code} appears twice`);
+    numbeoRank.set(code, Number(rank)); // CHANGED (S3-rb): tie-breaker below
     numbeo.push({ code, region: regionOf(code, at), crimeIndex });
   }
   if (numbeo.length < 100) problems.push(`numbeo-crime-2026-mid.txt: only ${numbeo.length} rows parsed`);
@@ -150,7 +155,8 @@ writeFileSync(
 console.log(`✓ ${HOMICIDE_FILE} — ${sorted.length} countries and territories, ${sorted.filter((r) => r.year < latestYear).length} with an older year.`);
 
 if (numbeo) {
-  const ns = [...numbeo].sort((a, b) => b.crimeIndex - a.crimeIndex || a.code.localeCompare(b.code));
+  // CHANGED (S3-rb): ties → Numbeo's rank (was: ISO code, which swapped Jamaica and Guyana at 67.4).
+  const ns = [...numbeo].sort((a, b) => b.crimeIndex - a.crimeIndex || numbeoRank.get(a.code)! - numbeoRank.get(b.code)!);
   const nd = { edition: '2026 Mid-Year', rows: ns };
   parseNumbeoDataset(nd, NUMBEO_FILE);
   writeFileSync(

@@ -115,12 +115,20 @@ test('real homicide file: UNODC 2024 world estimate, Haiti in the Americas, UK c
   assert.equal(by('UA').olderYear, 2021);
   assert.ok(r.every((x) => /^[A-Z]{2}$/.test(x.code)));
 });
-if (existsSync(`public/data/crime-index/${NUMBEO_FILE}`)) {
-  test('real Numbeo file: 2026 Mid-Year, Haiti in the Americas', () => {
-    const d = parseNumbeoDataset(JSON.parse(readFileSync(`public/data/crime-index/${NUMBEO_FILE}`, 'utf8')));
-    assert.equal(d.edition, '2026 Mid-Year');
-    assert.equal(d.rows.find((x) => x.code === 'HT')?.region, 'americas');
-  });
-}
+// CHANGED (S3-rb): the owner's Numbeo copy shipped — the file is listed in meta.data and checked unconditionally.
+test('real Numbeo file: listed, 148 countries in Numbeo’s order, Haiti in the Americas, safety derived', () => {
+  assert.ok(meta.data.includes(NUMBEO_FILE));
+  assert.ok(existsSync(`public/data/crime-index/${NUMBEO_FILE}`));
+  const d = parseNumbeoDataset(JSON.parse(readFileSync(`public/data/crime-index/${NUMBEO_FILE}`, 'utf8')));
+  assert.equal(d.edition, '2026 Mid-Year');
+  assert.equal(d.rows.length, 148);
+  const r = rankNumbeo(d);
+  assert.deepEqual([r[0]!.code, r[0]!.value, r[0]!.safetyIndex], ['PG', 80.8, 19.2]);
+  assert.deepEqual([r.at(-1)!.code, r.at(-1)!.value], ['AD', 13.5]);
+  const rank = (c: string) => r.find((x) => x.code === c)?.rank;
+  assert.deepEqual([rank('JM'), rank('GY')], [9, 10], 'equal indexes keep Numbeo’s order');
+  assert.equal(d.rows.find((x) => x.code === 'HT')?.region, 'americas');
+  assert.equal(d.rows.find((x) => x.code === 'UA')?.crimeIndex, 46.9);
+});
 
 console.log(`✓ crime — ${passed} tests passed.`);

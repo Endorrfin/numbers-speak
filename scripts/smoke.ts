@@ -486,11 +486,54 @@ async function main(): Promise<void> {
     const americas = check('ready:crime americas', h(Cr, { params: { region: 'americas', view: 'table' }, setParams: noop }), 'en', 2000, ['Haiti']);
     ok(!americas.includes(' Germany</th>'), 'ready:crime americas filter excludes Europe (Haiti is in the Americas)');
     if (crMeta.data.length > 1) {
-      check('ready:crime numbeo', h(Cr, { params: { show: 'numbeo', view: 'table' }, setParams: noop }), 'en', 3000, ['Safety Index', 'Numbeo']);
+      // CHANGED (S3-rb): Numbeo shipped — both tabs, its chart, its table order and the UK strings.
+      check('ready:crime tabs', h(Cr, { params: {}, setParams: noop }), 'en', 1500, ['Homicide rate (UNODC)', 'Crime Index (Numbeo)']);
+      check('ready:crime numbeo chart', h(Cr, { params: { show: 'numbeo' }, setParams: noop }), 'en', 1500, [
+        'Showing 1–15 of 148',
+        'Highest: Papua New Guinea, 80.8',
+        'Numbeo 2026 Mid-Year',
+        'Data © Numbeo',
+      ]);
+      const nt = check('ready:crime numbeo', h(Cr, { params: { show: 'numbeo', view: 'table' }, setParams: noop }), 'en', 3000, ['Safety Index', 'Numbeo', 'Andorra', '19.2']);
+      ok(nt.indexOf('Jamaica') < nt.indexOf('Guyana'), 'ready:crime numbeo keeps Numbeo’s order for equal indexes (Jamaica before Guyana)');
+      check('ready:crime numbeo uk', h(Cr, { params: { show: 'numbeo' }, setParams: noop }), 'uk', 1500, ['Індекс злочинності (Numbeo)', 'Дані © Numbeo']);
     } else {
       const fallback = check('ready:crime numbeo pending', h(Cr, { params: { show: 'numbeo' }, setParams: noop }), 'en', 1500, ['World estimate']);
       ok(!fallback.includes('Crime Index (Numbeo)'), 'ready:crime hides the Numbeo tab while its file is not shipped');
     }
+  }
+
+  // CHANGED (S3-rb): Global Peace Index 2026 — both orders, ties, the Honduras note, table, filter, EN + UK.
+  if (CATALOG.some((m) => m.id === 'global-peace-index')) {
+    const { default: Gp } = await import('../src/viz/global-peace-index/index');
+    const { default: gpMeta } = await import('../src/viz/global-peace-index/meta');
+    for (const file of gpMeta.data) {
+      primeDataset(dataUrl('global-peace-index', file), JSON.parse(readFileSync(`public/data/global-peace-index/${file}`, 'utf8')));
+    }
+    check('ready:gpi chart', h(Gp, { params: {}, setParams: noop }), 'en', 1500, [
+      'role="img"',
+      'Showing 1–15 of 163',
+      'First: 1 Iceland, 1.161',
+      '99 countries became less peaceful, 62 more peaceful',
+      'Most peaceful first',
+      'educational, non-commercial purposes',
+    ]);
+    check('ready:gpi least', h(Gp, { params: { order: 'least' }, setParams: noop }), 'en', 1500, ['First: 163 Russia, 3.367']);
+    check('ready:gpi uk', h(Gp, { params: {}, setParams: noop }), 'uk', 1500, ['Спершу наймирніші', 'Нижчий бал = мирніше', 'Ісландія']);
+    const table = check('ready:gpi table', h(Gp, { params: { view: 'table' }, setParams: noop }), 'en', 5000, [
+      '<table',
+      '=70',
+      '=142',
+      'Ukraine',
+      '3.184',
+      '▲2',
+      'rank 96, level with Cambodia (2.075)',
+      '2.075*',
+    ]);
+    ok(table.indexOf('Iceland') < table.indexOf('Russia'), 'ready:gpi table in the report order by default');
+    const europe = check('ready:gpi europe', h(Gp, { params: { region: 'europe', order: 'least', view: 'table' }, setParams: noop }), 'en', 2000, ['Russia', 'Ukraine']);
+    ok(!europe.includes(' Japan</th>'), 'ready:gpi europe filter excludes Asia');
+    ok(europe.indexOf('Russia') < europe.indexOf('Iceland'), 'ready:gpi least-peaceful order puts Russia before Iceland');
   }
 
   ok(ssr(h(AboutPage), 'en') !== ssr(h(AboutPage), 'uk'), 'EN and UK renders differ (language toggle works)');

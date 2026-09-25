@@ -11,12 +11,13 @@ import meta4 from '../viz/donations/meta';
 import meta5 from '../viz/gdp-by-country/meta';
 import meta6 from '../viz/gdp-ppp-per-capita/meta';
 import meta7 from '../viz/global-brands-race/meta';
-import meta8 from '../viz/land-area/meta';
-import meta9 from '../viz/population-by-country/meta';
-import meta10 from '../viz/robotization/meta';
-import meta11 from '../viz/time-of-life/meta';
-import meta12 from '../viz/volunteers-by-region/meta';
-import meta13 from '../viz/volunteers-growth/meta';
+import meta8 from '../viz/global-peace-index/meta';
+import meta9 from '../viz/land-area/meta';
+import meta10 from '../viz/population-by-country/meta';
+import meta11 from '../viz/robotization/meta';
+import meta12 from '../viz/time-of-life/meta';
+import meta13 from '../viz/volunteers-by-region/meta';
+import meta14 from '../viz/volunteers-growth/meta';
 
 export type VizLoader = () => Promise<{ default: ComponentType<VizBodyProps> }>;
 
@@ -35,6 +36,7 @@ export const VIZ_METAS: readonly VizMeta[] = [
   meta11,
   meta12,
   meta13,
+  meta14,
 ];
 
 export const VIZ_LOADERS: Readonly<Record<string, VizLoader>> = {
@@ -46,6 +48,7 @@ export const VIZ_LOADERS: Readonly<Record<string, VizLoader>> = {
   'gdp-by-country': () => import('../viz/gdp-by-country/index'),
   'gdp-ppp-per-capita': () => import('../viz/gdp-ppp-per-capita/index'),
   'global-brands-race': () => import('../viz/global-brands-race/index'),
+  'global-peace-index': () => import('../viz/global-peace-index/index'),
   'land-area': () => import('../viz/land-area/index'),
   'population-by-country': () => import('../viz/population-by-country/index'),
   'robotization': () => import('../viz/robotization/index'),

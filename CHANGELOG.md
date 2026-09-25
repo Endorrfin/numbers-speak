@@ -2,6 +2,28 @@
 
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
+## 2026‑09‑25
+- **New:** [Crime by country: homicides and perceived crime / Злочинність у країнах: убивства й відчуття небезпеки](https://endorrfin.github.io/numbers-speak/#/v/crime-index) —
+  two measures side by side as sub-tabs. The official one: victims of intentional homicide per 100,000 people in
+  166 countries and territories (UNODC, latest year since 2015; world estimate 5.1 in 2024) — the highest of any
+  country of over a million people is Haiti's 64.3, 12.5 times the world rate. The perceived one: Numbeo's
+  crowd-sourced Crime Index, 2026 Mid-Year, 148 countries — Papua New Guinea 80.8 at the top, Andorra 13.5 at the
+  bottom. They do not always agree: the United Kingdom is 123rd by homicide rate but 60th by perceived crime. /
+  Два показники поруч як підвкладки. Офіційний — жертви умисних убивств на 100 000 населення у 166 країнах і
+  територіях (UNODC, останній рік із 2015-го; світова оцінка — 5,1 у 2024-му): найвищий серед країн із населенням
+  понад мільйон — у Гаїті, 64,3, у 12,5 раза вище за світовий рівень. Суб’єктивний — індекс злочинності Numbeo,
+  зібраний від користувачів, випуск 2026 Mid-Year, 148 країн: угорі Папуа Нова Гвінея (80,8), унизу Андорра
+  (13,5). Вони не завжди збігаються: Велика Британія — 123-я за рівнем убивств, але 60-та за відчуттям
+  злочинності.
+- **New:** [Global Peace Index 2026 / Глобальний індекс миру 2026](https://endorrfin.github.io/numbers-speak/#/v/global-peace-index) —
+  163 countries ranked by the Institute for Economics & Peace on 23 indicators of safety, conflict and
+  militarisation (score 1–5, lower = more peaceful): Iceland first for the 19th year, Russia last; Ukraine 160th,
+  up two places. Over the year 99 countries became less peaceful and 62 more peaceful; switch the order to see the
+  least peaceful first. /
+  163 країни в рейтингу Інституту економіки та миру за 23 показниками безпеки, конфліктів і мілітаризації (бал
+  1–5, нижчий = мирніше): Ісландія — перша 19-й рік поспіль, Росія — остання; Україна — 160-та, на два місця вище.
+  За рік 99 країн стали менш мирними, 62 — мирнішими; перемкніть порядок, щоб побачити спершу найменш мирні.
+
 ## 2026‑09‑24
 - **New:** [Industrial robots per 10,000 workers, 2024 (top 15) / Роботизація виробництва, 2024 (топ‑15)](https://endorrfin.github.io/numbers-speak/#/v/robotization) —
   robot density in manufacturing from the IFR's World Robotics 2025: South Korea 1,220 robots per 10,000 employees,
