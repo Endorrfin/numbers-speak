@@ -14,6 +14,7 @@ import { fill, ui } from '../../i18n/ui';
 import { countryName, flagUrl } from '../../lib/countries';
 import { formatNumber, formatScore, formatScoreChange } from '../../lib/format';
 import { paginate } from '../../lib/paginate';
+import { Pager } from '../../components/viz/Pager';
 import { REGIONS, REGION_LABELS } from '../../lib/regions';
 import type { Region } from '../../lib/regions';
 import { dataUrl, useDataset } from '../../lib/useDataset';
@@ -34,8 +35,14 @@ const txt = {
     least: { en: 'Least peaceful first', uk: 'Спершу найменш мирні' },
   } satisfies Record<Order, L>,
   chartLabel: {
-    en: 'Horizontal bar chart: Global Peace Index 2026 overall score (1–5, lower = more peaceful), {region}, {order}, rows {from} to {to} of {total}. First: {first}. The table view lists every value.',
-    uk: 'Горизонтальна стовпчикова діаграма: загальний бал Глобального індексу миру 2026 (1–5, нижчий = мирніше), {region}, {order}, рядки {from}–{to} з {total}. Перший: {first}. Таблиця містить усі значення.',
+    // CHANGED (S3-fx): scale ends from data.ts; says that the bars start at the scale's floor, not at 0.
+    en: 'Horizontal bar chart: Global Peace Index 2026 overall score ({min}–{max}, lower = more peaceful; bars start at {min}), {region}, {order}, rows {from} to {to} of {total}. First: {first}. The table view lists every value.',
+    uk: 'Горизонтальна стовпчикова діаграма: загальний бал Глобального індексу миру 2026 ({min}–{max}, нижчий = мирніше; стовпці від {min}), {region}, {order}, рядки {from}–{to} з {total}. Перший: {first}. Таблиця містить усі значення.',
+  },
+  // CHANGED (S3-fx): axis title — GPI's scale starts at 1 (most peaceful possible), so the bars do too.
+  axisLabel: {
+    en: 'Score on a {min}–{max} scale · bars start at {min}',
+    uk: 'Бал за шкалою {min}–{max} · стовпці від {min}',
   },
   summary: {
     en: 'Lower score = more peaceful · since last year {deteriorated} countries became less peaceful, {improved} more peaceful',
@@ -156,17 +163,15 @@ function GpiView({ data, settings, update }: ViewProps) {
   const regionName = settings.region === 'all' ? t(ui.allRegions) : t(REGION_LABELS[settings.region]);
   const orderName = t(txt.orders[settings.order]).toLowerCase();
   const first = pageItems[0];
+  const scale = { min: formatNumber(SCORE_MIN, lang), max: formatNumber(SCORE_MAX, lang) }; // CHANGED (S3-fx)
   const chartLabel = fill(t(txt.chartLabel), {
+    ...scale,
     region: regionName,
     order: orderName,
     from: page.from,
     to: page.to,
     total: page.total,
     first: first ? `${rankLabel(first)} ${countryName(first.code, lang)}, ${formatScore(first.score, lang)}` : '—',
-  });
-  const pageOptions = Array.from({ length: page.pages }, (_, i) => {
-    const from = i * PAGE_SIZE + 1;
-    return { value: i + 1, label: `${from}–${Math.min(from + PAGE_SIZE - 1, page.total)}` };
   });
   const s = gpiSummary(all);
   const summary =
@@ -205,24 +210,8 @@ function GpiView({ data, settings, update }: ViewProps) {
         </div>
 
         {settings.view === 'chart' && (
-          <div className="field">
-            <label htmlFor={`${base}-page`}>{t(ui.rows)}</label>
-            <div className="pager">
-              <button type="button" className="btn btn-ghost btn-icon" aria-label={t(ui.prevPage)} disabled={page.page <= 1} onClick={() => update({ page: page.page - 1 })}>
-                ‹
-              </button>
-              <select id={`${base}-page`} value={page.page} onChange={(e) => update({ page: Number(e.target.value) })}>
-                {pageOptions.map((o) => (
-                  <option key={o.value} value={o.value}>
-                    {o.label}
-                  </option>
-                ))}
-              </select>
-              <button type="button" className="btn btn-ghost btn-icon" aria-label={t(ui.nextPage)} disabled={page.page >= page.pages} onClick={() => update({ page: page.page + 1 })}>
-                ›
-              </button>
-            </div>
-          </div>
+          // CHANGED (S3-fx): shared Pager — the select no longer clips on phones
+          <Pager id={`${base}-page`} page={page} size={PAGE_SIZE} onPage={(p) => update({ page: p })} />
         )}
 
         <div className="field field-auto">
@@ -249,7 +238,8 @@ function GpiView({ data, settings, update }: ViewProps) {
       </p>
 
       {settings.view === 'chart' ? (
-        <RankedBar rows={rows} label={chartLabel} tickFormat={tickFormat} />
+        // CHANGED (S3-fx): bars from SCORE_MIN (data.ts), not 0 — page 1 (1.161–1.538) no longer looks flat
+        <RankedBar rows={rows} label={chartLabel} tickFormat={tickFormat} baseline={SCORE_MIN} axisLabel={fill(t(txt.axisLabel), scale)} />
       ) : (
         <div className="table-wrap">
           <table className="data-table">

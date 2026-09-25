@@ -493,7 +493,19 @@
   gap: 0.35rem;
 }
 .pager select {
-  flex: 1;
+  flex: 1 1 0;
+  /* CHANGED (S3-fx): never narrower than the longest label ("151–163" = 7 ch, set by Pager.tsx) +
+     padding + the native arrow (with slack for WebKit's) — it was clipped at 360–390 px on every paged
+     ranking and at 768 on two. width: auto — the 100 % of `.field select` made the field's intrinsic
+     width circular and pushed the › button out of the row. */
+  width: auto;
+  min-width: calc(var(--pager-ch, 7) * 1ch + 3rem);
+  font-variant-numeric: tabular-nums;
+}
+/* CHANGED (S3-fx): the Rows field keeps its content width and wraps to its own line instead of shrinking */
+.controls .field-pager {
+  flex: 0 0 auto;
+  max-width: 100%;
 }
 .btn-icon {
   justify-content: center;
@@ -616,6 +628,12 @@
 .rb-axis .tick text {
   fill: var(--chart-axis);
   font-size: 11px;
+}
+/* CHANGED (S3-fx): axis title of a chart that does not start at 0 (text token, never a data colour) */
+.rb-axis-label {
+  fill: var(--tx2);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
 }
 .rb-hit {
   fill: transparent;

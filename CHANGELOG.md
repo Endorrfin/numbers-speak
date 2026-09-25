@@ -3,6 +3,15 @@
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
 ## 2026‑09‑25
+- **Updated:** [Global Peace Index 2026 / Глобальний індекс миру 2026](https://endorrfin.github.io/numbers-speak/#/v/global-peace-index) —
+  the bars now start at 1, the most peaceful score possible on the index's 1–5 scale, instead of 0, so the gaps
+  between countries show: on the first page Iceland's 1.161 is under a third of Hungary's bar, not three quarters;
+  a line above the axis says so. On phones, the row picker of every paged ranking no longer cuts off its label
+  ("151–163"). /
+  Стовпці тепер починаються з 1 — найменшого можливого балу за шкалою індексу 1–5, — а не з 0, тож різницю між
+  країнами видно: на першій сторінці стовпець Ісландії (1,161) — менше третини стовпця Угорщини, а не три чверті;
+  про це сказано над віссю. На телефонах перемикач рядків у рейтингах зі сторінками більше не обрізає підпис
+  («151–163»).
 - **Fixed:** [Russian missile and drone attacks on Ukraine / Російські ракетні й дронові атаки на Україну](https://endorrfin.github.io/numbers-speak/#/v/air-attacks-on-ukraine?show=largest) —
   “Largest attacks” now counts locationally lost drones (electronic warfare, reported separately from July 2024 to
   July 2025) as shot down or suppressed, like the timeline and the interception angle: 9 July 2025 is 97 %, not 41 %. /
