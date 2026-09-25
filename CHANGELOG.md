@@ -3,6 +3,12 @@
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
 ## 2026‑09‑25
+- **Updated:** the site now counts page views anonymously with GoatCounter — which pages are opened, no cookies,
+  nothing stored in your browser to identify you, no banner; nothing is sent when your browser asks not to be
+  tracked (Do Not Track, Global Privacy Control). Details on the About page and in the README. /
+  Сайт тепер знеособлено рахує перегляди сторінок через GoatCounter — які сторінки відкривають, без cookies,
+  без ідентифікаторів у вашому браузері, без банерів; якщо браузер просить не відстежувати (Do Not Track,
+  Global Privacy Control), не надсилається нічого. Подробиці — на сторінці «Про проєкт» і в README.
 - **Updated:** gallery cards now show a preview drawn from each visualization's own data — a key figure and a
   miniature of the chart, in both themes and both languages — instead of one icon per chart type. /
   Картки галереї тепер показують прев’ю з власних даних кожної візуалізації — ключове число й мініатюру

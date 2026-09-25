@@ -17,7 +17,27 @@ Ukraine and the world in numbers. Every chart can be configured, shared by link 
   and panels "About the data" (description, sources with retrieval dates, licence, data download) and
   "How it's built".
 - **Bilingual at the data layer** — every string is `{ en, uk }`; technical terms stay English.
-- **No runtime third‑party requests** — D3 and fonts are bundled; data files are static snapshots.
+- **No runtime third‑party requests** — D3 and fonts are bundled; data files are static snapshots. The one
+  exception is the anonymous visit counter below.
+
+## Visit statistics
+
+To see how many people open the gallery and which visualizations they read, the site counts page views with
+[GoatCounter](https://www.goatcounter.com) — with its own small client (`src/lib/analytics.ts`, ≈ 0.85 kB gzip), not
+GoatCounter's script.
+
+- **What is sent:** one request per page you open — the page's route (`/#/`, `/#/t/<tab>`, `/#/v/<id>`,
+  `/#/about`, `/#/404`) and its English title, the site you came from (first page only) and your screen width.
+  Filters and chart settings (`?region=…`, `?show=…`) are not pages and are never sent.
+- **What is not:** no cookies, no identifier stored in your browser, no consent banner or pop‑up. Like any web
+  request, it carries your IP address and User‑Agent; GoatCounter uses them only to tell unique visits apart
+  (in memory, up to 8 hours) and stores neither ([how](https://www.goatcounter.com/help/sessions)); country,
+  region and browser collection are switched off in the site's GoatCounter settings.
+- **When nothing is sent:** Do Not Track or Global Privacy Control is on; the browser is automated; the site
+  runs anywhere but `endorrfin.github.io` (localhost, a fork, a preview); the dev build.
+- **Never in your way:** the request goes after the page is shown, is never retried, and a blocker, being
+  offline or GoatCounter being down changes nothing on the page.
+- **Owner's own visits:** `#/about?no-count=1` switches counting off in that browser (`?no-count=0` back on).
 
 ## Tech
 
@@ -84,7 +104,28 @@ Copy the golden entry `src/viz/gdp-by-country/` (data.ts → state.ts → index.
   налаштування, і панелі «Про дані» (опис, джерела з датами отримання, ліцензія, завантаження даних) та
   «Як побудовано».
 - **Двомовність на рівні даних** — кожен рядок `{ en, uk }`; технічні терміни лишаються англійською.
-- **Жодних сторонніх запитів під час роботи** — D3 і шрифти в бандлі; дані — статичні знімки.
+- **Жодних сторонніх запитів під час роботи** — D3 і шрифти в бандлі; дані — статичні знімки. Єдиний
+  виняток — знеособлений лічильник відвідувань нижче.
+
+## Статистика відвідувань
+
+Щоб бачити, скільки людей відкривають галерею і які візуалізації читають, сайт рахує перегляди сторінок через
+[GoatCounter](https://www.goatcounter.com) — власним невеликим клієнтом (`src/lib/analytics.ts`, ≈ 0,85 кБ gzip), а не
+скриптом GoatCounter.
+
+- **Що надсилається:** один запит на кожну відкриту сторінку — її маршрут (`/#/`, `/#/t/<tab>`, `/#/v/<id>`,
+  `/#/about`, `/#/404`) і англійська назва, сайт, з якого ви прийшли (лише для першої сторінки), і ширина
+  екрана. Фільтри й налаштування графіків (`?region=…`, `?show=…`) — не сторінки й ніколи не надсилаються.
+- **Чого немає:** cookies, ідентифікаторів у вашому браузері, банерів згоди чи спливних вікон. Як і будь‑який
+  вебзапит, він містить вашу IP‑адресу та User‑Agent; GoatCounter використовує їх лише щоб розрізнити
+  унікальні візити (у пам’яті, до 8 годин), і не зберігає ні того, ні іншого
+  ([як саме](https://www.goatcounter.com/help/sessions)); збір країни, регіону й браузера вимкнено в
+  налаштуваннях сайту в GoatCounter.
+- **Коли не надсилається нічого:** увімкнено Do Not Track або Global Privacy Control; браузер автоматизований;
+  сайт працює не на `endorrfin.github.io` (localhost, форк, прев’ю); dev‑збірка.
+- **Не заважає:** запит іде після показу сторінки, ніколи не повторюється, а блокувальник, офлайн чи
+  недоступність GoatCounter нічого на сторінці не змінюють.
+- **Власні візити власника:** `#/about?no-count=1` вимикає підрахунок у цьому браузері (`?no-count=0` — вмикає).
 
 ## Стек і команди
 

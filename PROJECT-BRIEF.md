@@ -50,6 +50,13 @@ after the migration, add **1–4 visualizations per month** through a repeatable
 - **Out:** the learning exercises (`_examples/_removed`, `_examples/bar-chart-population`,
   `_examples/d3.html`); any backend, accounts, analytics or tracking; runtime requests to third‑party
   hosts; live data feeds (snapshots only).
+- **Explicit exception (owner, 2026‑09‑25, S3‑an):** anonymous page counts with **GoatCounter** — one request
+  per real navigation (the route path and its English title; the external referrer on the first view; the
+  screen width) to `numbers-speak.goatcounter.com`, sent after the page is shown, only on the production host.
+  No third‑party script, no cookies, no identifiers, no consent banner; nothing is sent for Do Not Track,
+  Global Privacy Control, automated browsers or the owner's opt‑out; any failure is silent. Settings in the
+  query are never counted as pages. Everything else in **Out** stays out (no tracking beyond page counts, no
+  other third‑party host).
 - **Weighting:** original Ukrainian content first (air strikes, volunteering, real estate, companies,
   settlements), then world rankings, then adapted gallery pieces.
 
@@ -58,7 +65,7 @@ after the migration, add **1–4 visualizations per month** through a repeatable
 |---|---|
 | **Name / URL** | Repo = package = Pages path = `numbers-speak` → `https://endorrfin.github.io/numbers-speak/` (D1). |
 | **Location** | `src/guides/numbers-speak/`; legacy pages copied to `_examples/` (gitignored); `src/D3` stays the read‑only original (D2). |
-| **Stack** | Vite 8 + React 19 + TypeScript 6 (strict) + D3 7.9 (npm) + `@types/d3`. No router library — hash router. No runtime third‑party requests (D3). |
+| **Stack** | Vite 8 + React 19 + TypeScript 6 (strict) + D3 7.9 (npm) + `@types/d3`. No router library — hash router. No runtime third‑party requests (D3) — except the GoatCounter page counter (§4, S3‑an). |
 | **Content model** | One folder per visualization, `src/viz/<id>/`: `meta.ts` (typed `VizMeta` manifest, the SSOT) + `index.tsx` (the page body). `scripts/gen-catalog.ts` generates `src/catalog/catalog.generated.ts`; `check:catalog` fails on a stale index. |
 | **Taxonomy** | 5 topic tabs (`ukraine`, `world`, `economy`, `security`, `knowledge`) + "All" + "New" (≤ 30 days). One primary tab, any number of secondary ones; facets: chart kind, geography, origin, language (D4). |
 | **Merges** | 5 EN/UA pairs → 1 entry each; 3 brand‑race versions → one 2000–2025 entry; simple + detailed time of life → 1 (D5). |
@@ -80,7 +87,8 @@ after the migration, add **1–4 visualizations per month** through a repeatable
 - **Content lives only in `src/viz/*` and `public/data/*`** — never hand‑edit generated files or `dist/`.
 - **Accessibility:** keyboard‑operable controls, visible focus, `role="img"` + label on charts,
   `prefers-reduced-motion` fallback for every animation, contrast‑checked palette.
-- **Security:** never build HTML from data (`.text()`, not `.html()`); no third‑party requests at runtime;
+- **Security:** never build HTML from data (`.text()`, not `.html()`); no third‑party requests at runtime
+  (sole exception: the GoatCounter page counter, §4 — a beacon, no third‑party code in the page);
   no secrets in the repo; Dependabot on for npm and Actions.
 - **Licences:** code MIT; data under its sources' terms; adapted code keeps its notice.
 - **Sandbox gotchas:** agent sessions never run git against the live repo and never `npm install` in it
