@@ -59,6 +59,26 @@ def('history', { state: null, replaceState: noop });
 def('addEventListener', noop);
 def('removeEventListener', noop);
 
+// CHANGED (S3-an): network spies — rendering must never send a request. The page-view counter runs in an
+// effect (SSR never runs effects) and counts only on the production host; asserted at the end of main().
+const network = { fetch: 0, beacon: 0, image: 0 };
+def('fetch', () => {
+  network.fetch++;
+  return Promise.reject(new Error('no network in the smoke'));
+});
+if (!g.navigator) def('navigator', {});
+Object.defineProperty(g.navigator as object, 'sendBeacon', {
+  configurable: true,
+  value: () => {
+    network.beacon++;
+    return true;
+  },
+});
+def('Image', function Image() {
+  network.image++;
+  return {};
+});
+
 // Legacy server APIs log about Suspense when lazy routes suspend — expected; real errors still surface.
 const NOISE = ['renderToStaticMarkup', 'renderToString', 'Suspense', 'hydrat', 'renderToPipeableStream'];
 const origError = console.error.bind(console);
@@ -158,6 +178,13 @@ async function main(): Promise<void> {
   for (const lang of langs) check('about', h(AboutPage), lang, 1500);
   check('about', h(AboutPage), 'en', 1500, ['Every number has a source']);
   check('about', h(AboutPage), 'uk', 1500, ['Кожне число має джерело']);
+  // CHANGED (S3-an): the statistics panel in both languages; the owner's opt-out line only with ?no-count=1.
+  check('about:stats', h(AboutPage), 'en', 1500, ['Anonymous visit counts', 'GoatCounter', 'Global Privacy Control']);
+  check('about:stats', h(AboutPage), 'uk', 1500, ['Знеособлена статистика', 'GoatCounter', 'Global Privacy Control']);
+  ok(!ssr(h(AboutPage), 'en').includes('Visits from this browser'), 'about: no opt-out line for visitors');
+  check('about:no-count', h(AboutPage, { params: { 'no-count': '1' } }), 'en', 1500, ['Visits from this browser are not counted']);
+  check('about:no-count', h(AboutPage, { params: { 'no-count': '1' } }), 'uk', 1500, ['Візити з цього браузера не рахуються']);
+  ok(!ssr(h(AboutPage, { params: { 'no-count': '0' } }), 'en').includes('Visits from this browser'), 'about: ?no-count=0 hides the line');
   for (const lang of langs) check('notFound', h(NotFound), lang, 150);
 
   // ── C: every visualization page + an unknown id ───────────────────────────────────────────────
@@ -561,6 +588,8 @@ async function main(): Promise<void> {
   }
 
   ok(ssr(h(AboutPage), 'en') !== ssr(h(AboutPage), 'uk'), 'EN and UK renders differ (language toggle works)');
+  // CHANGED (S3-an): every page above rendered without a single request (fetch · sendBeacon · Image).
+  ok(network.fetch + network.beacon + network.image === 0, `no request during render (${JSON.stringify(network)})`);
 
   console.log('— SSR / render smoke —');
   console.log(`  ${CATALOG.length} visualization(s) · ${TAB_IDS.length} tabs · ${hashes.length} hashes · EN + UK`);

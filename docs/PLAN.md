@@ -1,7 +1,7 @@
 # Numbers Speak — Implementation Plan
 # Цифри говорять — план реалізації
 
-> **Status:** v0.2 · owner decisions D1–D10 accepted · 2026‑09‑17 (v0.1, the original draft, stays in `src/D3/docs/PLAN.md`)
+> **Status:** v0.5 (see Changelog) · owner decisions D1–D10 accepted · 2026‑09‑17 (v0.1, the original draft, stays in `src/D3/docs/PLAN.md`)
 > **Scope:** visualizations from `src/D3/Contribution` and `src/D3/d3_collections` (copied to `_examples/`, gitignored) only. Learning exercises
 > (`00–05`, `Data visualization fundamentals`, `bar-chart-population`, `attempts`, `d3.html`) are **out of scope**
 > (owner decision, 2026‑09‑17).
@@ -160,7 +160,11 @@ export function RankedBarChart({ rows, options }: Props) {
 - Lazy loading: `fetch('./data/<id>/…')` when the page opens. Large trees are split by branch
   (settlements: 6 KB skeleton + 20–85 KB per region).
 - No runtime third‑party requests: D3, `topojson-client` and `us-atlas` come from npm; the Statistics
-  Iceland data becomes a static snapshot with a retrieval date.
+  Iceland data becomes a static snapshot with a retrieval date. **One exception (v0.5, S3‑an):** anonymous page
+  counts — one `sendBeacon` to `numbers-speak.goatcounter.com/count` per real navigation, after the page is
+  shown, only on `endorrfin.github.io`; no third‑party script, no cookies, no identifiers; skipped for Do Not
+  Track, Global Privacy Control, automated browsers and the owner's opt‑out; a failure is silent and never
+  retried (`src/lib/analytics.ts`).
 
 **Quality gates** (`npm run verify`): typecheck → lint → `check:catalog` (generated index is fresh) →
 `check:data` (manifest complete in EN+UA, https sources, unique ids, valid enums; dataset schema: types,
@@ -260,7 +264,7 @@ flowchart LR
 | Risk | Mitigation |
 |---|---|
 | v3/v6 code (`d3.xhr`, `d3.scale.linear`, `d3.svg.axis`) does not port 1:1 | Rewrite on v7 APIs inside the chart kit; keep the old page only as a visual reference |
-| Runtime third parties (CDNs, jsdelivr, PX‑Web API) break or change | Everything from npm; static data snapshots with retrieval dates |
+| Runtime third parties (CDNs, jsdelivr, PX‑Web API) break or change | Everything from npm; static data snapshots with retrieval dates. The only runtime third party is the GoatCounter page counter (v0.5): fire‑and‑forget, nothing on the page depends on it — blocked, offline or down, the site works the same |
 | Licences of adapted examples | Keep the licence notice and a link on each adapted entry (the D3 gallery notebook checked, "Icelandic population by age", is ISC — check each one). The Iceland pyramid reuses third‑party code (`px_client.js`) with no recorded licence → re‑implement it on v7 from the static dataset |
 | Data terms | Most World Bank datasets: CC BY 4.0 with the prescribed attribution. Numbeo: personal use with a link back; commercial use needs a paid licence. Check IEP (GPI), IFR, Interbrand and Opendatabot terms before publishing |
 | Hash URLs give one link preview for the whole site | Generated static share pages `/v/<id>/` with OG tags |
@@ -384,7 +388,11 @@ Actions. Автоматизація — плагін `guide-factory` (skills `ne
 - **Ліниве завантаження:** `fetch('./data/<id>/…')` під час відкриття сторінки. Великі дерева діляться на гілки
   (населені пункти: каркас 6 KB + 20–85 KB на регіон).
 - **Жодних runtime‑запитів до третіх сторін:** D3, `topojson-client` і `us-atlas` — з npm; дані Ісландії —
-  статичний знімок із датою отримання.
+  статичний знімок із датою отримання. **Один виняток (v0.5, S3‑an):** знеособлена статистика переглядів — один
+  `sendBeacon` на `numbers-speak.goatcounter.com/count` на кожен справжній перехід, після показу сторінки, лише на
+  `endorrfin.github.io`; без стороннього скрипта, cookies та ідентифікаторів; не надсилається при Do Not Track, Global
+  Privacy Control, в автоматизованих браузерах і з прапорцем власника; збій тихий і без повторів
+  (`src/lib/analytics.ts`).
 - **Ворота якості** (`npm run verify`): typecheck → lint → `check:catalog` (згенерований індекс актуальний) →
   `check:data` (маніфест повний EN+UA, https‑джерела, унікальні id, валідні enum; схема датасету: типи,
   діапазони на кшталт «частка ≤ 100 %», унікальні ключі) → `test` (чисті перетворення: parse, filter, rank,
@@ -477,7 +485,7 @@ Actions. Автоматизація — плагін `guide-factory` (skills `ne
 | Ризик | Запобіжник |
 |---|---|
 | Код v3/v6 (`d3.xhr`, `d3.scale.linear`, `d3.svg.axis`) не переноситься 1:1 | Переписати на API v7 у chart kit; стару сторінку лишити тільки як візуальний референс |
-| Сторонні runtime‑залежності (CDN, jsdelivr, PX‑Web API) ламаються чи змінюються | Усе з npm; статичні знімки даних із датами отримання |
+| Сторонні runtime‑залежності (CDN, jsdelivr, PX‑Web API) ламаються чи змінюються | Усе з npm; статичні знімки даних із датами отримання. Єдина runtime‑третя сторона — лічильник переглядів GoatCounter (v0.5): «вистрілив і забув», від нього нічого на сторінці не залежить — заблокований, офлайн чи недоступний, сайт працює так само |
 | Ліцензії адаптованих прикладів | На кожному адаптованому записі — ліцензійне повідомлення й посилання (перевірений нотбук D3 gallery «Icelandic population by age» має ISC — перевіряти кожен). Піраміда Ісландії використовує сторонній код (`px_client.js`) без зазначеної ліцензії → переписати на v7 на статичному датасеті |
 | Умови використання даних | Більшість датасетів World Bank — CC BY 4.0 з визначеним форматом атрибуції. Numbeo — особисте використання з посиланням на сайт; комерційне — лише з платною ліцензією. Перевірити умови IEP (GPI), IFR, Interbrand і Opendatabot до публікації |
 | Hash‑URL дають одне прев’ю на весь сайт | Згенеровані статичні share‑сторінки `/v/<id>/` з OG‑тегами |
@@ -602,6 +610,7 @@ By origin — own 16 · own data + gallery code 4 · adapted 10.
 ---
 
 ## Changelog
+- **v0.5** (2026‑09‑25) — S3‑an: one explicit exception to “no runtime third‑party requests” — anonymous page counts with GoatCounter (own client, no cookies, DNT/GPC respected, production host only). / Один явний виняток із «жодних runtime‑запитів до третіх сторін» — знеособлена статистика переглядів через GoatCounter (власний клієнт, без cookies, з повагою до DNT/GPC, лише на продакшн‑хості).
 - **v0.4** (2026‑09‑25) — S3‑th: DoD “thumbnail” → “card preview” (data‑driven, built at build time: `preview.ts` → `gen:previews`); Playwright webp stays only for OG images in P5. / DoD: «мініатюра» → «прев’ю картки»; webp через Playwright лишається лише для OG у P5.
 - **v0.3** (2026‑09‑18) — S2 done: A11 questions decided (see `CATALOG.md` §E); the separate colour‑blind palette setting (A6) is dropped — the default region palette is validated all‑pairs for CVD. / Питання A11 вирішено; окремої CVD‑палітри не потрібно.
 - **v0.2** (2026‑09‑17) — repo named `numbers-speak` (D1); location `src/guides/numbers-speak/` with the legacy copy in `_examples/` (D2); D3–D10 accepted; commit prefixes renamed. / Назва репо, розташування й рішення D3–D10 зафіксовано.

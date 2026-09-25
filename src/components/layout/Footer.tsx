@@ -1,6 +1,6 @@
 import { useLang } from '../../i18n/lang';
 import { ui } from '../../i18n/ui';
-import { PORTFOLIO_URL, REPO_URL } from '../../lib/links';
+import { REPO_URL } from '../../lib/links';
 
 export function Footer() {
   const { t } = useLang();
@@ -18,9 +18,6 @@ export function Footer() {
         </span>
         <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
           {t(ui.repository)}
-        </a>
-        <a href={PORTFOLIO_URL} target="_blank" rel="noopener noreferrer">
-          {t(ui.portfolio)}
         </a>
       </p>
     </footer>
