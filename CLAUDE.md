@@ -400,3 +400,51 @@ S4a/b/c full migration → S5 customize & share → S6 growth pipeline. Details:
   typecheck · lint · check:catalog · check:data · test (19 files) · smoke · build — green.
   Open (owner decisions): an optional one‑line note on `volunteers-growth` about that cut difference; extending
   `check:catalog` so an entry's latest CHANGELOG date must be ≥ its `meta.updated` (≈ 30 min).
+- **S3‑rb** (2026‑09‑24) — P3a ranked bars on the existing `RankedBar` core (no new chart core). Step 1 = data audit
+  (device shell and sandbox egress block every source → official data read through the in‑app browser: WB API,
+  IEP PDFs via pdf.js, IFR, Numbeo terms; owner put WPP / GPI / IFR‑terms files in `docs/data/`).
+  - `population-by-country` **published** (CATALOG #4): UN WPP 2024 compact workbook (owner download, sha256 in
+    README) → `extract-wpp.py` (sheet "Medium variant", 2025, 237 countries/areas + World) → `prep.ts` → 237 rows,
+    world 8,231,613,070. Owner decisions: year **2025** (2026 still in progress — WPP 2025 is itself a projection,
+    said on the page); density as a metric sub‑tab (`?metric=density`) = population ÷ land area, **joined at
+    runtime** with `public/data/land-area/land-area.json` (no copied areas; Q3) — 234 of 237, Guernsey/Jersey/Kosovo
+    null + note; land < 25 km² marked approximate (source rounds to whole km²: Monaco "1 km²"); UA/RU marked
+    `recognized-borders` (WPP counts Crimea in Ukraine; prep aborts if that footnote disappears). World density
+    63.3/km² vs WPP's 63.1. Shared: `formatCountCompact/Tick`, `formatDensity/Tick` (`/км²` in UK) in `format.ts`.
+    Tests: `test-population.ts` (18, incl. the real join); smoke 18 checks (both metrics, tables, filter, EN + UK).
+    `verify` green in a scratch copy (20 test files · 685 smoke checks · build; chunk 6.4 kB gzip).
+    Branch (proposed) `viz/2026-09-population-by-country`.
+    Open: Monaco's 1 km² and Gibraltar's land > total are `land-area` (Worldometers) issues — fixing them there
+    fixes the density automatically.
+  - `gdp-ppp-per-capita` **published** (CATALOG #2): WB API `NY.GDP.PCAP.PP.CD` (WDI 2026‑07‑13) read through the
+    in‑app browser → `wb-ppp-per-capita-<year>.csv` ×3 (sha256 in README, matched against the browser's own hash) →
+    `prep.ts` → one JSON per year, 197/195/185 of 217 economies. Owner decisions: 2023 · 2024 · 2025 year sub‑tabs
+    from **one vintage** (legacy Dec‑2024 values not reused — PPP revisions would fake growth); world average =
+    **WB World (WLD) aggregate** (23,382 / 24,544 / 25,704), "× world average" derived in `rankPpp`; legacy typed
+    "world share" and nominal column dropped; no fill‑ins for missing economies (Taiwan never in WB data). KPIs:
+    world average · economies above it (80/185) · highest ÷ lowest (Singapore ÷ Burundi 130.9×).
+    Tests: `test-gdp-ppp.ts` (11); smoke 11 checks. `verify` green (21 test files · 733 smoke checks · build; chunk
+    4.5 kB gzip). Branch (proposed) `viz/2026-09-gdp-ppp-per-capita`.
+  - `robotization` **published** (CATALOG #8): IFR World Robotics 2025 (data 2024) — press release 8 Apr 2026 + its
+    chart of 22 economies, transcribed to `ifr-robot-density-2024.csv` (top 10, Canada, China, world 132 match the
+    release text; image sha256 in README) → `prep.ts` → 22 rows + world. WR 2026 (released 2026‑09‑24) has no density
+    yet. IFR terms (`docs/data/vdma_500_worldrobot.pdf` §5(2)): single figures with credit allowed, full tables not.
+    Owner decisions: top 15; Belgium & Luxembourg one row (`code: BE` + `with: LU`, *); "× world average".
+    China (largest stock) 22nd with 166 — stated from data. No paging (15 rows), region filter + table.
+    Tests: `test-robotization.ts` (10); smoke 8 checks. `verify` green (22 test files · 782 smoke checks · build;
+    chunk 4.0 kB gzip). Branch (proposed) `viz/2026-09-robotization`.
+  - `crime-index` **soon** (CATALOG #6; 2026‑09‑25): owner decision — both measures as sub‑tabs. UNODC tab done:
+    `data_cts_intentional_homicide.xlsx` (12 Jul 2026, sha256 in README) parsed in the in‑app browser (SheetJS) →
+    `unodc-homicide-latest.csv` (latest year with a rate, ≥ 2015, + counts, + WLD 5.14 for 2024) → `prep.ts` →
+    `homicide-rate.json`, 166 rows (95 for 2024, older marked with year). UK = E&W + Scotland + NI combined as
+    Σ victims ÷ Σ(victims ÷ rate) (all 2023); Iraq = Central Iraq only (`partial-territory`); fractional modelled
+    counts rounded; ISO3 → ISO2 via the WPP table. Numbeo tab coded (parser, derived Safety = 100 − Crime, prep
+    aborts on mismatch, name aliases) but **not shipped**: Numbeo's terms forbid automated collection → owner copies
+    the table to `data-raw/crime-index/numbeo-crime-2026-mid.txt`; the tab appears once `numbeo-crime-2026-mid.json`
+    is added to `meta.data` (`AVAILABLE` in index.tsx). `soon`, not `draft`: a draft fails the production smoke.
+    Tests: `test-crime.ts` (8); smoke 12 checks. `verify` green (23 test files · 830 smoke checks · build).
+  - `global-peace-index` **not built**: owner answered "GPI — ні"; asked whether that means "no letter to IEP"
+    or "skip the entry" — no reply yet. `docs/data/Global-Peace-Index-2026-Report.pdf` (sha256 879c371e…) is ready;
+    the rankings table (pp. 10–11) parses with pdf.js.
+  Open (S3‑rb): Numbeo copy → publish crime-index + CHANGELOG line; GPI decision; UNODC/IEP/Numbeo terms were read
+  (links in READMEs) — none is an open licence, all used with attribution per their terms.

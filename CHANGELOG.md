@@ -3,6 +3,29 @@
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
 ## 2026‑09‑24
+- **New:** [Industrial robots per 10,000 workers, 2024 (top 15) / Роботизація виробництва, 2024 (топ‑15)](https://endorrfin.github.io/numbers-speak/#/v/robotization) —
+  robot density in manufacturing from the IFR's World Robotics 2025: South Korea 1,220 robots per 10,000 employees,
+  9.2 times the world average of 132, then Singapore, Germany and Japan; nine of the top 15 are in Europe, while
+  China — with the largest robot stock — is 22nd. /
+  Щільність роботів у промисловості за IFR World Robotics 2025: Південна Корея — 1 220 роботів на 10 000
+  працівників, у 9,2 раза більше за світове середнє (132), далі Сінгапур, Німеччина та Японія; дев’ять із топ‑15 — у
+  Європі, а Китай із найбільшим парком роботів — 22‑й.
+- **New:** [GDP (PPP) per capita, 2023–2025 / ВВП (ПКС) на душу населення, 2023–2025](https://endorrfin.github.io/numbers-speak/#/v/gdp-ppp-per-capita) —
+  output per person at purchasing-power parity for up to 197 economies, three years from one World Bank release
+  (July 2026), each as a multiple of the World Bank's world average ($25,704 in 2025): Singapore $163k (6.4×),
+  Burundi $1,248 — 131 times less; Ukraine $18,905 (0.74×). /
+  Виробництво на одну особу за паритетом купівельної спроможності для до 197 економік, три роки з одного випуску
+  Світового банку (липень 2026), кожне — як кратне світового середнього ($25 704 у 2025-му): Сінгапур — $163 тис.
+  (6,4×), Бурунді — $1 248, у 131 раз менше; Україна — $18 905 (0,74×).
+- **New:** [Population by country, 2025 / Населення країн, 2025](https://endorrfin.github.io/numbers-speak/#/v/population-by-country) —
+  8.23 billion people in 237 countries and territories on 1 July 2025 (UN World Population Prospects 2024):
+  India 1.46 billion, China 1.42 billion, the ten largest countries 57 % of humanity; each region's share; and a
+  density view — people per km² of land, from the gallery's land-area entry (world 63/km²). Ukraine's
+  38.98 million is the UN estimate within recognized borders, Crimea included. /
+  8,23 млрд людей у 237 країнах і територіях на 1 липня 2025 року (ООН, World Population Prospects 2024): Індія —
+  1,46 млрд, Китай — 1,42 млрд, десять найбільших країн — 57 % людства; частка кожного регіону; і щільність —
+  осіб на км² суходолу, за даними запису про площу країн (у світі — 63/км²). 38,98 млн України — оцінка ООН у
+  визнаних кордонах, разом із Кримом.
 - **Updated:** [Russian missile and drone attacks on Ukraine, 2022–2026 / Російські ракетні й дронові атаки на Україну, 2022–2026](https://endorrfin.github.io/numbers-speak/#/v/air-attacks-on-ukraine?show=calendar) —
   a sixth angle, a calendar heatmap: one square per day since 28 Sep 2022, one grid per year, shaded by quantile
   of the day's launches — all, missiles only or drones only — so a few record nights don't wash out ordinary

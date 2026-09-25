@@ -1,0 +1,239 @@
+name,notes,location_code,iso3,iso2,type,year,pop_jul_thousands,wpp_density
+World,,900,,,World,2025,8231613.07,63.124
+Burundi,,108,BDI,BI,Country/Area,2025,14390.003,554.528
+Comoros,,174,COM,KM,Country/Area,2025,882.847,474.394
+Djibouti,,262,DJI,DJ,Country/Area,2025,1184.076,51.082
+Eritrea,,232,ERI,ER,Country/Area,2025,3607.003,29.775
+Ethiopia,,231,ETH,ET,Country/Area,2025,135472.051,135.472
+Kenya,,404,KEN,KE,Country/Area,2025,57532.493,99.07
+Madagascar,,450,MDG,MG,Country/Area,2025,32740.678,56.275
+Malawi,,454,MWI,MW,Country/Area,2025,22216.12,234.962
+Mauritius,1,480,MUS,MU,Country/Area,2025,1268.28,624.768
+Mayotte,2,175,MYT,YT,Country/Area,2025,337.011,898.696
+Mozambique,,508,MOZ,MZ,Country/Area,2025,35631.653,45.311
+Réunion,2,638,REU,RE,Country/Area,2025,882.405,352.962
+Rwanda,,646,RWA,RW,Country/Area,2025,14569.341,601.79
+Seychelles,,690,SYC,SC,Country/Area,2025,132.779,290.544
+Somalia,,706,SOM,SO,Country/Area,2025,19654.739,31.33
+South Sudan,,728,SSD,SS,Country/Area,2025,12188.788,21.605
+Uganda,,800,UGA,UG,Country/Area,2025,51384.894,257.173
+United Republic of Tanzania,3,834,TZA,TZ,Country/Area,2025,70545.865,79.641
+Zambia,,894,ZMB,ZM,Country/Area,2025,21913.874,29.478
+Zimbabwe,,716,ZWE,ZW,Country/Area,2025,16950.795,43.817
+Angola,,24,AGO,AO,Country/Area,2025,39040.039,31.315
+Cameroon,,120,CMR,CM,Country/Area,2025,29879.337,64.112
+Central African Republic,,140,CAF,CF,Country/Area,2025,5513.282,8.85
+Chad,,148,TCD,TD,Country/Area,2025,21003.705,16.68
+Congo,,178,COG,CG,Country/Area,2025,6484.437,18.988
+Democratic Republic of the Congo,,180,COD,CD,Country/Area,2025,112832.473,49.771
+Equatorial Guinea,,226,GNQ,GQ,Country/Area,2025,1938.431,69.106
+Gabon,,266,GAB,GA,Country/Area,2025,2593.13,10.064
+Sao Tome and Principe,,678,STP,ST,Country/Area,2025,240.254,250.265
+Algeria,,12,DZA,DZ,Country/Area,2025,47435.312,19.916
+Egypt,,818,EGY,EG,Country/Area,2025,118365.995,118.907
+Libya,,434,LBY,LY,Country/Area,2025,7458.555,4.45
+Morocco,,504,MAR,MA,Country/Area,2025,38430.77,86.11
+Sudan,,729,SDN,SD,Country/Area,2025,51662.147,29.27
+Tunisia,,788,TUN,TN,Country/Area,2025,12348.573,79.448
+Western Sahara,,732,ESH,EH,Country/Area,2025,600.904,2.259
+Botswana,,72,BWA,BW,Country/Area,2025,2562.122,4.521
+Eswatini,,748,SWZ,SZ,Country/Area,2025,1256.174,72.348
+Lesotho,,426,LSO,LS,Country/Area,2025,2363.325,77.843
+Namibia,,516,NAM,NA,Country/Area,2025,3092.816,3.757
+South Africa,,710,ZAF,ZA,Country/Area,2025,64747.319,53.036
+Benin,,204,BEN,BJ,Country/Area,2025,14814.46,131.38
+Burkina Faso,,854,BFA,BF,Country/Area,2025,24074.58,87.992
+Cabo Verde,,132,CPV,CV,Country/Area,2025,527.326,130.85
+Côte d'Ivoire,,384,CIV,CI,Country/Area,2025,32711.547,102.866
+Gambia,,270,GMB,GM,Country/Area,2025,2822.093,278.863
+Ghana,,288,GHA,GH,Country/Area,2025,35064.272,154.102
+Guinea,,324,GIN,GN,Country/Area,2025,15099.727,61.451
+Guinea-Bissau,,624,GNB,GW,Country/Area,2025,2249.515,79.997
+Liberia,,430,LBR,LR,Country/Area,2025,5731.206,59.502
+Mali,,466,MLI,ML,Country/Area,2025,25198.821,20.652
+Mauritania,,478,MRT,MR,Country/Area,2025,5315.065,5.157
+Niger,,562,NER,NE,Country/Area,2025,27917.831,22.04
+Nigeria,,566,NGA,NG,Country/Area,2025,237527.782,260.799
+Saint Helena,4,654,SHN,SH,Country/Area,2025,5.197,13.324
+Senegal,,686,SEN,SN,Country/Area,2025,18931.966,98.333
+Sierra Leone,,694,SLE,SL,Country/Area,2025,8819.794,122.941
+Togo,,768,TGO,TG,Country/Area,2025,9721.608,178.739
+Kazakhstan,,398,KAZ,KZ,Country/Area,2025,20843.754,7.721
+Kyrgyzstan,,417,KGZ,KG,Country/Area,2025,7295.034,38.035
+Tajikistan,,762,TJK,TJ,Country/Area,2025,10786.734,75.379
+Turkmenistan,,795,TKM,TM,Country/Area,2025,7618.847,16.213
+Uzbekistan,,860,UZB,UZ,Country/Area,2025,37053.428,87.103
+China,5,156,CHN,CN,Country/Area,2025,1416096.094,147.51
+"China, Hong Kong SAR",6,344,HKG,HK,Country/Area,2025,7396.076,6729.823
+"China, Macao SAR",7,446,MAC,MO,Country/Area,2025,722.007,22562.719
+"China, Taiwan Province of China",8,158,TWN,TW,Country/Area,2025,23112.793,652.719
+Dem. People's Republic of Korea,,408,PRK,KP,Country/Area,2025,26571.036,220.671
+Japan,,392,JPN,JP,Country/Area,2025,123103.479,326.687
+Mongolia,,496,MNG,MN,Country/Area,2025,3517.1,2.258
+Republic of Korea,,410,KOR,KR,Country/Area,2025,51667.029,522.19
+Afghanistan,,4,AFG,AF,Country/Area,2025,43844.111,67.526
+Bangladesh,,50,BGD,BD,Country/Area,2025,175686.899,1349.673
+Bhutan,,64,BTN,BT,Country/Area,2025,796.682,20.75
+India,,356,IND,IN,Country/Area,2025,1463865.525,492.355
+Iran (Islamic Republic of),,364,IRN,IR,Country/Area,2025,92417.681,56.741
+Maldives,,462,MDV,MV,Country/Area,2025,529.676,1765.587
+Nepal,,524,NPL,NP,Country/Area,2025,29618.118,201.236
+Pakistan,,586,PAK,PK,Country/Area,2025,255219.554,331.076
+Sri Lanka,,144,LKA,LK,Country/Area,2025,23229.47,370.456
+Brunei Darussalam,,96,BRN,BN,Country/Area,2025,466.33,80.89
+Cambodia,,116,KHM,KH,Country/Area,2025,17847.982,98.589
+Indonesia,,360,IDN,ID,Country/Area,2025,285721.236,149.519
+Lao People's Democratic Republic,,418,LAO,LA,Country/Area,2025,7873.046,34.112
+Malaysia,9,458,MYS,MY,Country/Area,2025,35977.838,109.505
+Myanmar,,104,MMR,MM,Country/Area,2025,54850.648,83.961
+Philippines,,608,PHL,PH,Country/Area,2025,116786.962,389.29
+Singapore,,702,SGP,SG,Country/Area,2025,5870.75,8595.534
+Thailand,,764,THA,TH,Country/Area,2025,71619.863,140.186
+Timor-Leste,,626,TLS,TL,Country/Area,2025,1418.517,95.395
+Viet Nam,,704,VNM,VN,Country/Area,2025,101598.527,324.172
+Armenia,,51,ARM,AM,Country/Area,2025,2952.365,103.723
+Azerbaijan,10,31,AZE,AZ,Country/Area,2025,10397.713,125.792
+Bahrain,,48,BHR,BH,Country/Area,2025,1643.332,2098.763
+Cyprus,11,196,CYP,CY,Country/Area,2025,1370.754,148.35
+Georgia,12,268,GEO,GE,Country/Area,2025,3806.671,54.78
+Iraq,,368,IRQ,IQ,Country/Area,2025,47020.774,108.311
+Israel,,376,ISR,IL,Country/Area,2025,9517.181,439.735
+Jordan,,400,JOR,JO,Country/Area,2025,11520.684,129.746
+Kuwait,,414,KWT,KW,Country/Area,2025,5026.078,282.079
+Lebanon,,422,LBN,LB,Country/Area,2025,5849.421,571.791
+Oman,,512,OMN,OM,Country/Area,2025,5494.691,17.753
+Qatar,,634,QAT,QA,Country/Area,2025,3115.889,268.936
+Saudi Arabia,,682,SAU,SA,Country/Area,2025,34566.328,16.08
+State of Palestine,13,275,PSE,PS,Country/Area,2025,5589.623,928.509
+Syrian Arab Republic,,760,SYR,SY,Country/Area,2025,25620.427,139.461
+Türkiye,,792,TUR,TR,Country/Area,2025,87685.426,113.936
+United Arab Emirates,,784,ARE,AE,Country/Area,2025,11346,159.749
+Yemen,,887,YEM,YE,Country/Area,2025,41773.878,79.122
+Belarus,,112,BLR,BY,Country/Area,2025,8997.603,44.343
+Bulgaria,,100,BGR,BG,Country/Area,2025,6714.56,61.945
+Czechia,,203,CZE,CZ,Country/Area,2025,10609.239,137.42
+Hungary,,348,HUN,HU,Country/Area,2025,9632.287,106.399
+Poland,,616,POL,PL,Country/Area,2025,38140.91,124.565
+Republic of Moldova,14,498,MDA,MD,Country/Area,2025,2996.106,91.117
+Romania,,642,ROU,RO,Country/Area,2025,18908.65,82.184
+Russian Federation,,643,RUS,RU,Country/Area,2025,143997.393,8.793
+Slovakia,,703,SVK,SK,Country/Area,2025,5474.881,111.657
+Ukraine,15,804,UKR,UA,Country/Area,2025,38980.376,67.286
+Denmark,16,208,DNK,DK,Country/Area,2025,6002.507,141.589
+Estonia,,233,EST,EE,Country/Area,2025,1344.232,30.926
+Faroe Islands,17,234,FRO,FO,Country/Area,2025,56.002,40.434
+Finland,18,246,FIN,FI,Country/Area,2025,5623.329,18.597
+Guernsey,19,831,GGY,GG,Country/Area,2025,64.477,1007.445
+Iceland,,352,ISL,IS,Country/Area,2025,398.266,3.973
+Ireland,,372,IRL,IE,Country/Area,2025,5308.039,77.64
+Isle of Man,19,833,IMN,IM,Country/Area,2025,84.118,147.06
+Jersey,19,832,JEY,JE,Country/Area,2025,103.989,896.453
+Latvia,,428,LVA,LV,Country/Area,2025,1853.559,29.787
+Lithuania,,440,LTU,LT,Country/Area,2025,2830.144,45.195
+Norway,20,578,NOR,NO,Country/Area,2025,5623.071,18.483
+Sweden,,752,SWE,SE,Country/Area,2025,10656.633,26.162
+United Kingdom,21,826,GBR,GB,Country/Area,2025,69551.332,286.525
+Albania,,8,ALB,AL,Country/Area,2025,2771.508,101.157
+Andorra,,20,AND,AD,Country/Area,2025,82.904,176.393
+Bosnia and Herzegovina,,70,BIH,BA,Country/Area,2025,3140.095,61.334
+Croatia,,191,HRV,HR,Country/Area,2025,3848.16,68.845
+Gibraltar,19,292,GIB,GI,Country/Area,2025,40.126,4012.6
+Greece,,300,GRC,GR,Country/Area,2025,9938.844,75.973
+Holy See,22,336,VAT,VA,Country/Area,2025,0.501,1139.773
+Italy,,380,ITA,IT,Country/Area,2025,59146.26,199.835
+Kosovo (under UNSC res. 1244),23,412,XKX,XK,Country/Area,2025,1674.125,153.519
+Malta,,470,MLT,MT,Country/Area,2025,545.405,1731.444
+Montenegro,,499,MNE,ME,Country/Area,2025,632.729,45.81
+North Macedonia,,807,MKD,MK,Country/Area,2025,1813.791,72.805
+Portugal,,620,PRT,PT,Country/Area,2025,10411.834,113.191
+San Marino,,674,SMR,SM,Country/Area,2025,33.572,550.369
+Serbia,24,688,SRB,RS,Country/Area,2025,6689.039,87.17
+Slovenia,,705,SVN,SI,Country/Area,2025,2117.072,105.128
+Spain,25,724,ESP,ES,Country/Area,2025,47889.958,95.331
+Austria,,40,AUT,AT,Country/Area,2025,9113.574,110.442
+Belgium,,56,BEL,BE,Country/Area,2025,11758.603,388.355
+France,26,250,FRA,FR,Country/Area,2025,66650.804,120.88
+Germany,,276,DEU,DE,Country/Area,2025,84075.075,241.207
+Liechtenstein,,438,LIE,LI,Country/Area,2025,40.128,250.8
+Luxembourg,,442,LUX,LU,Country/Area,2025,680.453,262.723
+Monaco,,492,MCO,MC,Country/Area,2025,38.341,25732.215
+Netherlands,27,528,NLD,NL,Country/Area,2025,18346.819,544.885
+Switzerland,,756,CHE,CH,Country/Area,2025,8967.407,224.23
+Anguilla,19,660,AIA,AI,Country/Area,2025,14.728,167.364
+Antigua and Barbuda,,28,ATG,AG,Country/Area,2025,94.209,214.11
+Aruba,29,533,ABW,AW,Country/Area,2025,108.147,600.819
+Bahamas,,44,BHS,BS,Country/Area,2025,403.033,75.221
+Barbados,,52,BRB,BB,Country/Area,2025,282.623,657.264
+"Bonaire, Sint Eustatius and Saba",29,535,BES,BQ,Country/Area,2025,31.338,95.544
+British Virgin Islands,19,92,VGB,VG,Country/Area,2025,39.732,258
+Cayman Islands,19,136,CYM,KY,Country/Area,2025,75.844,314.703
+Cuba,,192,CUB,CU,Country/Area,2025,10937.203,102.449
+Curaçao,29,531,CUW,CW,Country/Area,2025,185.487,437.469
+Dominica,,212,DMA,DM,Country/Area,2025,65.871,87.829
+Dominican Republic,,214,DOM,DO,Country/Area,2025,11520.487,238.465
+Grenada,,308,GRD,GD,Country/Area,2025,117.303,345.01
+Guadeloupe,2,312,GLP,GP,Country/Area,2025,373.791,229.601
+Haiti,,332,HTI,HT,Country/Area,2025,11906.095,431.865
+Jamaica,,388,JAM,JM,Country/Area,2025,2837.077,261.965
+Martinique,2,474,MTQ,MQ,Country/Area,2025,340.439,321.169
+Montserrat,19,500,MSR,MS,Country/Area,2025,4.359,42.325
+Puerto Rico,30,630,PRI,PR,Country/Area,2025,3235.289,372.215
+Saint Barthélemy,2,652,BLM,BL,Country/Area,2025,11.414,518.795
+Saint Kitts and Nevis,,659,KNA,KN,Country/Area,2025,46.922,180.467
+Saint Lucia,,662,LCA,LC,Country/Area,2025,180.149,292.45
+Saint Martin (French part),2,663,MAF,MF,Country/Area,2025,24.941,470.575
+Saint Vincent and the Grenadines,,670,VCT,VC,Country/Area,2025,99.924,256.217
+Sint Maarten (Dutch part),29,534,SXM,SX,Country/Area,2025,43.923,1291.853
+Trinidad and Tobago,,780,TTO,TT,Country/Area,2025,1511.155,294.572
+Turks and Caicos Islands,19,796,TCA,TC,Country/Area,2025,46.855,49.321
+United States Virgin Islands,30,850,VIR,VI,Country/Area,2025,84.138,240.396
+Belize,,84,BLZ,BZ,Country/Area,2025,422.924,18.541
+Costa Rica,,188,CRI,CR,Country/Area,2025,5152.95,100.92
+El Salvador,,222,SLV,SV,Country/Area,2025,6365.503,307.215
+Guatemala,,320,GTM,GT,Country/Area,2025,18687.881,174.392
+Honduras,,340,HND,HN,Country/Area,2025,11005.85,100.903
+Mexico,,484,MEX,MX,Country/Area,2025,131946.9,67.346
+Nicaragua,,558,NIC,NI,Country/Area,2025,7007.502,58.231
+Panama,,591,PAN,PA,Country/Area,2025,4571.189,61.625
+Argentina,,32,ARG,AR,Country/Area,2025,45851.378,16.424
+Bolivia (Plurinational State of),,68,BOL,BO,Country/Area,2025,12581.843,11.614
+Brazil,,76,BRA,BR,Country/Area,2025,212812.405,25.462
+Chile,,152,CHL,CL,Country/Area,2025,19859.921,26.376
+Colombia,,170,COL,CO,Country/Area,2025,53425.635,47.545
+Ecuador,,218,ECU,EC,Country/Area,2025,18289.896,73.643
+Falkland Islands (Malvinas),31,238,FLK,FK,Country/Area,2025,3.469,0.285
+French Guiana,2,254,GUF,GF,Country/Area,2025,313.666,3.816
+Guyana,,328,GUY,GY,Country/Area,2025,835.986,4.247
+Paraguay,,600,PRY,PY,Country/Area,2025,7013.078,17.339
+Peru,,604,PER,PE,Country/Area,2025,34576.665,27.011
+Suriname,,740,SUR,SR,Country/Area,2025,639.85,4.102
+Uruguay,,858,URY,UY,Country/Area,2025,3384.688,19.543
+Venezuela (Bolivarian Republic of),,862,VEN,VE,Country/Area,2025,28516.896,31.117
+Bermuda,19,60,BMU,BM,Country/Area,2025,64.555,1195.454
+Canada,,124,CAN,CA,Country/Area,2025,40126.723,4.413
+Greenland,17,304,GRL,GL,Country/Area,2025,55.745,0.136
+Saint Pierre and Miquelon,2,666,SPM,PM,Country/Area,2025,5.574,24.233
+United States of America,32,840,USA,US,Country/Area,2025,347275.807,37.964
+Australia,33,36,AUS,AU,Country/Area,2025,26974.026,3.511
+New Zealand,34,554,NZL,NZ,Country/Area,2025,5251.899,19.826
+Fiji,,242,FJI,FJ,Country/Area,2025,933.154,51.076
+New Caledonia,2,540,NCL,NC,Country/Area,2025,295.333,16.156
+Papua New Guinea,,598,PNG,PG,Country/Area,2025,10762.817,23.766
+Solomon Islands,,90,SLB,SB,Country/Area,2025,838.645,29.124
+Vanuatu,,548,VUT,VU,Country/Area,2025,335.169,27.495
+Guam,30,316,GUM,GU,Country/Area,2025,168.999,312.382
+Kiribati,,296,KIR,KI,Country/Area,2025,136.488,188.001
+Marshall Islands,,584,MHL,MH,Country/Area,2025,36.282,201.567
+Micronesia (Fed. States of),,583,FSM,FM,Country/Area,2025,113.683,162.404
+Nauru,,520,NRU,NR,Country/Area,2025,12.025,601.275
+Northern Mariana Islands,30,580,MNP,MP,Country/Area,2025,43.541,95.275
+Palau,,585,PLW,PW,Country/Area,2025,17.663,38.397
+American Samoa,30,16,ASM,AS,Country/Area,2025,46.029,230.143
+Cook Islands,36,184,COK,CK,Country/Area,2025,13.263,55.263
+French Polynesia,2,258,PYF,PF,Country/Area,2025,282.465,76.673
+Niue,36,570,NIU,NU,Country/Area,2025,1.821,7.002
+Samoa,,882,WSM,WS,Country/Area,2025,219.306,77.493
+Tokelau,36,772,TKL,TK,Country/Area,2025,2.608,217.333
+Tonga,,776,TON,TO,Country/Area,2025,103.742,159.603
+Tuvalu,,798,TUV,TV,Country/Area,2025,9.492,316.4
+Wallis and Futuna Islands,2,876,WLF,WF,Country/Area,2025,11.194,79.957

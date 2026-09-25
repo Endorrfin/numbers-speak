@@ -1,0 +1,28 @@
+{
+  "year": 2024,
+  "world": 132,
+  "rows": [
+    {"code":"KR","region":"asia","value":1220},
+    {"code":"SG","region":"asia","value":818},
+    {"code":"DE","region":"europe","value":449},
+    {"code":"JP","region":"asia","value":446},
+    {"code":"SE","region":"europe","value":377},
+    {"code":"DK","region":"europe","value":329},
+    {"code":"SI","region":"europe","value":315},
+    {"code":"US","region":"americas","value":307},
+    {"code":"TW","region":"asia","value":302},
+    {"code":"CH","region":"europe","value":294},
+    {"code":"NL","region":"europe","value":293},
+    {"code":"AT","region":"europe","value":272},
+    {"code":"CA","region":"americas","value":241},
+    {"code":"IT","region":"europe","value":237},
+    {"code":"BE","with":"LU","region":"europe","value":232},
+    {"code":"CZ","region":"europe","value":216},
+    {"code":"SK","region":"europe","value":210},
+    {"code":"FR","region":"europe","value":195},
+    {"code":"FI","region":"europe","value":183},
+    {"code":"ES","region":"europe","value":183},
+    {"code":"HU","region":"europe","value":172},
+    {"code":"CN","region":"asia","value":166}
+  ]
+}

@@ -6,13 +6,17 @@ import type { VizBodyProps, VizMeta } from './types';
 import meta0 from '../viz/air-attacks-on-ukraine/meta';
 import meta1 from '../viz/births-deaths-per-day/meta';
 import meta2 from '../viz/births-deaths-ua/meta';
-import meta3 from '../viz/donations/meta';
-import meta4 from '../viz/gdp-by-country/meta';
-import meta5 from '../viz/global-brands-race/meta';
-import meta6 from '../viz/land-area/meta';
-import meta7 from '../viz/time-of-life/meta';
-import meta8 from '../viz/volunteers-by-region/meta';
-import meta9 from '../viz/volunteers-growth/meta';
+import meta3 from '../viz/crime-index/meta';
+import meta4 from '../viz/donations/meta';
+import meta5 from '../viz/gdp-by-country/meta';
+import meta6 from '../viz/gdp-ppp-per-capita/meta';
+import meta7 from '../viz/global-brands-race/meta';
+import meta8 from '../viz/land-area/meta';
+import meta9 from '../viz/population-by-country/meta';
+import meta10 from '../viz/robotization/meta';
+import meta11 from '../viz/time-of-life/meta';
+import meta12 from '../viz/volunteers-by-region/meta';
+import meta13 from '../viz/volunteers-growth/meta';
 
 export type VizLoader = () => Promise<{ default: ComponentType<VizBodyProps> }>;
 
@@ -27,16 +31,24 @@ export const VIZ_METAS: readonly VizMeta[] = [
   meta7,
   meta8,
   meta9,
+  meta10,
+  meta11,
+  meta12,
+  meta13,
 ];
 
 export const VIZ_LOADERS: Readonly<Record<string, VizLoader>> = {
   'air-attacks-on-ukraine': () => import('../viz/air-attacks-on-ukraine/index'),
   'births-deaths-per-day': () => import('../viz/births-deaths-per-day/index'),
   'births-deaths-ua': () => import('../viz/births-deaths-ua/index'),
+  'crime-index': () => import('../viz/crime-index/index'),
   'donations': () => import('../viz/donations/index'),
   'gdp-by-country': () => import('../viz/gdp-by-country/index'),
+  'gdp-ppp-per-capita': () => import('../viz/gdp-ppp-per-capita/index'),
   'global-brands-race': () => import('../viz/global-brands-race/index'),
   'land-area': () => import('../viz/land-area/index'),
+  'population-by-country': () => import('../viz/population-by-country/index'),
+  'robotization': () => import('../viz/robotization/index'),
   'time-of-life': () => import('../viz/time-of-life/index'),
   'volunteers-by-region': () => import('../viz/volunteers-by-region/index'),
   'volunteers-growth': () => import('../viz/volunteers-growth/index'),
