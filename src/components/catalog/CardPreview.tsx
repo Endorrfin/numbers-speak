@@ -29,14 +29,21 @@ function Flag({ code }: { code: string }) {
   return src ? <img className="cp-flag" src={src} alt="" width={16} height={12} loading="lazy" decoding="async" /> : null;
 }
 
-/** A horizontal bar in a 100-unit box, from `from` (0–1) to `to` (0–1). */
+/**
+ * A horizontal bar in a 100-unit box, from `from` (0–1) to `to` (0–1).
+ * CHANGED (S3-th fix): the SVG sits absolutely inside a sized track. In flow, WebKit (Safari, every iOS
+ * browser) sized the inline SVG at its default 300 px intrinsic width when laying out the grid, so the
+ * value column was pushed past the card edge on phones; an absolutely positioned SVG adds no intrinsic width.
+ */
 function Bar({ from = 0, to, tone }: { from?: number; to: number; tone: PreviewTone }) {
   const x = Math.max(0, Math.min(1, from)) * W;
   const w = Math.max(1, (Math.max(0, Math.min(1, to)) - Math.max(0, from)) * W);
   return (
-    <svg className="cp-bar" viewBox={`0 0 ${W} 10`} preserveAspectRatio="none" focusable="false">
-      <rect x={x} width={w} height={10} rx={1.5} style={{ fill: color(tone) }} />
-    </svg>
+    <span className="cp-track">
+      <svg className="cp-bar" viewBox={`0 0 ${W} 10`} preserveAspectRatio="none" focusable="false">
+        <rect x={x} width={w} height={10} rx={1.5} style={{ fill: color(tone) }} />
+      </svg>
+    </span>
   );
 }
 

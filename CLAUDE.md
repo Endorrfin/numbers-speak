@@ -167,6 +167,10 @@ current. **Agent sessions never push.**
   sandbox (tar the build into the gitignored `dist-*/`, stage it, serve it there).
 - The SSR smoke runs under `tsx` (no Vite): keep `import.meta.env` access optional (`import.meta.env?.DEV`).
 - The device bridge rejects very long commands (`spawn E2BIG`): write big files in parts (`cat >` then `cat >>`).
+- **WebKit (Safari, every iOS browser) and in‑flow inline SVG:** a `width:100%` SVG inside a grid/flex item can
+  count with its default 300 px intrinsic width and widen the track (S3‑th: card values pushed off the card on
+  iPhone; Chromium was fine). Put decorative SVG absolutely inside a sized box and give grids `minmax(0, 1fr)`.
+  Playwright here has Chromium only — check Safari (Responsive Design Mode) or an iPhone by hand.
 - `Intl` month abbreviations differ between ICU versions (`Sep` / `Sept` in en‑GB): tests match both.
 - **Page counter in tests (S3‑an):** headless Chromium sends `HeadlessChrome` in its UA and
   `navigator.webdriver = true`, so the built site never counts under Playwright — an e2e check of the counter
@@ -545,6 +549,9 @@ S4a/b/c full migration → S5 customize & share → S6 growth pipeline. Details:
   Playwright screenshots of the built catalog at 1280 (dark, light, UK) and 390 (dark EN, light UK): 15 previews,
   no broken flags, no horizontal scroll, no overflowing preview, no console errors.
   Docs: PLAN v0.4 (DoD “thumbnail” → “card preview”; P5 keeps webp for OG only), PROJECT‑BRIEF §9, CATALOG §B.
+  Fix (owner's iPhone screenshot, same session): on WebKit the bar SVGs widened the rows grid and pushed the value
+  column past the card edge — bars now sit absolutely in a `.cp-track`, `.cp` has `minmax(0, 1fr)`, `min-width: 0`
+  on the marks; Chromium re-checked (all cards at 1280/390, nothing outside a card), WebKit to be confirmed by the owner.
   Follow‑up (owner, same session): no manual regeneration step — `verify` starts with `gen:catalog && gen:previews`
   (CI still runs `check:catalog` without generating, so staleness stays a CI failure) and `npm run prep -- <id>`
   runs `gen:previews` after a successful prep.
