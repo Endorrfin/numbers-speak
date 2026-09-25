@@ -1632,6 +1632,7 @@
 .cp {
   height: 100%;
   display: grid;
+  grid-template-columns: minmax(0, 1fr); /* CHANGED (S3-th fix): content never widens the card (WebKit) */
   grid-template-rows: auto minmax(0, 1fr);
   gap: 0.45rem;
 }
@@ -1658,6 +1659,7 @@
   text-wrap: balance;
 }
 .cp-marks {
+  min-width: 0;
   min-height: 0;
   display: flex;
   flex-direction: column;
@@ -1670,6 +1672,7 @@
 }
 .cp-rows,
 .cp-bfly {
+  min-width: 0;
   display: grid;
   grid-template-columns: 16px max-content minmax(0, 1fr) max-content;
   grid-auto-rows: 19px;
@@ -1711,10 +1714,20 @@
 .cp-num {
   text-align: right;
 }
+/* CHANGED (S3-th fix): the bar's SVG is absolutely positioned in its track, so it adds no intrinsic
+   width to the grid (WebKit used the SVG's default 300 px and pushed the value column off the card). */
+.cp-track {
+  position: relative;
+  display: block;
+  min-width: 0;
+  height: 9px;
+}
 .cp-bar {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
-  height: 9px;
+  height: 100%;
 }
 .cp-gap {
   grid-column: 1 / -1;
@@ -1792,6 +1805,7 @@
   gap: 0.9rem;
 }
 .cp-grid svg {
+  width: auto; /* CHANGED (S3-th fix): width from height × aspect-ratio, not the SVG's 300 px default */
   height: 100%;
   max-width: 62%;
   flex: none;
