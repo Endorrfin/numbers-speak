@@ -141,7 +141,6 @@ export const ui = {
     uk: 'Кожен графік містить свої джерела даних. Код: MIT.',
   },
   footerAuthor: { en: 'Made by Vasyl Krupka', uk: 'Автор — Vasyl Krupka' },
-  portfolio: { en: 'Portfolio', uk: 'Портфоліо' },
   repository: { en: 'Repository', uk: 'Репозиторій' },
 } satisfies Record<string, Localized>;
 

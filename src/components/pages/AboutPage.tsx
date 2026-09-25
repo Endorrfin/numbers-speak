@@ -2,7 +2,7 @@ import type { Localized, VizParams } from '../../catalog/types';
 import { useLang } from '../../i18n/lang';
 import { ui } from '../../i18n/ui';
 import { storedOptOut } from '../../lib/analytics';
-import { ISSUES_URL, PORTFOLIO_URL, REPO_URL } from '../../lib/links';
+import { ISSUES_URL, REPO_URL } from '../../lib/links'; // CHANGED: portfolio link removed (owner)
 
 type Principle = { title: Localized; body: Localized };
 
@@ -106,9 +106,6 @@ export function AboutPage({ params = {} }: { params?: VizParams }) {
           </a>
           <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
             {t(ui.repository)}
-          </a>
-          <a href={PORTFOLIO_URL} target="_blank" rel="noopener noreferrer">
-            {t(ui.portfolio)}
           </a>
         </p>
       </section>

@@ -611,3 +611,6 @@ S4a/b/c full migration → S5 customize & share → S6 growth pipeline. Details:
   it; the tooltip adds “of them locationally lost”. Only 2 of the all‑time top 15 changed (9 Jul 2025, 23 Dec 2025).
   Test group added to `test-air-attacks.ts` (the 9 Jul numbers; every largest report equals `rate()` of its items).
   CHANGELOG “Fixed” line. `verify` green in a scratch copy.
+- **Portfolio link removed** (2026‑09‑25, owner) — the About page no longer links to the portfolio landing
+  (`PORTFOLIO_URL` in `lib/links.ts` and the `ui.portfolio` string deleted). Plan documents still describe D10
+  (a card for the gallery *on* the landing) — unchanged; that is about the landing, not a link from the site.
