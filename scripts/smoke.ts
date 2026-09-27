@@ -609,6 +609,138 @@ async function main(): Promise<void> {
     ok(!table.includes('field-pager'), 'ready:gpi table view has no pager');
   }
 
+  // CHANGED (S3-re): real-estate-world — six angles, the city picker (default: Ukrainian cities; none; one city),
+  // eight measures, KPIs, the shared table, region filter, pager, EN + UK. Expectations come from the shipped file
+  // (ranks, names, counts), so a data refresh needs no new literals. D3 draws in effects: SSR checks the frames,
+  // labels, KPIs, lists and tables; the drawn marks are covered by the jsdom tests (test-scatter-swarm.ts).
+  if (CATALOG.some((m) => m.id === 'real-estate-world')) {
+    const { default: Re } = await import('../src/viz/real-estate-world/index');
+    const { default: reMeta } = await import('../src/viz/real-estate-world/meta');
+    const reDataMod = await import('../src/viz/real-estate-world/data');
+    const { defaultCities } = await import('../src/viz/real-estate-world/state');
+    const { countryName: reCountry } = await import('../src/lib/countries');
+    for (const file of reMeta.data) {
+      primeDataset(dataUrl('real-estate-world', file), JSON.parse(readFileSync(`public/data/real-estate-world/${file}`, 'utf8')));
+    }
+    const reData = reDataMod.parseRealEstateDataset(JSON.parse(readFileSync(`public/data/real-estate-world/${reDataMod.DATA_FILE}`, 'utf8')));
+    const centre = reDataMod.rankBy(reData, 'centre');
+    const mortgage = reDataMod.rankByMeasure(reData, 'mortgage');
+    const both = reData.rows.filter((r) => r.centre !== undefined && r.income !== undefined);
+    const html = (v: string): string =>
+      v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
+    const ua = defaultCities(reData.rows).map((id) => reData.rows.find((r) => r.id === id)!);
+    const bestUa = ua.filter((r) => r.centreRank !== undefined).sort((a, b) => a.centreRank! - b.centreRank!)[0]!;
+    const kyiv = reData.rows.find((r) => r.id === 'kyiv-ua')!;
+    const chart = check('ready:realestate chart', h(Re, { params: {}, setParams: noop }), 'en', 1500, [
+      'role="img"',
+      `Showing 1–15 of ${centre.length}`,
+      `Median of ${centre.length} cities`,
+      html(centre[0]!.row.name.en),
+      'the dearest city centre',
+      'class="field field-pager"',
+      'Data © Numbeo',
+      'Highlight cities',
+      `aria-label="Remove ${html(kyiv.name.en)}"`,
+      `value="${html(`${centre[0]!.row.name.en}, ${reCountry(centre[0]!.row.code, 'en')}`)}"`,
+      `${html(bestUa.name.en)}: rank ${bestUa.centreRank} of ${centre.length}, the highest of your cities`,
+      'Your cities in this ranking',
+      `${html(bestUa.name.en)} · #${bestUa.centreRank}`,
+    ]);
+    for (const tab of ['Ranking', 'Price vs affordability', 'A year of income &amp; mortgage', 'Centre vs outskirts', 'World map', 'Compare']) {
+      ok(chart.includes(`>${tab}</label>`), `ready:realestate angle tab "${tab}"`);
+    }
+    check('ready:realestate uk', h(Re, { params: {}, setParams: noop }), 'uk', 1500, [
+      'Медіана',
+      html(centre[0]!.row.name.uk),
+      'Дані © Numbeo',
+      'Виділити міста',
+      `aria-label="Прибрати ${html(kyiv.name.uk)}"`,
+      'Ціна vs доступність',
+      'Рік доходу та іпотека',
+      'Центр vs околиці',
+      'Карта світу',
+      'Порівняння',
+    ]);
+    check('ready:realestate page 2', h(Re, { params: { page: '2' }, setParams: noop }), 'en', 1500, [`Showing 16–30 of ${centre.length}`]);
+    const table = check('ready:realestate table', h(Re, { params: { view: 'table' }, setParams: noop }), 'en', 8000, [
+      '<table',
+      'Centre, $/m²',
+      'Outside, $/m²',
+      'Centre ÷ outside',
+      'Years of income',
+      'm² a year',
+      'Mortgage, % of income',
+      'Price ÷ rent, centre',
+      'Price ÷ rent, outside',
+      'aria-sort="descending"',
+      'class="is-home"',
+      html(centre[centre.length - 1]!.row.name.en),
+    ]);
+    ok(!table.includes('field-pager'), 'ready:realestate table view has no pager');
+    const over = mortgage.filter((c) => c.value > 100).length;
+    check('ready:realestate mortgage', h(Re, { params: { measure: 'mortgage' }, setParams: noop }), 'en', 1500, [
+      `${over} of ${mortgage.length} cities: the payment exceeds the whole income`,
+      `${html(mortgage[0]!.row.name.en)}`,
+      'the heaviest mortgage',
+    ]);
+    check('ready:realestate premium', h(Re, { params: { measure: 'premium' }, setParams: noop }), 'en', 1500, ['the outskirts cost more than the centre', 'the widest gap']);
+    check('ready:realestate m2', h(Re, { params: { measure: 'm2' }, setParams: noop }), 'en', 1500, ['the most home for a year of income']);
+    const firstEurope = centre.find((c) => c.row.region === 'europe')!;
+    const firstAmericas = centre.find((c) => c.row.region === 'americas')!;
+    const americas = check('ready:realestate americas', h(Re, { params: { region: 'americas', view: 'table' }, setParams: noop }), 'en', 2000, [
+      html(firstAmericas.row.name.en),
+    ]);
+    const europeLabel = `${html(firstEurope.row.name.en)}, ${html(reCountry(firstEurope.row.code, 'en'))}`;
+    const americasTable = americas.slice(americas.indexOf('<table'), americas.indexOf('</table>')); // the picker lists every city
+    ok(americasTable.length > 0 && !americasTable.includes(europeLabel), `ready:realestate americas filter excludes Europe (${europeLabel})`);
+    check('ready:realestate scatter', h(Re, { params: { show: 'scatter' }, setParams: noop }), 'en', 1500, [
+      `Scatter plot of ${both.length} cities`,
+      'rank correlation',
+      'Cheap m², out of reach · ',
+      'Dear m², high incomes · ',
+      'For example',
+    ]);
+    check('ready:realestate scatter uk', h(Re, { params: { show: 'scatter' }, setParams: noop }), 'uk', 1500, ['Дешевий м², недосяжне житло', 'рангова кореляція']);
+    check('ready:realestate scatter table', h(Re, { params: { show: 'scatter', view: 'table' }, setParams: noop }), 'en', 5000, ['<table', 'ordered by Years of income for a 90 m² home']);
+    const noIncome = ua.filter((r) => r.income === undefined).map((r) => html(r.name.en));
+    check('ready:realestate income', h(Re, { params: { show: 'income' }, setParams: noop }), 'en', 1500, [
+      'What a year of income buys',
+      `${html(kyiv.name.en)}: a year of income buys ${(90 / kyiv.income!).toFixed(1)}`,
+      'Median of',
+      `${over} of ${mortgage.length} cities: the payment exceeds the whole income`,
+      `Beeswarm of ${mortgage.length} cities`,
+      ...(noIncome.length ? [`${noIncome.join(', ')}: not in Numbeo’s property index`] : []),
+    ]);
+    check('ready:realestate centre', h(Re, { params: { show: 'centre' }, setParams: noop }), 'en', 1500, [
+      'Median centre premium',
+      'Dumbbell chart',
+      '<option value="premium" selected="">Widest gap</option>',
+      'Buy or rent?',
+      'outside the centre',
+      'class="field field-pager"',
+    ]);
+    check('ready:realestate centre inverse', h(Re, { params: { show: 'centre', sort: 'inverse' }, setParams: noop }), 'en', 1500, [
+      '<option value="inverse" selected="">Outskirts dearer</option>',
+    ]);
+    check('ready:realestate map', h(Re, { params: { show: 'map', measure: 'income' }, setParams: noop }), 'en', 1500, [
+      `World map of ${reDataMod.rankBy(reData, 'income').length} cities`,
+      `Quartiles of ${reDataMod.rankBy(reData, 'income').length} cities`,
+      `${reData.rows.length - reDataMod.rankBy(reData, 'income').length} cities have no value for this measure`,
+    ]);
+    check('ready:realestate compare', h(Re, { params: { show: 'compare' }, setParams: noop }), 'en', 1500, [
+      'class="re-compare"',
+      `#${kyiv.centreRank} of ${centre.length}`,
+      'The bar under each value',
+    ]);
+    check('ready:realestate compare uk', h(Re, { params: { show: 'compare' }, setParams: noop }), 'uk', 1500, [`№${kyiv.centreRank} з ${centre.length}`]);
+    const none = check('ready:realestate none', h(Re, { params: { show: 'compare', cities: 'none' }, setParams: noop }), 'en', 1000, [
+      'Pick up to 5 cities above',
+      'No highlighted cities.',
+    ]);
+    ok(!none.includes('class="re-chip"'), 'ready:realestate cities=none shows no chips');
+    check('ready:realestate one city', h(Re, { params: { cities: 'warsaw-pl' }, setParams: noop }), 'en', 1500, ['aria-label="Remove Warsaw"', 'Warsaw · #']);
+  }
+
   ok(ssr(h(AboutPage), 'en') !== ssr(h(AboutPage), 'uk'), 'EN and UK renders differ (language toggle works)');
   // CHANGED (S3-an): every page above rendered without a single request (fetch · sendBeacon · Image).
   ok(network.fetch + network.beacon + network.image === 0, `no request during render (${JSON.stringify(network)})`);

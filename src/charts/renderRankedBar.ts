@@ -31,6 +31,8 @@ export type RankedBarRow = {
   imageUrl?: string;
   /** Tooltip: a heading and detail lines (plain text). */
   tooltip: { title: string; lines: string[] };
+  // CHANGED (S3-re): optional highlight (accent band + bold label); omitted = the row is drawn exactly as before.
+  emphasis?: boolean;
 };
 
 export type RankedBarOptions = {
@@ -235,6 +237,8 @@ export function renderRankedBar(
         return exit.transition().duration(duration / 2).style('opacity', 0).remove();
       },
     );
+
+  rowSel.classed('is-emphasis', (d) => Boolean(d.emphasis)); // CHANGED (S3-re)
 
   // Position rows (animated reorder when paging within a filter).
   const rowY = (_: RankedBarRow, i: number): string => `translate(0,${yOf(i)})`;

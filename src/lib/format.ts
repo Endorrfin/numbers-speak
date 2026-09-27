@@ -151,3 +151,25 @@ export function formatScore(value: number, lang: Lang): string {
 export function formatScoreChange(value: number, lang: Lang): string {
   return nf(lang, 'score-change', { minimumFractionDigits: 3, maximumFractionDigits: 3, signDisplay: 'exceptZero' }).format(value);
 }
+
+// CHANGED (S3-re): real-estate-world — prices per m² and years of income.
+/** Whole US$ with the symbol: 30_978.66 → '$30,979' / '30 979 $'. */
+export function formatUsdPrice(value: number, lang: Lang): string {
+  return nf(lang, 'usd-price', { style: 'currency', currency: 'USD', currencyDisplay: 'narrowSymbol', maximumFractionDigits: 0 }).format(value);
+}
+
+/** Years to one decimal with the locale's plural: 11.4 → '11.4 years' / '11,4 року'; `short` → '11.4 yr' / '11,4 р.'. */
+export function formatYears(value: number, lang: Lang, display: 'long' | 'short' = 'long'): string {
+  return nf(lang, `years-${display}`, { style: 'unit', unit: 'year', unitDisplay: display, minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(value);
+}
+
+// CHANGED (S3-re): real-estate-world — square metres a year of income buys; whole-percent axis ticks.
+/** 7.93 → '7.9 m²' / '7,9 м²' (one decimal; a non-breaking space keeps the unit on the number's line). */
+export function formatSquareMetres(value: number, lang: Lang): string {
+  return nf(lang, 'm2', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(value) + (lang === 'uk' ? ' м²' : ' m²');
+}
+
+/** Axis ticks in percent units: 100 → '100%', 1500 → '1,500%' / '1500%'. */
+export function formatPercentTick(value: number, lang: Lang): string {
+  return nf(lang, 'pct-tick', { style: 'percent', maximumFractionDigits: 0 }).format(value / 100);
+}

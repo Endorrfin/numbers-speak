@@ -2,6 +2,20 @@
 
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
+## 2026‑09‑27
+- **New:** [Price per square metre in world cities, 2026 / Ціна квадратного метра в містах світу, 2026](https://endorrfin.github.io/numbers-speak/#/v/real-estate-world) —
+  housing in 528 cities from Numbeo's snapshot of 27 September 2026, from six angles: rank the cities by any of
+  eight measures (a square metre in the city centre costs from $656 to $30,964 in Zug); price vs affordability — a
+  cheap square metre can still be out of reach: in Lagos a 90 m² home costs 101.8 years of income; what a year of
+  income buys (Kyiv: 7.9 m²) and in how many cities a mortgage payment would exceed the whole family income (130 of
+  402); the centre vs the outskirts, and rent; a world map; up to five cities side by side. The Ukrainian cities are
+  highlighted from the start — search for yours. /
+  Житло в 528 містах за знімком Numbeo від 27 вересня 2026 року, у шести ракурсах: рейтинг за будь-яким із восьми
+  показників (квадратний метр у центрі коштує від 656 $ до 30 964 $ у Цузі); ціна vs доступність — дешевий
+  квадратний метр ще не означає доступне житло: у Лагосі житло 90 м² коштує 101,8 року доходу; що купує рік доходу
+  (Київ — 7,9 м²) і в скількох містах платіж за іпотекою перевищив би весь дохід сім’ї (130 з 402); центр vs
+  околиці й оренда; карта світу; до п’яти міст поруч. Українські міста виділено одразу — знайдіть своє.
+
 ## 2026‑09‑25
 - **Updated:** [Global Peace Index 2026 / Глобальний індекс миру 2026](https://endorrfin.github.io/numbers-speak/#/v/global-peace-index) —
   the bars now start at 1, the most peaceful score possible on the index's 1–5 scale, instead of 0, so the gaps

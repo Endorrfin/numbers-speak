@@ -68,6 +68,10 @@ export async function generatePreviews(): Promise<{ path: string; source: string
   const entries: string[] = [];
   const ids: string[] = [];
   for (const { id, dir } of previewFolders()) {
+    // CHANGED (S3-re): only published entries ship a card preview — a `soon` entry (data still arriving) keeps the
+    // chart-kind glyph, so its card never shows a key figure the page does not stand behind yet.
+    const meta = (await import(pathToFileURL(join(dir, 'meta.ts')).href)) as { default: { status: string } };
+    if (meta.default.status !== 'published') continue;
     const p = await buildPreview(id, dir);
     entries.push(`  ${JSON.stringify(id)}: ${JSON.stringify(p)}`);
     ids.push(id);

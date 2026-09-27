@@ -45,8 +45,21 @@ const get = (id: string): CardPreview => {
 
 await test('every published entry has a preview; every preview passes the contract', async () => {
   const { ids } = await generatePreviews();
-  assert.equal(ids.length, 15);
+  assert.equal(ids.length, 16); // CHANGED (S3-re): + real-estate-world
   for (const [id, p] of built) assert.deepEqual(parseCardPreview(p, id), p);
+});
+
+// CHANGED (S3-re)
+await test('real-estate-world: the five dearest city centres by name (flags on three), dearest ÷ cheapest centre', () => {
+  const p = get('real-estate-world');
+  const m = rowsOf(p);
+  const data = JSON.parse(readFileSync(join(ROOT, 'public/data/real-estate-world/numbeo-2026-09.json'), 'utf8')) as {
+    rows: Array<{ code: string; name: { en: string }; centre?: number; centreRank?: number }>;
+  };
+  const centre = data.rows.filter((r) => r.centreRank !== undefined).sort((a, b) => a.centreRank! - b.centreRank!);
+  assert.deepEqual(m.rows.map((r) => r.code), centre.slice(0, 5).map((r) => r.code));
+  assert.deepEqual(m.rows.map((r) => r.name?.en), centre.slice(0, 5).map((r) => r.name.en));
+  close(one(p.key).value, centre[0]!.centre! / centre[centre.length - 1]!.centre!, 0.05);
 });
 
 await test('global-peace-index: two most + two least peaceful on the 1–5 scale, flags on the extremes', () => {
