@@ -1,0 +1,516 @@
+1	Zug, Switzerland		$30964.45
+2	Hong Kong, Hong Kong (China)		$29583.69
+3	Seoul, South Korea		$28694.74
+4	Zurich, Switzerland		$27090.72
+5	Singapore, Singapore		$23149.42
+6	Geneva, Switzerland		$22037.32
+7	Lucerne, Switzerland		$21373.84
+8	Tel Aviv-Yafo, Israel		$20176.60
+9	Jerusalem, Israel		$20078.18
+10	New York, NY, United States		$18759.46
+11	London, United Kingdom		$18695.24
+12	Bern, Switzerland		$18683.84
+13	Lausanne, Switzerland		$18277.39
+14	Basel, Switzerland		$18112.78
+15	Lugano, Switzerland		$15956.26
+16	Vienna, Austria		$14569.09
+17	Paris, France		$14539.70
+18	Shanghai, China		$13608.58
+19	Boston, MA, United States		$13578.27
+20	Brooklyn, NY, United States		$13568.99
+21	Shenzhen, China		$13385.87
+22	Sydney, Australia		$13375.39
+23	Munich, Germany		$13277.95
+24	Luxembourg, Luxembourg		$12780.42
+25	New Taipei City, Taiwan		$12537.00
+26	Beijing, China		$12459.95
+27	Taipei, Taiwan		$12424.08
+28	Copenhagen, Denmark		$11888.30
+29	Oslo, Norway		$11744.68
+30	Stockholm, Sweden		$11634.43
+31	Canberra, Australia		$11296.50
+32	Milan, Italy		$10725.76
+33	Amsterdam, Netherlands		$10549.70
+34	Moscow, Russia		$10309.10
+35	Gold Coast, Australia		$10280.01
+36	Innsbruck, Austria		$10177.99
+37	Adelaide, Australia		$10149.03
+38	San Francisco, CA, United States		$10095.85
+39	Helsinki, Finland		$9791.00
+40	Prague, Czech Republic		$9725.51
+41	Hamburg, Germany		$9694.44
+42	Haifa, Israel		$9513.77
+43	Dallas, TX, United States		$9410.00
+44	Dublin, Ireland		$9226.78
+45	Dusseldorf, Germany		$9177.00
+46	Salzburg, Austria		$9112.80
+47	Hobart, Australia		$9049.06
+48	Cambridge, United Kingdom		$9038.67
+49	Madrid, Spain		$8953.15
+50	San Jose, CA, United States		$8891.50
+51	Honolulu, HI, United States		$8845.41
+52	Berlin, Germany		$8802.89
+53	Tokyo, Japan		$8754.32
+54	Guangzhou, China		$8661.36
+55	Brighton, United Kingdom		$8517.81
+56	Rome, Italy		$8508.41
+57	Washington, DC, United States		$8393.91
+58	Perth, Australia		$8385.61
+59	Brisbane, Australia		$8310.80
+60	Vancouver, Canada		$8207.10
+61	Heidelberg, Germany		$8189.30
+62	Sharjah, United Arab Emirates		$8168.82
+63	Reykjavik, Iceland		$8128.60
+64	San Diego, CA, United States		$8093.34
+65	Frankfurt, Germany		$8086.42
+66	Toronto, Canada		$8048.25
+67	Oxford, United Kingdom		$7986.69
+68	Nashville, TN, United States		$7910.00
+69	Oakland, CA, United States		$7890.25
+70	Cologne, Germany		$7850.96
+71	Jersey City, NJ, United States		$7828.50
+72	Lisbon, Portugal		$7820.05
+73	Haarlem, Netherlands		$7777.17
+74	Bergen, Norway		$7755.00
+75	Aarhus, Denmark		$7748.53
+76	Hangzhou, China		$7717.14
+77	Leiden, Netherlands		$7655.64
+78	Freiburg im Breisgau, Germany		$7508.54
+79	Guildford, United Kingdom		$7484.94
+80	Barcelona, Spain		$7469.72
+81	Seattle, WA, United States		$7453.96
+82	Nice, France		$7437.31
+83	Auckland, New Zealand		$7423.80
+84	Milton Keynes, United Kingdom		$7420.28
+85	Los Angeles, CA, United States		$7420.13
+86	San Juan, Puerto Rico		$7407.74
+87	Bolzano-Bozen, Italy		$7397.84
+88	Split, Croatia		$7330.20
+89	Austin, TX, United States		$7325.91
+90	Boise, ID, United States		$7300.00
+91	Mississauga, Canada		$7293.45
+92	Nuremberg, Germany		$7223.84
+93	Melbourne, Australia		$7189.13
+94	Taichung, Taiwan		$7170.16
+95	Utrecht, Netherlands		$7167.57
+96	Miami, FL, United States		$7146.75
+97	Bordeaux, France		$7089.21
+98	Espoo, Finland		$7049.89
+99	Dubai, United Arab Emirates		$7018.93
+100	Reading, United Kingdom		$7010.64
+101	Stuttgart, Germany		$6948.92
+102	Bristol, United Kingdom		$6831.36
+103	Palma de Mallorca, Spain		$6799.10
+104	Delft, Netherlands		$6768.66
+105	Burnaby, Canada		$6723.93
+106	Wellington, New Zealand		$6703.01
+107	Karlsruhe, Germany		$6687.29
+108	Ljubljana, Slovenia		$6601.78
+109	Edinburgh, United Kingdom		$6589.93
+110	Lyon, France		$6536.71
+111	Eindhoven, Netherlands		$6532.98
+112	Toulouse, France		$6510.16
+113	Brno, Czech Republic		$6509.81
+114	Trondheim, Norway		$6469.01
+115	Bratislava, Slovakia		$6435.63
+116	Florence, Italy		$6389.92
+117	Bonn, Germany		$6377.04
+118	Erlangen, Germany		$6283.71
+119	The Hague (Den Haag), Netherlands		$6271.33
+120	Arlington, VA, United States		$6257.41
+121	Gothenburg, Sweden		$6243.39
+122	Lund, Sweden		$6217.01
+123	Darmstadt, Germany		$6199.65
+124	Stavanger, Norway		$6164.28
+125	Warsaw, Poland		$6162.58
+126	Osaka, Japan		$6143.84
+127	Vilnius, Lithuania		$6113.71
+128	Rotterdam, Netherlands		$6041.79
+129	Mumbai, India		$6041.21
+130	Graz, Austria		$6033.53
+131	Makati, Philippines		$6022.74
+132	Bangkok, Thailand		$5919.28
+133	Southampton, United Kingdom		$5868.44
+134	Bilbao, Spain		$5867.78
+135	Budapest, Hungary		$5835.94
+136	Mannheim, Germany		$5695.96
+137	Krakow (Cracow), Poland		$5685.94
+138	Denver, CO, United States		$5653.09
+139	Limassol, Cyprus		$5640.49
+140	Almere, Netherlands		$5612.62
+141	Valencia, Spain		$5608.99
+142	Linz, Austria		$5587.29
+143	Charleston, SC, United States		$5571.58
+144	Lethbridge, AB, Canada		$5569.35
+145	Leuven, Belgium		$5566.61
+146	Ann Arbor, MI, United States		$5526.90
+147	Fort Lauderdale, FL, United States		$5510.54
+148	Belgrade, Serbia		$5505.02
+149	Sliema, Malta		$5472.74
+150	Gdansk, Poland		$5436.22
+151	Tampa, FL, United States		$5435.16
+152	Aalborg, Denmark		$5402.15
+153	Birmingham, United Kingdom		$5392.95
+154	Suzhou, China		$5383.70
+155	Groningen, Netherlands		$5383.62
+156	Cardiff, United Kingdom		$5375.28
+157	Strasbourg, France		$5374.18
+158	Kiel, Germany		$5339.27
+159	Gent, Belgium		$5328.82
+160	Kuwait City, Kuwait		$5298.45
+161	Porto, Portugal		$5226.91
+162	Puerto Vallarta, Mexico		$5220.51
+163	Waterloo, Canada		$5216.54
+164	Victoria, Canada		$5210.24
+165	Las Vegas, NV, United States		$5208.26
+166	New Orleans, LA, United States		$5200.75
+167	Bremen, Germany		$5179.25
+168	Marseille, France		$5178.60
+169	Zagreb, Croatia		$5178.21
+170	Bologna, Italy		$5166.59
+171	Burlington, Canada		$5157.63
+172	Newcastle upon Tyne, United Kingdom		$5134.57
+173	Brussels, Belgium		$5114.59
+174	Christchurch, New Zealand		$5113.91
+175	Quebec City, Canada		$5113.52
+176	Montpellier, France		$5104.90
+177	Leipzig, Germany		$5097.19
+178	Plzen, Czech Republic		$5094.42
+179	Dresden, Germany		$5065.20
+180	Malaga, Spain		$5048.59
+181	Nanjing, China		$5042.08
+182	Abu Dhabi, United Arab Emirates		$4964.68
+183	Cork, Ireland		$4960.78
+184	Ras al-Khaimah, United Arab Emirates		$4909.34
+185	Tallinn, Estonia		$4891.92
+186	Montreal, Canada		$4886.06
+187	Naples, Italy		$4865.14
+188	Tampere, Finland		$4856.91
+189	Funchal, Portugal		$4856.30
+190	Verona, Italy		$4842.39
+191	Guelph, Canada		$4816.77
+192	Tacoma, WA, United States		$4813.50
+193	Essen, Germany		$4808.43
+194	Turin, Italy		$4779.47
+195	Faro, Portugal		$4770.32
+196	Ho Chi Minh City, Vietnam		$4767.71
+197	Sacramento, CA, United States		$4765.52
+198	Cluj-Napoca, Romania		$4752.72
+199	Erfurt, Germany		$4750.05
+200	Knoxville, TN, United States		$4743.90
+201	Phoenix, AZ, United States		$4708.60
+202	Baghdad, Iraq		$4672.61
+203	Wroclaw, Poland		$4650.01
+204	Hanoi, Vietnam		$4619.65
+205	Kaohsiung, Taiwan		$4601.51
+206	Manchester, United Kingdom		$4589.09
+207	Seville (Sevilla), Spain		$4568.19
+208	Aachen, Germany		$4563.22
+209	Antwerp, Belgium		$4506.94
+210	Lille, France		$4491.50
+211	Odense, Denmark		$4491.45
+212	Sofia, Bulgaria		$4455.25
+213	San Antonio, TX, United States		$4450.93
+214	Madison, WI, United States		$4450.00
+215	Villach, Austria		$4438.35
+216	Treviso, Italy		$4436.81
+217	Paphos, Cyprus		$4431.10
+218	Tirana, Albania		$4426.31
+219	Manila, Philippines		$4418.82
+220	Trento, Italy		$4412.24
+221	Saint Petersburg, Russia		$4360.14
+222	Ottawa, Canada		$4330.40
+223	Turku, Finland		$4294.41
+224	Alicante, Spain		$4274.97
+225	Charlotte, NC, United States		$4270.00
+226	Monterrey, Mexico		$4268.67
+227	Hanover, Germany		$4262.24
+228	Rijeka, Croatia		$4206.25
+229	Budva, Montenegro		$4169.11
+230	Gdynia, Poland		$4168.74
+231	Salt Lake City, UT, United States		$4159.58
+232	Belfast, United Kingdom		$4137.60
+233	Fort Worth, TX, United States		$4109.17
+234	Doha, Qatar		$4103.39
+235	Nottingham, United Kingdom		$4099.37
+236	Chicago, IL, United States		$4094.16
+237	Philadelphia, PA, United States		$4085.78
+238	Rimini, Italy		$4081.21
+239	Glasgow, United Kingdom		$4075.47
+240	Kuala Lumpur, Malaysia		$4071.71
+241	Malmo, Sweden		$4069.45
+242	Padova, Italy		$4061.25
+243	Oulu, Finland		$4031.99
+244	Detroit, MI, United States		$4030.00
+245	Kosice, Slovakia		$4028.62
+246	Anchorage, AK, United States		$4020.73
+247	Beirut, Lebanon		$3975.56
+248	Grenoble, France		$3934.41
+249	Athens, Greece		$3919.33
+250	Raleigh, NC, United States		$3904.71
+251	Kelowna, Canada		$3902.76
+252	Kitchener, Canada		$3897.87
+253	Portland, OR, United States		$3896.40
+254	Atlanta, GA, United States		$3893.59
+255	Heraklion, Greece		$3891.93
+256	Bucharest, Romania		$3890.29
+257	Thessaloniki, Greece		$3884.05
+258	Rio de Janeiro, Brazil		$3828.96
+259	Bari, Italy		$3824.83
+260	Medellin, Colombia		$3822.62
+261	Mexico City, Mexico		$3808.63
+262	Nanaimo, BC, Canada		$3804.71
+263	Larnaca, Cyprus		$3791.69
+264	Liverpool, United Kingdom		$3776.10
+265	Chengdu, China		$3767.74
+266	Gijon, Spain		$3763.44
+267	Leeds, United Kingdom		$3748.72
+268	Trieste, Italy		$3740.59
+269	Kaunas, Lithuania		$3734.11
+270	Colombo, Sri Lanka		$3686.96
+271	Chania, Greece		$3675.26
+272	Genoa, Italy		$3662.50
+273	Novi Sad, Serbia		$3620.87
+274	Poznan, Poland		$3593.78
+275	Modena, Italy		$3593.14
+276	Bergamo, Italy		$3576.54
+277	Hefei, China		$3575.05
+278	Rzeszow, Poland		$3571.46
+279	Qingdao, Shandong, China		$3566.25
+280	Tartu, Estonia		$3558.61
+281	Phuket, Thailand		$3523.20
+282	Pisa, Italy		$3522.58
+283	Calgary, Canada		$3513.97
+284	Valladolid, Spain		$3510.52
+285	Brescia, Italy		$3471.13
+286	Yerevan, Armenia		$3465.34
+287	London, Canada		$3462.29
+288	Parma, Italy		$3450.04
+289	Cincinnati, OH, United States		$3447.56
+290	Columbus, OH, United States		$3440.00
+291	Pecs, Hungary		$3432.91
+292	Montevideo, Uruguay		$3411.11
+293	Tucson, AZ, United States		$3402.17
+294	Minneapolis, MN, United States		$3395.59
+295	Spokane, WA, United States		$3391.25
+296	Vancouver, WA, United States		$3366.50
+297	Sarajevo, Bosnia And Herzegovina		$3356.21
+298	Szczecin, Poland		$3345.85
+299	Reno, NV, United States		$3336.00
+300	Nizhny Novgorod, Russia		$3294.33
+301	Cagliari, Italy		$3287.23
+302	Varna, Bulgaria		$3286.95
+303	Eugene, OR, United States		$3280.25
+304	Saarbrucken, Germany		$3265.93
+305	Ostrava, Czech Republic		$3251.20
+306	Maribor, Slovenia		$3232.70
+307	Lagos, Nigeria		$3222.42
+308	Halifax, Canada		$3219.35
+309	Las Palmas de Gran Canaria, Spain		$3217.10
+310	Aveiro, Portugal		$3213.88
+311	Lodz, Poland		$3202.87
+312	Szeged, Hungary		$3198.85
+313	Olympia, WA, United States		$3194.63
+314	Brasov, Romania		$3186.74
+315	Guadalajara, Mexico		$3186.42
+316	Pittsburgh, PA, United States		$3169.77
+317	Richmond, VA, United States		$3163.98
+318	Nicosia, Cyprus		$3147.79
+319	Panama City, Panama		$3125.83
+320	Wuhan, China		$3119.89
+321	Podgorica, Montenegro		$3117.78
+322	Riga, Latvia		$3117.10
+323	Orlando, FL, United States		$3087.39
+324	Dortmund, Germany		$3075.57
+325	Vigo, Spain		$3073.84
+326	Buffalo, NY, United States		$3065.00
+327	Salem, OR, United States		$3029.75
+328	Debrecen, Hungary		$3020.96
+329	Windsor, Canada		$2998.11
+330	Jakarta, Indonesia		$2995.10
+331	Istanbul, Turkey		$2986.53
+332	Fort Collins, CO, United States		$2982.00
+333	Birmingham, AL, United States		$2975.88
+334	Oviedo, Spain		$2971.69
+335	Riyadh, Saudi Arabia		$2965.54
+336	Iasi, Romania		$2947.76
+337	Katowice, Poland		$2942.47
+338	Cebu, Philippines		$2935.19
+339	Banja Luka, Bosnia And Herzegovina		$2922.39
+340	Phnom Penh, Cambodia		$2906.46
+341	Gurgaon, India		$2904.24
+342	Bydgoszcz, Poland		$2900.44
+343	Accra, Ghana		$2851.55
+344	Muscat, Oman		$2840.63
+345	Saskatoon, Canada		$2834.51
+346	Coimbra, Portugal		$2816.40
+347	San Miguel de Allende, Mexico		$2812.34
+348	Florianopolis, Brazil		$2788.96
+349	San Salvador, El Salvador		$2778.06
+350	Indianapolis, IN, United States		$2775.38
+351	Bogota, Colombia		$2762.44
+352	Milwaukee, WI, United States		$2753.22
+353	Tarragona, Spain		$2750.11
+354	Hamilton, Canada		$2724.17
+355	Sao Paulo, Brazil		$2716.42
+356	Skopje, North Macedonia		$2714.10
+357	Chongqing, China		$2701.74
+358	Louisville, KY, United States		$2700.00
+359	Craiova, Romania		$2692.87
+360	Chisinau, Moldova		$2680.53
+361	Santiago, Chile		$2678.32
+362	Buenos Aires, Argentina		$2672.67
+363	Palermo, Italy		$2672.33
+364	Delhi, India		$2633.36
+365	Pristina, Kosovo (Disputed Territory)		$2622.36
+366	Kiev (Kyiv), Ukraine		$2621.37
+367	Klaipeda, Lithuania		$2621.36
+368	Manama, Bahrain		$2621.25
+369	Fortaleza, Brazil		$2599.41
+370	Kansas City, MO, United States		$2586.89
+371	Almaty, Kazakhstan		$2579.98
+372	Nis, Serbia		$2579.42
+373	Timisoara, Romania		$2571.90
+374	Burgas, Bulgaria		$2562.90
+375	Colorado Springs, CO, United States		$2557.39
+376	Algiers, Algeria		$2548.74
+377	Minsk, Belarus		$2540.57
+378	Constanta, Romania		$2534.78
+379	Braga, Portugal		$2534.54
+380	Pattaya, Thailand		$2532.92
+381	Sibiu, Romania		$2518.62
+382	Changsha, China		$2513.90
+383	Baltimore, MD, United States		$2499.12
+384	Albuquerque, NM, United States		$2495.21
+385	Yekaterinburg, Russia		$2488.52
+386	Siem Reap, Cambodia		$2485.67
+387	Reggio Nell'emilia, Italy		$2478.31
+388	Oklahoma City, OK, United States		$2460.68
+389	Albany, NY, United States		$2459.25
+390	Lima, Peru		$2441.82
+391	Brasilia, Brazil		$2436.61
+392	Bali, Indonesia		$2417.37
+393	Curitiba, Brazil		$2414.89
+394	Cape Town, South Africa		$2414.19
+395	Jacksonville, FL, United States		$2408.22
+396	Tbilisi, Georgia		$2403.99
+397	Xi'an, China		$2383.36
+398	Houston, TX, United States		$2378.53
+399	Santos, Brazil		$2362.64
+400	Denpasar, Indonesia		$2347.31
+401	Winnipeg, Canada		$2345.11
+402	Merida, Mexico		$2324.09
+403	Targu Mures, Romania		$2317.05
+404	Catania, Italy		$2312.34
+405	Queretaro (Santiago de Querétaro), Mexico		$2303.19
+406	Plovdiv, Bulgaria		$2301.44
+407	Kathmandu, Nepal		$2297.39
+408	Guayaquil, Ecuador		$2289.95
+409	San Jose, Costa Rica		$2281.02
+410	Aberdeen, United Kingdom		$2279.08
+411	Ajman, United Arab Emirates		$2262.25
+412	Casablanca, Morocco		$2260.94
+413	Abidjan, Ivory Coast		$2257.51
+414	Belo Horizonte, Brazil		$2252.16
+415	Baku, Azerbaijan		$2244.08
+416	Edmonton, Canada		$2240.29
+417	Santo Domingo, Dominican Republic		$2233.74
+418	Penang, Malaysia		$2202.40
+419	Moncton, Canada		$2199.12
+420	Pune, India		$2190.05
+421	Columbia, SC, United States		$2123.11
+422	Regina, Canada		$2122.08
+423	Huntsville, AL, United States		$2115.00
+424	Antalya, Turkey		$2111.32
+425	Vlore, Albania		$2106.53
+426	Patras, Greece		$2079.27
+427	Campinas, Brazil		$2058.53
+428	Guatemala City, Guatemala		$2040.00
+429	Rabat, Morocco		$2035.93
+430	Lviv, Ukraine		$2024.87
+431	Sao Jose dos Campos, Brazil		$2024.55
+432	Gaborone, Botswana		$2015.72
+433	Greenville, SC, United States		$2004.40
+434	Oradea, Romania		$1994.14
+435	Chennai, India		$1956.77
+436	Addis Ababa, Ethiopia		$1954.83
+437	Chiang Mai, Thailand		$1945.73
+438	Ulaanbaatar, Mongolia		$1930.56
+439	Marrakech, Morocco		$1924.29
+440	Recife, Brazil		$1922.48
+441	Omaha, NE, United States		$1909.20
+442	Little Rock, AR, United States		$1898.67
+443	Bangalore, India		$1848.87
+444	Tulsa, OK, United States		$1821.25
+445	Durres, Albania		$1810.70
+446	El Paso, TX, United States		$1782.80
+447	Memphis, TN, United States		$1780.50
+448	Bishkek, Kyrgyzstan		$1778.75
+449	Tangier, Morocco		$1770.35
+450	Quito, Ecuador		$1758.60
+451	Syracuse, NY, United States		$1756.68
+452	Asuncion, Paraguay		$1746.67
+453	Jeddah (Jiddah), Saudi Arabia		$1743.86
+454	Batumi, Ajara, Georgia		$1742.99
+455	Damascus, Syria		$1727.28
+456	Ankara, Turkey		$1706.08
+457	Puebla, Mexico		$1687.86
+458	Cleveland, OH, United States		$1663.63
+459	Islamabad, Pakistan		$1655.98
+460	Tashkent, Uzbekistan		$1650.59
+461	Porto Alegre, Brazil		$1631.32
+462	Dhaka, Bangladesh		$1630.65
+463	Amman, Jordan		$1615.59
+464	Odessa (Odesa), Ukraine		$1598.29
+465	Navi Mumbai, India		$1594.88
+466	Astana (Nur-Sultan), Kazakhstan		$1571.49
+467	Agadir, Morocco		$1566.48
+468	Wichita, KS, United States		$1540.48
+469	Dar es Salaam, Tanzania		$1531.56
+470	Izmir, Turkey		$1498.45
+471	Tunis, Tunisia		$1490.23
+472	Stara Zagora, Bulgaria		$1484.30
+473	Noida, India		$1477.56
+474	Caracas, Venezuela		$1472.00
+475	Rochester, NY, United States		$1462.56
+476	Saint Louis, MO, United States		$1388.50
+477	Hyderabad, India		$1367.09
+478	Coimbatore, India		$1357.67
+479	Bursa, Turkey		$1348.69
+480	Santa Cruz, Bolivia		$1324.27
+481	Nairobi, Kenya		$1319.87
+482	Dushanbe, Tajikistan		$1296.61
+483	Indore, India		$1291.17
+484	Tehran, Iran		$1274.44
+485	Patna, India		$1266.36
+486	Lucknow (Lakhnau), India		$1264.06
+487	Mersin, Turkey		$1251.14
+488	Cuenca, Ecuador		$1228.86
+489	Kampala, Uganda		$1219.44
+490	La Paz, Bolivia		$1215.95
+491	Bhubaneswar, India		$1213.14
+492	Aguascalientes, Mexico		$1205.65
+493	Dnipro, Ukraine		$1195.67
+494	Bhopal, India		$1165.46
+495	Rawalpindi, Pakistan		$1157.36
+496	Kolkata, India		$1131.18
+497	Erbil (Irbil), Iraq		$1109.88
+498	Kharkiv, Ukraine		$1062.67
+499	Karachi, Pakistan		$1025.95
+500	Sousse, Tunisia		$1000.29
+501	Johannesburg, South Africa		$998.92
+502	Kochi, India		$966.07
+503	Harare, Zimbabwe		$926.21
+504	Durban, South Africa		$905.01
+505	Pretoria, South Africa		$896.42
+506	Ahmedabad, India		$846.22
+507	Jaipur, India		$829.77
+508	Cairo, Egypt		$820.79
+509	Lahore, Pakistan		$797.39
+510	Chittagong, Bangladesh		$795.69
+511	Vadodara, India		$760.30
+512	Rajkot, India		$727.26
+513	Dehradun, India		$724.84
+514	Alexandria, Egypt		$701.70
+515	Kabul, Afghanistan		$684.29
+516	Surat, India		$656.08

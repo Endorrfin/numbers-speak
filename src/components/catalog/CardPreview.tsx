@@ -82,7 +82,8 @@ function Rows({ m }: { m: RowsMarks }) {
             <span className="cp-gap">{fill(t(ui.previewMore), { n: formatNumber(m.gap.count, lang) })}</span>
           )}
           {flags && <span className="cp-flag-slot">{r.flag && r.code ? <Flag code={r.code} /> : null}</span>}
-          <span className="cp-code">{r.code ?? (r.name ? pick(r.name, lang) : '')}</span>
+          {/* CHANGED (S3-re): a name wins over the code, so a city row shows the city while its code still draws the flag */}
+          <span className="cp-code">{r.name ? pick(r.name, lang) : (r.code ?? '')}</span>
           <Bar to={(r.value - lo) / (hi - lo)} tone={r.tone} />
           <span className="cp-num">{formatPreviewNum(r.value, m.format, lang)}</span>
         </Fragment>

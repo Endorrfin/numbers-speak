@@ -16,6 +16,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { csvParse } from 'd3';
 import { M49_REGION } from '../_shared/m49';
+import { numbeoCountryCode } from '../_shared/numbeo'; // CHANGED (S3-re)
 import { HOMICIDE_FILE, NUMBEO_FILE, OLDEST_YEAR, parseHomicideDataset, parseNumbeoDataset } from '../../src/viz/crime-index/data';
 import type { HomicideRow, NumbeoRow } from '../../src/viz/crime-index/data';
 import type { Region } from '../../src/lib/regions';
@@ -73,44 +74,7 @@ for (const d of unodc) {
 
 // ── 2. Numbeo (owner's copy; optional until provided) ────────────────────────────────────────────
 const NUMBEO_TXT = join(here, 'numbeo-crime-2026-mid.txt');
-// Numbeo names that differ from the CLDR English names Intl.DisplayNames produces.
-const NUMBEO_ALIASES: Record<string, string> = {
-  'Bosnia And Herzegovina': 'BA',
-  'Trinidad And Tobago': 'TT',
-  'Congo (Kinshasa)': 'CD',
-  'Congo (Brazzaville)': 'CG',
-  'Ivory Coast': 'CI',
-  Kosovo: 'XK',
-  'Kosovo (Disputed Territory)': 'XK',
-  'Hong Kong (China)': 'HK',
-  'Macao (China)': 'MO',
-  Palestine: 'PS',
-  Myanmar: 'MM',
-  Turkey: 'TR',
-  Czech: 'CZ',
-  'Czech Republic': 'CZ',
-  'North Macedonia': 'MK',
-  'United States': 'US',
-  'United Kingdom': 'GB',
-  'Isle Of Man': 'IM',
-  'Antigua And Barbuda': 'AG',
-  'Saint Kitts And Nevis': 'KN',
-  'Saint Vincent And The Grenadines': 'VC',
-  'Sao Tome And Principe': 'ST',
-  'Cabo Verde': 'CV',
-  'Cape Verde': 'CV',
-  'Curacao': 'CW',
-  'Taiwan': 'TW',
-  'South Korea': 'KR',
-  'North Korea': 'KP',
-  'Us Virgin Islands': 'VI', // CHANGED (S3-rb): Numbeo's capitalisation of "US"
-};
-const display = new Intl.DisplayNames(['en'], { type: 'region' });
-const byName = new Map<string, string>();
-for (const c of M49_REGION.keys()) {
-  const n = display.of(c);
-  if (n) byName.set(n, c);
-}
+// CHANGED (S3-re): Numbeo's country spellings moved to data-raw/_shared/numbeo.ts (shared with real-estate-world).
 let numbeo: NumbeoRow[] | null = null;
 // CHANGED (S3-rb): equal indexes (one decimal) keep Numbeo's published order — its rank column.
 const numbeoRank = new Map<string, number>();
@@ -122,9 +86,9 @@ if (existsSync(NUMBEO_TXT)) {
     if (cells.length < 3 || !/^\d+$/.test(cells[0]!)) continue; // header, blank or wrapped lines
     const [rank, name, crime, safety] = cells;
     const at = `numbeo-crime-2026-mid.txt "${name}"`;
-    const code = NUMBEO_ALIASES[name!] ?? byName.get(name!) ?? '';
+    const code = numbeoCountryCode(name!); // CHANGED (S3-re): shared alias map
     if (!code) {
-      problems.push(`${at}: no ISO code — add it to NUMBEO_ALIASES`);
+      problems.push(`${at}: no ISO code — add it to NUMBEO_ALIASES in data-raw/_shared/numbeo.ts`);
       continue;
     }
     const crimeIndex = Number(crime);

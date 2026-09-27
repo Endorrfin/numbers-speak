@@ -1831,3 +1831,383 @@
 .cp-grid .cp-legend {
   flex-direction: column;
 }
+
+/* ── Real estate in world cities (S3-re) ───────────────────────────────── */
+/* CHANGED (S3-re): highlight = the accent (as .swatch-home / tr.is-home); marks wear region or ramp colours,
+   text wears text tokens; every new chart core draws 8 px dots with a surface ring. */
+.rb-row.is-emphasis .rb-hit {
+  fill: var(--accent-soft);
+}
+.rb-row.is-emphasis .rb-label {
+  font-weight: 700;
+}
+.re-lede {
+  max-width: 62rem;
+  margin: 0 0 0.75rem;
+  color: var(--tx2);
+}
+.re-h {
+  margin: 1.75rem 0 0.4rem;
+  font-size: 1.05rem;
+}
+.controls .re-field-measure {
+  flex: 1 1 15rem;
+  max-width: 24rem;
+}
+
+/* City picker */
+.re-picker {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+.re-picker-field {
+  max-width: 34rem;
+}
+.re-picker-row {
+  display: flex;
+  gap: 0.4rem;
+}
+.re-picker-row input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.re-picker-message {
+  min-height: 1.2em;
+  margin: 0;
+  color: var(--tx2);
+  font-size: 0.85rem;
+}
+.re-picker-message:empty {
+  min-height: 0;
+}
+.re-picker-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.9rem;
+}
+.re-chips,
+.re-find-list,
+.re-quadrants,
+.re-waffles,
+.re-compare {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.re-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.re-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 2rem;
+  padding: 0.2rem 0.7rem;
+  border: 2px solid var(--accent);
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--tx);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.re-chip:hover {
+  background: var(--s2);
+}
+.re-chip:focus-visible,
+.re-find-btn:focus-visible,
+.re-preset:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.re-presets {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+.re-preset,
+.re-find-btn {
+  min-height: 2rem;
+  padding: 0.2rem 0.7rem;
+  font-size: 0.85rem;
+}
+
+/* Finder, quadrants, waffles */
+.re-find {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.6rem;
+  margin: 0 0 0.6rem;
+}
+.re-find-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.re-find-missing {
+  font-size: 0.85rem;
+}
+.re-quadrants {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0.75rem 0;
+}
+@media (min-width: 720px) {
+  .re-quadrants {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.re-quadrant {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+}
+.re-waffles {
+  display: grid;
+  align-items: end; /* titles of one or two lines: the grids still line up */
+  grid-template-columns: repeat(auto-fill, minmax(8.25rem, 1fr));
+  gap: 1rem 0.9rem;
+  margin: 0.5rem 0 0.75rem;
+}
+.re-waffle-item {
+  display: grid;
+  gap: 0.35rem;
+  align-content: start;
+  font-size: 0.85rem;
+}
+.re-waffle-title {
+  font-weight: 700;
+  color: var(--tx);
+}
+.re-waffle-item.is-reference .re-waffle-title {
+  font-weight: 600;
+  color: var(--tx2);
+}
+.re-waffle-caption {
+  color: var(--tx2);
+  font-variant-numeric: tabular-nums;
+}
+.re-waffle .is-filled {
+  fill: var(--c-birth); /* the validated blue — one series, named by the heading */
+}
+.re-waffle .is-empty {
+  fill: var(--s2);
+  stroke: var(--line);
+  stroke-width: 1;
+}
+.re-waffle-item.is-reference .re-waffle .is-filled {
+  fill: var(--tx3);
+}
+
+/* Compare cards */
+.re-compare {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 0.9rem;
+}
+.re-card {
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--line2);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+.re-card-title {
+  margin: 0;
+  font-size: 1.05rem;
+}
+.re-card-country {
+  color: var(--tx2);
+  font-weight: 400;
+}
+.re-card-region {
+  margin: 0.2rem 0 0.6rem;
+  font-size: 0.85rem;
+}
+.re-card-list {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+}
+.re-card-item dt {
+  color: var(--tx2);
+  font-size: 0.8rem;
+}
+.re-card-item dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.15rem 0.5rem;
+  margin: 0;
+}
+.re-card-value {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.re-card-rank {
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+.re-meter {
+  flex: 1 1 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--s2);
+  overflow: hidden;
+}
+.re-meter > span {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--tx3);
+}
+.re-map-legend {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0.6rem 0;
+}
+.re-shape {
+  flex: none;
+}
+.re-shape-from {
+  fill: var(--surface);
+  stroke: var(--tx2);
+  stroke-width: 2;
+}
+.re-shape-to {
+  fill: var(--tx2);
+}
+
+/* Scatter (sc-), beeswarm (sw-), dumbbell (db-), point map (pm-) — shared chart cores (S3-re) */
+.sc-gx,
+.sc-gy,
+.sw-grid,
+.db-grid {
+  stroke: var(--chart-grid);
+  stroke-width: 1;
+}
+.sc-tick,
+.sw-tick,
+.db-tick {
+  fill: var(--chart-axis);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.sc-title,
+.sw-title {
+  fill: var(--tx2);
+  font-size: 12px;
+}
+.sc-guide,
+.sw-ref line {
+  stroke: var(--tx3);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+.sc-quadrant,
+.sw-ref text {
+  fill: var(--tx2);
+  font-size: 11.5px;
+  paint-order: stroke;
+  stroke: var(--surface);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+.sc-dot,
+.sw-dot,
+.pm-dot {
+  stroke: var(--surface);
+  stroke-width: 1.5;
+}
+.sc-dot.is-emphasis,
+.sw-dot.is-emphasis,
+.pm-dot.is-emphasis {
+  stroke: var(--accent);
+  stroke-width: 2.5;
+}
+.sc-label,
+.sw-label text,
+.pm-label {
+  fill: var(--tx);
+  font-size: 12px;
+  font-weight: 700;
+  paint-order: stroke;
+  stroke: var(--surface);
+  stroke-width: 3.5px;
+  stroke-linejoin: round;
+}
+.sw-label line {
+  stroke: var(--tx3);
+  stroke-width: 1;
+}
+.sc-ring,
+.sw-ring,
+.pm-ring {
+  fill: none;
+  stroke: var(--tx);
+  stroke-width: 2;
+  pointer-events: none;
+}
+.sc-hit,
+.sw-hit,
+.pm-hit {
+  fill: transparent;
+}
+.db-hit {
+  fill: transparent;
+}
+.db-row.is-hover .db-hit {
+  fill: var(--chart-hover);
+}
+.db-row.is-emphasis .db-hit {
+  fill: var(--accent-soft);
+}
+.db-label {
+  fill: var(--tx);
+  font-size: 13px;
+}
+.db-row.is-emphasis .db-label {
+  font-weight: 700;
+}
+.db-line {
+  stroke: var(--tx3);
+  stroke-width: 2;
+}
+.db-from {
+  fill: var(--surface);
+  stroke-width: 2;
+}
+.db-to {
+  stroke: var(--surface);
+  stroke-width: 1.5;
+}
+.db-value {
+  fill: var(--tx2);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.db-flag {
+  pointer-events: none;
+}
+.chart-map .chart-svg {
+  overflow: hidden; /* a zoomed region: the land outside the view is cut at the frame */
+}
+.pm-land-path {
+  fill: var(--s2);
+  stroke: var(--line);
+  stroke-width: 0.6;
+  vector-effect: non-scaling-stroke;
+}
