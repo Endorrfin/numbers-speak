@@ -63,7 +63,7 @@ test('orderGpi reverses for least peaceful first; summary counts score changes',
   assert.deepEqual(gpiSummary(sample().rows), { total: 4, improved: 3, deteriorated: 1 });
 });
 test('state: report order by default, defaults omitted', () => {
-  assert.deepEqual(parseGpiState({}), { order: 'most', region: 'all', page: 1, view: 'chart' });
+  assert.deepEqual(parseGpiState({}), { order: 'most', region: 'all', page: 1, view: 'chart', focus: null }); // CHANGED (S3-uf)
   assert.deepEqual(toGpiParams(parseGpiState({ order: 'x', region: 'y', page: '-1' })), {});
   assert.deepEqual(toGpiParams(parseGpiState({ order: 'least', region: 'europe', page: '3', view: 'table' })), {
     order: 'least',

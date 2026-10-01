@@ -43,6 +43,6 @@ export default defineViz({
   data: ['gdp-ppp-per-capita-2023.json', 'gdp-ppp-per-capita-2024.json', 'gdp-ppp-per-capita-2025.json'],
   status: 'published',
   added: '2026-09-24',
-  updated: '2026-09-24',
+  updated: '2026-10-01', // CHANGED (S3-uf): Ukraine in focus
   d3Modules: ['d3-selection', 'd3-scale', 'd3-axis', 'd3-transition', 'd3-interpolate', 'd3-array'],
 });

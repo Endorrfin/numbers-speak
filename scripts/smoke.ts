@@ -89,6 +89,9 @@ console.error = (...args: unknown[]): void => {
 
 let checks = 0;
 let failures = 0;
+/** CHANGED (S3-uf): the markup from the first <table> on — pickers put every name into a <datalist> above it. */
+const inTable = (html: string): string => html.slice(Math.max(0, html.indexOf('<table')));
+
 function ok(cond: boolean, msg: string): void {
   checks++;
   if (!cond) {
@@ -220,7 +223,7 @@ async function main(): Promise<void> {
       {},
       { view: 'table' },
       { region: 'europe', page: '2' },
-      { region: '<script>', page: '999', view: 'x' },
+      { region: '<script>', page: '999', view: 'x', focus: '<script>,zz' }, // CHANGED (S3-uf): + focus
     ];
     for (const params of variants) {
       for (const lang of langs) {
@@ -240,7 +243,8 @@ async function main(): Promise<void> {
     ok(!pcChart.includes('>2023<'), 'ready:gdp per capita offers no 2023 year');
     check('ready:gdp per capita table uk', h(Gdp, { params: { metric: 'per-capita', year: '2024', view: 'table' }, setParams: noop }), 'uk', 5000, ['Люксембург', '× світового середнього']);
     const europe = check('ready:gdp europe', h(Gdp, { params: { region: 'europe', view: 'table' }, setParams: noop }), 'en', 2000, ['Germany']);
-    ok(!europe.includes('United States'), 'ready:gdp europe filter excludes the Americas');
+    // CHANGED (S3-uf): the country picker's <datalist> lists every country — order/exclusion checks look inside the <table>.
+    ok(!inTable(europe).includes('United States'), 'ready:gdp europe filter excludes the Americas');
   }
 
   // CHANGED (S3-bd): births & deaths — every angle, the table and both languages with the real dataset.
@@ -547,7 +551,7 @@ async function main(): Promise<void> {
         'Data © Numbeo',
       ]);
       const nt = check('ready:crime numbeo', h(Cr, { params: { show: 'numbeo', view: 'table' }, setParams: noop }), 'en', 3000, ['Safety Index', 'Numbeo', 'Andorra', '19.2']);
-      ok(nt.indexOf('Jamaica') < nt.indexOf('Guyana'), 'ready:crime numbeo keeps Numbeo’s order for equal indexes (Jamaica before Guyana)');
+      ok(inTable(nt).indexOf('Jamaica') < inTable(nt).indexOf('Guyana'), 'ready:crime numbeo keeps Numbeo’s order for equal indexes (Jamaica before Guyana)');
       check('ready:crime numbeo uk', h(Cr, { params: { show: 'numbeo' }, setParams: noop }), 'uk', 1500, ['Індекс злочинності (Numbeo)', 'Дані © Numbeo']);
     } else {
       const fallback = check('ready:crime numbeo pending', h(Cr, { params: { show: 'numbeo' }, setParams: noop }), 'en', 1500, ['World estimate']);
@@ -582,10 +586,10 @@ async function main(): Promise<void> {
       'rank 96, level with Cambodia (2.075)',
       '2.075*',
     ]);
-    ok(table.indexOf('Iceland') < table.indexOf('Russia'), 'ready:gpi table in the report order by default');
+    ok(inTable(table).indexOf('Iceland') < inTable(table).indexOf('Russia'), 'ready:gpi table in the report order by default');
     const europe = check('ready:gpi europe', h(Gp, { params: { region: 'europe', order: 'least', view: 'table' }, setParams: noop }), 'en', 2000, ['Russia', 'Ukraine']);
     ok(!europe.includes(' Japan</th>'), 'ready:gpi europe filter excludes Asia');
-    ok(europe.indexOf('Russia') < europe.indexOf('Iceland'), 'ready:gpi least-peaceful order puts Russia before Iceland');
+    ok(inTable(europe).indexOf('Russia') < inTable(europe).indexOf('Iceland'), 'ready:gpi least-peaceful order puts Russia before Iceland');
     // CHANGED (S3-fx): the shared Pager (sized from its longest label) and the "bars start at 1" wording.
     // The axis title itself is drawn by D3 in an effect — covered by the jsdom test (test-ranked-bar.ts).
     check('ready:gpi pager', h(Gp, { params: {}, setParams: noop }), 'en', 1500, [
@@ -607,6 +611,62 @@ async function main(): Promise<void> {
       '(1–5, нижчий = мирніше; стовпці від 1)',
     ]);
     ok(!table.includes('field-pager'), 'ready:gpi table view has no pager');
+  }
+
+  // CHANGED (S3-uf): «Ukraine in focus» on the six country rankings — Finder (rank in the current list, "of N"), the
+  // country picker (chip), the table's is-home row, the KPI tile on pages with a KPI row, ?focus=none / pl, a region
+  // that hides Ukraine (the button stays: the jump resets the region), EN + UK. Ranks come from the shipped files.
+  {
+    const gdpD = await import('../src/viz/gdp-by-country/data');
+    const pppD = await import('../src/viz/gdp-ppp-per-capita/data');
+    const popD = await import('../src/viz/population-by-country/data');
+    const landD = await import('../src/viz/land-area/data');
+    const crD = await import('../src/viz/crime-index/data');
+    const gpD = await import('../src/viz/global-peace-index/data');
+    const J = (id: string, f: string): unknown => JSON.parse(readFileSync(`public/data/${id}/${f}`, 'utf8'));
+    const areaD = landD.parseAreaDataset(J('land-area', landD.DATA_FILE));
+    type Pos = { rank: number | null; code: string };
+    const ua = (list: readonly Pos[]): { rank: number; total: number } => {
+      const charted = list.filter((r) => r.rank !== null);
+      return { rank: charted.find((r) => r.code === 'UA')!.rank!, total: charted.length };
+    };
+    const pages: Array<{ id: string; tile: boolean; pos: { rank: number; total: number }; detail?: string }> = [
+      { id: 'gdp-by-country', tile: false, pos: ua(gdpD.rankGdp(gdpD.parseGdpDataset(J('gdp-by-country', gdpD.dataFile('total', gdpD.LATEST_YEAR))))), detail: 'bn' },
+      { id: 'gdp-ppp-per-capita', tile: true, pos: ua(pppD.rankPpp(pppD.parsePppDataset(J('gdp-ppp-per-capita', pppD.dataFile(pppD.LATEST_YEAR))))) },
+      { id: 'population-by-country', tile: true, pos: ua(popD.rankPopulation(popD.parsePopDataset(J('population-by-country', popD.DATA_FILE)), 'population', null)) },
+      { id: 'land-area', tile: true, pos: ua(landD.rankArea(areaD, 'land', 'area')) },
+      { id: 'crime-index', tile: false, pos: ua(crD.rankHomicide(crD.parseHomicideDataset(J('crime-index', crD.HOMICIDE_FILE)))) },
+      { id: 'global-peace-index', tile: false, pos: ua(gpD.parseGpiDataset(J('global-peace-index', gpD.DATA_FILE)).rows) },
+    ];
+    for (const { id, tile, pos, detail } of pages) {
+      if (!CATALOG.some((m) => m.id === id)) continue;
+      const Body = (await getVizLoader(id)!()).default as ComponentType<{ params: object; setParams: () => void }>;
+      const r = (params: Record<string, string>, lang: 'en' | 'uk', inc: string[]): string =>
+        check(`ready:${id} focus ${JSON.stringify(params)}`, h(Body, { params, setParams: noop }), lang, 1500, inc);
+      const en = r({}, 'en', [`Ukraine · #${pos.rank}`, `In this ranking of ${pos.total}:`, 'Highlight countries', 'class="fp-chip"', 'Go to the row of Ukraine']);
+      ok(/class="fp-chip"[^>]*>Ukraine /.test(en), `ready:${id} focus: Ukraine chip`);
+      r({}, 'uk', [`Україна · №${pos.rank}`, `У цьому рейтингу з ${pos.total}:`, 'Виділити країни', 'Перейти до рядка «Україна»']);
+      if (tile) {
+        ok(en.includes('kpi kpi-home') && en.includes(`Ukraine: rank ${pos.rank} of ${pos.total}`), `ready:${id} focus: KPI tile`);
+        ok(!en.includes('finder-detail'), `ready:${id} focus: value in the tile, not in the Finder`);
+        r({}, 'uk', [`Україна: місце ${pos.rank} з ${pos.total}`]);
+      } else {
+        ok(!en.includes('kpi-home'), `ready:${id} focus: no tile without a KPI row`);
+        ok(en.includes('class="finder-detail muted"') && (!detail || en.includes(detail)), `ready:${id} focus: value after the button`);
+      }
+      const table = r({ view: 'table' }, 'en', ['<tr class="is-home">']);
+      const at = table.indexOf('<tr class="is-home">');
+      ok(table.slice(at, at + 400).includes('Ukraine'), `ready:${id} focus: the table's is-home row is Ukraine`);
+      ok(table.split('class="is-home"').length === 2, `ready:${id} focus: one is-home row by default`);
+      const none = r({ focus: 'none' }, 'en', ['No highlighted countries.']);
+      ok(!none.includes('class="finder"') && !none.includes('kpi-home'), `ready:${id} focus=none: no Finder, no tile`);
+      ok(!r({ focus: 'none', view: 'table' }, 'en', []).includes('is-home'), `ready:${id} focus=none: no table highlight`);
+      const pl = r({ focus: 'pl,ua' }, 'en', ['Poland · #', `Ukraine · #${pos.rank}`]);
+      ok(pl.indexOf('Poland · #') < pl.indexOf('Ukraine · #'), `ready:${id} focus=pl,ua: buttons in the order added`);
+      ok(!r({ focus: 'pl' }, 'en', ['Poland · #']).includes('Ukraine · #'), `ready:${id} focus=pl: Ukraine not highlighted`);
+      r({ region: 'asia' }, 'en', [`Ukraine · #${pos.rank}`]);
+      r({ focus: 'qq' }, 'en', ['QQ: not in this list']);
+    }
   }
 
   // CHANGED (S3-re): real-estate-world — six angles, the city picker (default: Ukrainian cities; none; one city),
@@ -737,7 +797,7 @@ async function main(): Promise<void> {
       'Pick up to 5 cities above',
       'No highlighted cities.',
     ]);
-    ok(!none.includes('class="re-chip"'), 'ready:realestate cities=none shows no chips');
+    ok(!none.includes('class="fp-chip"'), 'ready:realestate cities=none shows no chips');
     check('ready:realestate one city', h(Re, { params: { cities: 'warsaw-pl' }, setParams: noop }), 'en', 1500, ['aria-label="Remove Warsaw"', 'Warsaw · #']);
   }
 

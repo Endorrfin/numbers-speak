@@ -20,12 +20,15 @@ import type { ScatterAxis, ScatterPoint } from '../../charts/renderScatter';
 import type { SwarmPoint, SwarmRef } from '../../charts/renderSwarm';
 import type { TipContent } from '../../charts/tooltip';
 import { HEAT_COLOR, REGION_COLOR } from '../../charts/palette';
+import { Finder } from '../../components/viz/Finder'; // CHANGED (S3-uf)
+import type { FinderItem } from '../../components/viz/Finder';
 import { Pager } from '../../components/viz/Pager';
 import { useLang } from '../../i18n/lang';
 import type { Lang } from '../../i18n/lang';
 import { fill, ui } from '../../i18n/ui';
 import { countryName, flagUrl } from '../../lib/countries';
 import { formatDate, formatMultiple, formatNumber, formatShare, formatUsdPrice, formatYears } from '../../lib/format';
+import { focusJump } from '../../lib/focus';
 import { paginate } from '../../lib/paginate';
 import { REGIONS, REGION_LABELS } from '../../lib/regions';
 import type { Region } from '../../lib/regions';
@@ -189,37 +192,10 @@ function Legend({ region, update, extra }: { region?: Region | 'all'; update?: P
   );
 }
 
-/** One button per highlighted city: its rank in the current list; a click opens the page that shows it. */
-function Finder({ highlighted, list, rankOf, onJump }: {
-  highlighted: readonly CityRow[];
-  list: readonly CityRow[];
-  rankOf: (r: CityRow) => number | undefined;
-  onJump: (r: CityRow) => void;
-}) {
-  const { t, lang } = useLang();
-  if (!highlighted.length) return null;
+// CHANGED (S3-uf): the Finder moved to components/viz; this maps the highlighted cities onto its items.
+function cityFinderItems(highlighted: readonly CityRow[], list: readonly CityRow[], rankOf: (r: CityRow) => number | undefined, lang: Lang): FinderItem[] {
   const listed = new Set(list.map((r) => r.id));
-  return (
-    <div className="re-find">
-      <span className="field-label">{t(txt.find)}</span>
-      <ul className="re-find-list">
-        {highlighted.map((r) => {
-          const rank = rankOf(r);
-          return (
-            <li key={r.id}>
-              {rank !== undefined && listed.has(r.id) ? (
-                <button type="button" className="btn btn-ghost re-find-btn" title={fill(t(txt.findTitle), { city: r.name[lang] })} onClick={() => onJump(r)}>
-                  {fill(t(txt.findButton), { city: r.name[lang], rank })}
-                </button>
-              ) : (
-                <span className="re-find-missing muted">{fill(t(txt.notListed), { city: r.name[lang] })}</span>
-              )}
-            </li>
-          );
-        })}
-      </ul>
-    </div>
-  );
+  return highlighted.map((r) => ({ key: r.id, name: r.name[lang], rank: listed.has(r.id) ? rankOf(r) : undefined }));
 }
 
 function Status({ children }: { children: ReactNode }) {
@@ -342,11 +318,10 @@ export function RankingAngle({ data, settings, update, highlighted, ranks }: Pro
     .filter((x): x is { r: CityRow; info: RankInfo } => x.info !== undefined)
     .sort((a, b) => a.info.rank - b.info.rank)[0];
 
-  const jump = (r: CityRow): void => {
-    const keep = inRegion(r, settings.region);
-    const list = keep ? filtered : ranked;
-    const pos = list.findIndex((c) => c.row.id === r.id);
-    if (pos >= 0) update({ region: keep ? settings.region : 'all', page: Math.floor(pos / PAGE_SIZE) + 1, view: 'chart' });
+  // CHANGED (S3-uf): shared focusJump (same rule: the region stays when it keeps the city, else 'all').
+  const jump = (id: string): void => {
+    const to = focusJump(id, { all: ranked, filtered, keyOf: (c) => c.row.id, region: settings.region, size: PAGE_SIZE });
+    if (to) update({ ...to, view: 'chart' });
   };
 
   return (
@@ -373,7 +348,7 @@ export function RankingAngle({ data, settings, update, highlighted, ranks }: Pro
         />
       )}
 
-      <Finder highlighted={highlighted} list={ranked.map((c) => c.row)} rankOf={(r) => ranks[m].get(r.id)?.rank} onJump={jump} />
+      <Finder label={t(txt.find)} items={cityFinderItems(highlighted, ranked.map((c) => c.row), (r) => ranks[m].get(r.id)?.rank, lang)} onJump={jump} />
 
       <Status>
         {settings.view === 'chart'
@@ -723,11 +698,10 @@ export function CentreAngle({ data, settings, update, highlighted, ranks }: Prop
     () => filtered.map((r) => ({ row: r, rank: position.get(r.id) ?? 0, value: premium(r) ?? 1 })),
     [filtered, position],
   );
-  const jump = (r: CityRow): void => {
-    const keep = inRegion(r, settings.region);
-    const list = keep ? filtered : ordered;
-    const pos = list.findIndex((c) => c.id === r.id);
-    if (pos >= 0) update({ region: keep ? settings.region : 'all', page: Math.floor(pos / PAGE_SIZE) + 1, view: 'chart' });
+  // CHANGED (S3-uf): shared focusJump.
+  const jump = (id: string): void => {
+    const to = focusJump(id, { all: ordered, filtered, keyOf: (r) => r.id, region: settings.region, size: PAGE_SIZE });
+    if (to) update({ ...to, view: 'chart' });
   };
 
   return (
@@ -755,7 +729,7 @@ export function CentreAngle({ data, settings, update, highlighted, ranks }: Prop
         {settings.view === 'chart' && <Pager id={`${base}-page`} page={page} size={PAGE_SIZE} onPage={(p) => update({ page: p })} />}
         <ViewField base={base} view={settings.view} update={update} />
       </div>
-      <Finder highlighted={highlighted} list={ordered} rankOf={(r) => position.get(r.id)} onJump={jump} />
+      <Finder label={t(txt.find)} items={cityFinderItems(highlighted, ordered, (r) => position.get(r.id), lang)} onJump={jump} />
       <Status>
         {settings.view === 'chart'
           ? fill(t(ui.showingRange), { from: page.from, to: page.to, total: page.total })

@@ -168,7 +168,7 @@ test('shipped files: every code has a real name in both languages', () => {
 });
 
 // ── URL state ─────────────────────────────────────────────────────────────────────────────────────
-const DEFAULT = { metric: 'total', year: 2025, region: 'all', page: 1, view: 'chart' } as const;
+const DEFAULT = { metric: 'total', year: 2025, region: 'all', page: 1, view: 'chart', focus: null } as const; // CHANGED (S3-uf): + focus
 test('state defaults: total GDP, latest year', () => assert.deepEqual(parseGdpState({}), DEFAULT));
 test('state parses valid params', () =>
   assert.deepEqual(parseGdpState({ metric: 'per-capita', year: '2024', region: 'europe', page: '3', view: 'table' }), {
@@ -177,6 +177,7 @@ test('state parses valid params', () =>
     region: 'europe',
     page: 3,
     view: 'table',
+    focus: null, // CHANGED (S3-uf)
   }));
 test('state ignores junk', () =>
   assert.deepEqual(parseGdpState({ metric: 'ppp', year: '1999', region: '<b>', page: '-2', view: 'pie' }), DEFAULT));

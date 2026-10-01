@@ -22,6 +22,8 @@ import {
 } from '../../lib/format';
 import { paginate } from '../../lib/paginate';
 import { Pager } from '../../components/viz/Pager';
+import { CountryFocus } from '../../components/viz/CountryFocus'; // CHANGED (S3-uf)
+import { resolveFocus } from '../../lib/focus';
 import { REGIONS, REGION_LABELS } from '../../lib/regions';
 import type { Region } from '../../lib/regions';
 import { dataUrl, useDataset } from '../../lib/useDataset';
@@ -243,11 +245,14 @@ function GdpView({ dataset, settings, update }: ViewProps) {
     () => (settings.region === 'all' ? ranked : ranked.filter((r) => r.region === settings.region)),
     [ranked, settings.region],
   );
+  // CHANGED (S3-uf): highlighted countries (default Ukraine) — accent row, Finder, table row.
+  const focus = useMemo(() => resolveFocus(settings.focus, (c) => ranked.some((r) => r.code === c)), [settings.focus, ranked]);
+  const hi = useMemo(() => new Set(focus), [focus]);
   const page = useMemo(() => paginate(filtered, settings.page, PAGE_SIZE), [filtered, settings.page]);
   const pageItems = page.items;
   const rows = useMemo(
-    () => pageItems.map((r) => toBarRow(r, metric, lang, ranked.length, t)),
-    [pageItems, metric, lang, ranked.length, t],
+    () => pageItems.map((r) => ({ ...toBarRow(r, metric, lang, ranked.length, t), emphasis: hi.has(r.code) })),
+    [pageItems, metric, lang, ranked.length, t, hi],
   );
   const tickFormat = useCallback((v: number) => formatUsdTick(v, lang), [lang]);
 
@@ -331,6 +336,18 @@ function GdpView({ dataset, settings, update }: ViewProps) {
         </div>
       </div>
 
+      <CountryFocus
+        codes={focus}
+        all={ranked}
+        filtered={filtered}
+        region={settings.region}
+        size={PAGE_SIZE}
+        rankOf={(r) => r.rank}
+        detail={(r) => toBarRow(r, metric, lang, ranked.length, t).valueLabel}
+        onFocus={(f) => update({ focus: f })}
+        onJump={(to) => update({ ...to, view: 'chart' })}
+      />
+
       <p className="viz-status" aria-live="polite">
         {settings.view === 'chart'
           ? fill(t(ui.showingRange), { from: page.from, to: page.to, total: page.total })
@@ -345,6 +362,7 @@ function GdpView({ dataset, settings, update }: ViewProps) {
         <GdpTable
           rows={filtered}
           metric={metric}
+          hi={hi}
           withNotes={marked > 0}
           caption={fill(t(txt.tableCaption[metric]), { year: dataset.year, region: regionName })}
         />
@@ -377,9 +395,9 @@ function GdpView({ dataset, settings, update }: ViewProps) {
   );
 }
 
-type TableProps = { rows: readonly RankedGdpRow[]; metric: Metric; withNotes: boolean; caption: string };
+type TableProps = { rows: readonly RankedGdpRow[]; metric: Metric; hi: ReadonlySet<string>; withNotes: boolean; caption: string };
 
-function GdpTable({ rows, metric, withNotes, caption }: TableProps) {
+function GdpTable({ rows, metric, hi, withNotes, caption }: TableProps) {
   const { t, lang } = useLang();
   const formatCell = metric === 'total' ? formatUsdBillions : formatUsdWhole;
   return (
@@ -406,7 +424,7 @@ function GdpTable({ rows, metric, withNotes, caption }: TableProps) {
           {rows.map((r) => {
             const flag = flagUrl(r.code);
             return (
-              <tr key={r.code}>
+              <tr key={r.code} className={hi.has(r.code) ? 'is-home' : undefined}>
                 <td className="num">{r.rank}</td>
                 <th scope="row">
                   {flag && <img className="flag" src={flag} alt="" width={20} height={15} loading="lazy" />}{' '}

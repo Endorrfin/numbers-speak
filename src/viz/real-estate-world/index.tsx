@@ -3,11 +3,13 @@
 // a world map and a side-by-side comparison. A city picker highlights up to five cities on every angle (default:
 // the Ukrainian cities; presets; state in the URL). Layers: data.ts (contract, parser, rankings) → state.ts (URL
 // state) → measures.ts / text.ts (formats, words) → angles.tsx (the six angles) → this shell.
-import { useCallback, useId, useMemo, useState } from 'react';
-import type { FormEvent, ReactNode } from 'react';
+import { useCallback, useId, useMemo } from 'react';
+import type { ReactNode } from 'react';
+import { FocusPicker } from '../../components/viz/FocusPicker'; // CHANGED (S3-uf)
+import type { FocusOption, FocusPickerText, FocusPreset } from '../../components/viz/FocusPicker';
 import type { VizBodyProps } from '../../catalog/types';
 import { useLang } from '../../i18n/lang';
-import { fill, ui } from '../../i18n/ui';
+import { ui } from '../../i18n/ui';
 import { dataUrl, useDataset } from '../../lib/useDataset';
 import { CentreAngle, CompareAngle, IncomeAngle, MapAngle, RankingAngle, ScatterAngle } from './angles';
 import { DATA_FILE, allRanks, parseRealEstateDataset } from './data';
@@ -107,130 +109,39 @@ function RealEstateView({ data, settings, update }: ViewProps) {
 type PickerProps = { data: RealEstateDataset; highlighted: readonly CityRow[]; onChange: (ids: string[] | null) => void };
 
 /**
- * Search (a native <datalist>, so keyboards and screen readers get the platform's own combobox) + removable chips +
- * presets. Picking a suggestion adds the city at once; typing a full name and pressing Enter or «Add» works too.
+ * CHANGED (S3-uf): the shared FocusPicker (components/viz) with the city options — the suggestion is "city, country";
+ * the Numbeo name and a city name that is unique in the list also pick a city when typed in full.
  */
 function CityPicker({ data, highlighted, onChange }: PickerProps) {
   const { t, lang } = useLang();
-  const base = useId();
-  const [query, setQuery] = useState('');
-  const [message, setMessage] = useState('');
-  const options = useMemo(
-    () =>
-      data.rows
-        .map((r) => ({ r, label: cityWithCountry(r, lang) }))
-        .sort((a, b) => a.label.localeCompare(b.label, lang === 'uk' ? 'uk' : 'en')),
-    [data, lang],
-  );
-  const labels = useMemo(() => new Map(options.map(({ r, label }) => [label.toLowerCase(), r])), [options]);
-  const lookup = useMemo(() => {
-    const map = new Map<string, CityRow>();
+  const options = useMemo<FocusOption[]>(() => {
     const names = new Map<string, number>();
-    for (const { r } of options) {
+    for (const r of data.rows) {
       const n = r.name[lang].toLowerCase();
       names.set(n, (names.get(n) ?? 0) + 1);
     }
-    for (const { r, label } of options) {
-      map.set(label.toLowerCase(), r);
-      map.set(r.numbeo.toLowerCase(), r);
-      if (names.get(r.name[lang].toLowerCase()) === 1) map.set(r.name[lang].toLowerCase(), r);
-    }
-    return map;
-  }, [options, lang]);
-  const ids = highlighted.map((r) => r.id);
-
-  const add = (raw: string, strict: boolean): boolean => {
-    const q = raw.trim();
-    if (!q) return false;
-    const r = lookup.get(q.toLowerCase());
-    if (!r) {
-      if (strict) setMessage(fill(t(txt.notFound), { q }));
-      return false;
-    }
-    if (ids.includes(r.id)) setMessage(fill(t(txt.already), { city: r.name[lang] }));
-    else if (ids.length >= MAX_CITIES) setMessage(fill(t(txt.full), { n: MAX_CITIES }));
-    else {
-      onChange([...ids, r.id]);
-      setMessage('');
-    }
-    setQuery('');
-    return true;
+    return data.rows.map((r) => ({
+      id: r.id,
+      label: cityWithCountry(r, lang),
+      name: r.name[lang],
+      keys: names.get(r.name[lang].toLowerCase()) === 1 ? [r.numbeo, r.name[lang]] : [r.numbeo],
+    }));
+  }, [data, lang]);
+  const text: FocusPickerText = {
+    label: t(txt.picker),
+    hint: t(txt.pickerHint),
+    placeholder: t(txt.pickerPlaceholder),
+    remove: t(txt.remove),
+    notFound: t(txt.notFound),
+    full: t(txt.full),
+    already: t(txt.already),
+    none: t(txt.noneSelected),
+    chips: t(txt.highlightLegend),
+    presets: t(txt.presets),
   };
-  const submit = (e: FormEvent): void => {
-    e.preventDefault();
-    add(query, true);
-  };
-
-  return (
-    <div className="re-picker">
-      <form className="re-picker-form" onSubmit={submit} role="search">
-        <div className="field re-picker-field">
-          <label htmlFor={`${base}-city`}>
-            {t(txt.picker)} <span className="muted">({fill(t(txt.pickerHint), { n: MAX_CITIES })})</span>
-          </label>
-          <div className="re-picker-row">
-            <input
-              id={`${base}-city`}
-              type="search"
-              list={`${base}-cities`}
-              value={query}
-              placeholder={t(txt.pickerPlaceholder)}
-              autoComplete="off"
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setMessage('');
-                // A picked suggestion matches an option exactly: add it without waiting for Enter.
-                if (labels.has(e.target.value.trim().toLowerCase())) add(e.target.value, false);
-              }}
-            />
-            <button type="submit" className="btn btn-ghost">
-              {t(txt.add)}
-            </button>
-          </div>
-          <datalist id={`${base}-cities`}>
-            {options.map(({ r, label }) => (
-              <option key={r.id} value={label} />
-            ))}
-          </datalist>
-        </div>
-      </form>
-      <p className="re-picker-message" role="status">
-        {message}
-      </p>
-      <div className="re-picker-chips">
-        {highlighted.length ? (
-          <ul className="re-chips" aria-label={t(txt.highlightLegend)}>
-            {highlighted.map((r) => (
-              <li key={r.id}>
-                <button
-                  type="button"
-                  className="re-chip"
-                  aria-label={fill(t(txt.remove), { city: r.name[lang] })}
-                  onClick={() => onChange(ids.filter((id) => id !== r.id))}
-                >
-                  {r.name[lang]} <span aria-hidden="true">×</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <span className="muted">{t(txt.noneSelected)}</span>
-        )}
-        <span className="re-presets">
-          <span className="field-label">{t(txt.presets)}:</span>
-          <button type="button" className="btn btn-ghost re-preset" onClick={() => onChange(null)}>
-            {t(txt.presetUa)}
-          </button>
-          <button type="button" className="btn btn-ghost re-preset" onClick={() => onChange(NEIGHBOURS.filter((id) => data.rows.some((r) => r.id === id)))}>
-            {t(txt.presetNeighbours)}
-          </button>
-          {highlighted.length > 0 && (
-            <button type="button" className="btn btn-ghost re-preset" onClick={() => onChange([])}>
-              {t(txt.clear)}
-            </button>
-          )}
-        </span>
-      </div>
-    </div>
-  );
+  const presets: FocusPreset[] = [
+    { label: t(txt.presetUa), ids: null },
+    { label: t(txt.presetNeighbours), ids: NEIGHBOURS.filter((id) => data.rows.some((r) => r.id === id)) },
+  ];
+  return <FocusPicker options={options} selected={highlighted.map((r) => r.id)} max={MAX_CITIES} text={text} presets={presets} onChange={onChange} />;
 }

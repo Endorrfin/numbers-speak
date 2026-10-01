@@ -10,11 +10,14 @@ import type { VizBodyProps } from '../../catalog/types';
 import { useLang } from '../../i18n/lang';
 import type { Lang } from '../../i18n/lang';
 import { fill, ui } from '../../i18n/ui';
+import { focusText } from '../../components/viz/focusText';
 import { countryName, flagUrl } from '../../lib/countries';
 import { formatMultiple, formatNumber, formatUsdCompact, formatUsdTick, formatUsdWhole } from '../../lib/format';
 import { hrefViz } from '../../lib/hashRouter';
 import { paginate } from '../../lib/paginate';
 import { Pager } from '../../components/viz/Pager';
+import { CountryFocus } from '../../components/viz/CountryFocus'; // CHANGED (S3-uf)
+import { resolveFocus } from '../../lib/focus';
 import { REGIONS, REGION_LABELS } from '../../lib/regions';
 import type { Region } from '../../lib/regions';
 import { dataUrl, useDataset } from '../../lib/useDataset';
@@ -157,9 +160,17 @@ function PppView({ dataset, settings, update }: ViewProps) {
     () => (settings.region === 'all' ? ranked : ranked.filter((r) => r.region === settings.region)),
     [ranked, settings.region],
   );
+  // CHANGED (S3-uf): highlighted countries (default Ukraine) — accent row, Finder, table row.
+  const focus = useMemo(() => resolveFocus(settings.focus, (c) => ranked.some((r) => r.code === c)), [settings.focus, ranked]);
+  const hi = useMemo(() => new Set(focus), [focus]);
   const page = useMemo(() => paginate(filtered, settings.page, PAGE_SIZE), [filtered, settings.page]);
   const pageItems = page.items;
-  const rows = useMemo(() => pageItems.map((r) => toBarRow(r, lang, ranked.length, t)), [pageItems, lang, ranked.length, t]);
+  const rows = useMemo(
+    () => pageItems.map((r) => ({ ...toBarRow(r, lang, ranked.length, t), emphasis: hi.has(r.code) })),
+    [pageItems, lang, ranked.length, t, hi],
+  );
+  const homeRow = ranked.find((r) => hi.has(r.code));
+  const homeTile = homeRow && { row: homeRow, label: fill(t(focusText.focusKpi), { name: countryName(homeRow.code, lang), rank: homeRow.rank, total: ranked.length }) };
   const tickFormat = useCallback((v: number) => formatUsdTick(v, lang), [lang]);
 
   const regionName = settings.region === 'all' ? t(ui.allRegions) : t(REGION_LABELS[settings.region]);
@@ -227,6 +238,17 @@ function PppView({ dataset, settings, update }: ViewProps) {
         </div>
       </div>
 
+      <CountryFocus
+        codes={focus}
+        all={ranked}
+        filtered={filtered}
+        region={settings.region}
+        size={PAGE_SIZE}
+        rankOf={(r) => r.rank}
+        onFocus={(f) => update({ focus: f })}
+        onJump={(to) => update({ ...to, view: 'chart' })}
+      />
+
       <p className="viz-status" aria-live="polite">
         {settings.view === 'chart'
           ? fill(t(ui.showingRange), { from: page.from, to: page.to, total: page.total })
@@ -238,7 +260,7 @@ function PppView({ dataset, settings, update }: ViewProps) {
       {settings.view === 'chart' ? (
         <RankedBar rows={rows} label={chartLabel} tickFormat={tickFormat} />
       ) : (
-        <PppTable rows={filtered} caption={fill(t(txt.tableCaption), { year: dataset.year, region: regionName })} />
+        <PppTable rows={filtered} hi={hi} caption={fill(t(txt.tableCaption), { year: dataset.year, region: regionName })} />
       )}
 
       <ul className="legend" aria-label={t(ui.legend)}>
@@ -279,6 +301,12 @@ function PppView({ dataset, settings, update }: ViewProps) {
             </span>
           </li>
         )}
+        {homeTile && (
+          <li className="kpi kpi-home">
+            <span className="kpi-value">{formatUsdCompact(homeTile.row.value, lang)}</span>
+            <span className="kpi-label">{homeTile.label}</span>
+          </li>
+        )}
       </ul>
 
       <p className="chart-note muted">
@@ -291,7 +319,7 @@ function PppView({ dataset, settings, update }: ViewProps) {
   );
 }
 
-function PppTable({ rows, caption }: { rows: readonly RankedPppRow[]; caption: string }) {
+function PppTable({ rows, hi, caption }: { rows: readonly RankedPppRow[]; hi: ReadonlySet<string>; caption: string }) {
   const { t, lang } = useLang();
   return (
     <div className="table-wrap">
@@ -316,7 +344,7 @@ function PppTable({ rows, caption }: { rows: readonly RankedPppRow[]; caption: s
           {rows.map((r) => {
             const flag = flagUrl(r.code);
             return (
-              <tr key={r.code}>
+              <tr key={r.code} className={hi.has(r.code) ? 'is-home' : undefined}>
                 <td className="num">{r.rank}</td>
                 <th scope="row">
                   {flag && <img className="flag" src={flag} alt="" width={20} height={15} loading="lazy" />} {countryName(r.code, lang)}

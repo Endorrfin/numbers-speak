@@ -115,7 +115,7 @@ test('regionShares sum to 1', () => {
 // ── URL state ─────────────────────────────────────────────────────────────────────────────────────
 test('state: defaults omitted, unknown values fall back', () => {
   const d = parsePopulationState({});
-  assert.deepEqual(d, { metric: 'population', region: 'all', page: 1, view: 'chart' });
+  assert.deepEqual(d, { metric: 'population', region: 'all', page: 1, view: 'chart', focus: null }); // CHANGED (S3-uf)
   assert.deepEqual(toPopulationParams(d), {});
   assert.deepEqual(parsePopulationState({ metric: 'x', region: '<b>', page: '-3', view: 'y' }), d);
   const s = parsePopulationState({ metric: 'density', region: 'europe', page: '2', view: 'table' });

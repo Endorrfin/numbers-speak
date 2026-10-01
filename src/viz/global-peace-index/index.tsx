@@ -15,6 +15,8 @@ import { countryName, flagUrl } from '../../lib/countries';
 import { formatNumber, formatScore, formatScoreChange } from '../../lib/format';
 import { paginate } from '../../lib/paginate';
 import { Pager } from '../../components/viz/Pager';
+import { CountryFocus } from '../../components/viz/CountryFocus'; // CHANGED (S3-uf)
+import { resolveFocus } from '../../lib/focus';
 import { REGIONS, REGION_LABELS } from '../../lib/regions';
 import type { Region } from '../../lib/regions';
 import { dataUrl, useDataset } from '../../lib/useDataset';
@@ -155,9 +157,16 @@ function GpiView({ data, settings, update }: ViewProps) {
     const inRegion = settings.region === 'all' ? all : all.filter((r) => r.region === settings.region);
     return orderGpi(inRegion, settings.order);
   }, [all, settings.region, settings.order]);
+  const ordered = useMemo(() => orderGpi(all, settings.order), [all, settings.order]); // CHANGED (S3-uf): the Finder's list
+  // CHANGED (S3-uf): highlighted countries (default Ukraine) — accent row, Finder, table row.
+  const focus = useMemo(() => resolveFocus(settings.focus, (c) => all.some((r) => r.code === c)), [settings.focus, all]);
+  const hi = useMemo(() => new Set(focus), [focus]);
   const page = useMemo(() => paginate(filtered, settings.page, PAGE_SIZE), [filtered, settings.page]);
   const pageItems = page.items;
-  const rows = useMemo(() => pageItems.map((r) => toBarRow(r, all, lang, t)), [pageItems, all, lang, t]);
+  const rows = useMemo(
+    () => pageItems.map((r) => ({ ...toBarRow(r, all, lang, t), emphasis: hi.has(r.code) })),
+    [pageItems, all, lang, t, hi],
+  );
   const tickFormat = useCallback((v: number) => formatNumber(v, lang), [lang]);
 
   const regionName = settings.region === 'all' ? t(ui.allRegions) : t(REGION_LABELS[settings.region]);
@@ -229,6 +238,18 @@ function GpiView({ data, settings, update }: ViewProps) {
         </div>
       </div>
 
+      <CountryFocus
+        codes={focus}
+        all={ordered}
+        filtered={filtered}
+        region={settings.region}
+        size={PAGE_SIZE}
+        rankOf={(r) => r.rank}
+        detail={(r) => toBarRow(r, all, lang, t).valueLabel}
+        onFocus={(f) => update({ focus: f })}
+        onJump={(to) => update({ ...to, view: 'chart' })}
+      />
+
       <p className="viz-status" aria-live="polite">
         {settings.view === 'chart'
           ? fill(t(ui.showingRange), { from: page.from, to: page.to, total: page.total })
@@ -268,7 +289,7 @@ function GpiView({ data, settings, update }: ViewProps) {
                 const flag = flagUrl(r.code);
                 const note = rowNote(r, all, lang, t);
                 return (
-                  <tr key={r.code}>
+                  <tr key={r.code} className={hi.has(r.code) ? 'is-home' : undefined}>
                     <td className="num">{rankLabel(r)}</td>
                     <th scope="row">
                       {flag && <img className="flag" src={flag} alt="" width={20} height={15} loading="lazy" />} {countryName(r.code, lang)}

@@ -6,6 +6,7 @@
 import type { VizParams } from '../../catalog/types';
 import { isRegion } from '../../lib/regions';
 import type { Region } from '../../lib/regions';
+import { focusParam, parseFocus } from '../../lib/focus';
 import { parsePage } from '../../lib/paginate';
 import { METRICS, SORTS } from './data';
 import type { Metric, Sort } from './data';
@@ -13,7 +14,7 @@ import type { Metric, Sort } from './data';
 export const PAGE_SIZE = 15;
 export type View = 'chart' | 'table';
 
-export type LandAreaState = { metric: Metric; region: Region | 'all'; sort: Sort; page: number; view: View };
+export type LandAreaState = { metric: Metric; region: Region | 'all'; sort: Sort; page: number; view: View; focus: string[] | null }; // CHANGED (S3-uf): focus null = default (Ukraine)
 
 const isMetric = (v: string | undefined): v is Metric => (METRICS as readonly string[]).includes(v ?? '');
 const isSort = (v: string | undefined): v is Sort => (SORTS as readonly string[]).includes(v ?? '');
@@ -27,6 +28,7 @@ export function parseLandAreaState(params: VizParams): LandAreaState {
     sort,
     page: parsePage(params.page),
     view: params.view === 'table' ? 'table' : 'chart',
+    focus: parseFocus(params.focus), // CHANGED (S3-uf)
   };
 }
 
@@ -37,5 +39,7 @@ export function toLandAreaParams(state: LandAreaState): VizParams {
   if (state.region !== 'all') out.region = state.region;
   if (state.page > 1) out.page = String(state.page);
   if (state.view !== 'chart') out.view = state.view;
+  const focus = focusParam(state.focus); // CHANGED (S3-uf)
+  if (focus) out.focus = focus;
   return out;
 }

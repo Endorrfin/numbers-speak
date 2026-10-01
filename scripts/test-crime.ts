@@ -86,7 +86,7 @@ test('rankHomicide marks rows older than the latest year; rankNumbeo derives saf
   assert.equal(n[1]!.safetyIndex, 53.1);
 });
 test('state: homicide by default, defaults omitted', () => {
-  assert.deepEqual(parseCrimeState({}), { show: 'homicide', region: 'all', page: 1, view: 'chart' });
+  assert.deepEqual(parseCrimeState({}), { show: 'homicide', region: 'all', page: 1, view: 'chart', focus: null }); // CHANGED (S3-uf)
   assert.deepEqual(toCrimeParams(parseCrimeState({ show: 'x', region: 'y', page: '0' })), {});
   assert.deepEqual(toCrimeParams(parseCrimeState({ show: 'numbeo', region: 'americas', page: '2', view: 'table' })), {
     show: 'numbeo',

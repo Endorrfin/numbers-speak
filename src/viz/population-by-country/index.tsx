@@ -13,6 +13,7 @@ import type { VizBodyProps } from '../../catalog/types';
 import { useLang } from '../../i18n/lang';
 import type { Lang } from '../../i18n/lang';
 import { fill, ui } from '../../i18n/ui';
+import { focusText } from '../../components/viz/focusText';
 import { countryName, flagUrl } from '../../lib/countries';
 import {
   formatAreaWhole,
@@ -26,6 +27,8 @@ import {
 import { hrefViz } from '../../lib/hashRouter';
 import { paginate } from '../../lib/paginate';
 import { Pager } from '../../components/viz/Pager';
+import { CountryFocus } from '../../components/viz/CountryFocus'; // CHANGED (S3-uf)
+import { resolveFocus } from '../../lib/focus';
 import { REGIONS, REGION_LABELS } from '../../lib/regions';
 import type { Region } from '../../lib/regions';
 import { dataUrl, useDataset } from '../../lib/useDataset';
@@ -254,9 +257,19 @@ function PopulationView({ dataset, area, settings, update }: ViewProps) {
   // The chart shows ranked rows only (density: rows with a land area); the table lists every row.
   const charted = useMemo(() => filtered.filter((r) => r.value !== null), [filtered]);
   const rankedCount = useMemo(() => ranked.filter((r) => r.rank !== null).length, [ranked]);
+  // CHANGED (S3-uf): highlighted countries (default Ukraine) — accent row, Finder, table row.
+  const focus = useMemo(() => resolveFocus(settings.focus, (c) => ranked.some((r) => r.code === c)), [settings.focus, ranked]);
+  const hi = useMemo(() => new Set(focus), [focus]);
+  const chartedAll = useMemo(() => ranked.filter((r) => r.value !== null), [ranked]); // CHANGED (S3-uf): the Finder's list
   const page = useMemo(() => paginate(charted, settings.page, PAGE_SIZE), [charted, settings.page]);
   const pageItems = page.items;
-  const rows = useMemo(() => pageItems.map((r) => toBarRow(r, metric, lang, rankedCount, t)), [pageItems, metric, lang, rankedCount, t]);
+  const rows = useMemo(
+    () => pageItems.map((r) => ({ ...toBarRow(r, metric, lang, rankedCount, t), emphasis: hi.has(r.code) })),
+    [pageItems, metric, lang, rankedCount, t, hi],
+  );
+  const homeRow = chartedAll.find((r) => hi.has(r.code) && r.rank !== null && r.value !== null);
+  const homeTile = homeRow && { row: homeRow, label: fill(t(focusText.focusKpi), { name: countryName(homeRow.code, lang), rank: homeRow.rank ?? '—', total: rankedCount }) };
+  const homeValue = (v: number | null): string => (v === null ? '—' : metric === 'population' ? formatCountCompact(v, lang) : formatDensity(v, lang));
   const tickFormat = useCallback(
     (v: number) => (metric === 'population' ? formatCountTick(v, lang) : formatDensityTick(v, lang)),
     [metric, lang],
@@ -341,6 +354,17 @@ function PopulationView({ dataset, area, settings, update }: ViewProps) {
         </div>
       </div>
 
+      <CountryFocus
+        codes={focus}
+        all={chartedAll}
+        filtered={charted}
+        region={settings.region}
+        size={PAGE_SIZE}
+        rankOf={(r) => r.rank ?? undefined}
+        onFocus={(f) => update({ focus: f })}
+        onJump={(to) => update({ ...to, view: 'chart' })}
+      />
+
       <p className="viz-status" aria-live="polite">
         {settings.view === 'chart'
           ? fill(t(ui.showingRange), { from: page.from, to: page.to, total: page.total })
@@ -358,6 +382,7 @@ function PopulationView({ dataset, area, settings, update }: ViewProps) {
         <PopulationTable
           rows={filtered}
           metric={metric}
+          hi={hi}
           withNotes={markedCount > 0}
           caption={fill(t(txt.tableCaption[metric]), { year: dataset.year, region: regionName })}
         />
@@ -398,6 +423,12 @@ function PopulationView({ dataset, area, settings, update }: ViewProps) {
               <span className="kpi-label">{fill(t(txt.kpiLargest), { value: formatCountCompact(largest.population, lang) })}</span>
             </li>
           )}
+          {homeTile && (
+            <li className="kpi kpi-home">
+              <span className="kpi-value">{homeValue(homeTile.row.value)}</span>
+              <span className="kpi-label">{homeTile.label}</span>
+            </li>
+          )}
         </ul>
       ) : (
         <ul className="kpi-row" aria-label={t(txt.kpiWorldDensity)}>
@@ -417,6 +448,12 @@ function PopulationView({ dataset, area, settings, update }: ViewProps) {
             <li className="kpi">
               <span className="kpi-value">{countryName(sparsest.code, lang)}</span>
               <span className="kpi-label">{fill(t(txt.kpiSparsest), { value: formatDensity(sparsest.density, lang) })}</span>
+            </li>
+          )}
+          {homeTile && (
+            <li className="kpi kpi-home">
+              <span className="kpi-value">{homeValue(homeTile.row.value)}</span>
+              <span className="kpi-label">{homeTile.label}</span>
             </li>
           )}
         </ul>
@@ -465,9 +502,9 @@ function RegionShareStrip({ dataset }: { dataset: PopDataset }) {
   );
 }
 
-type TableProps = { rows: readonly RankedPopRow[]; metric: Metric; withNotes: boolean; caption: string };
+type TableProps = { rows: readonly RankedPopRow[]; metric: Metric; hi: ReadonlySet<string>; withNotes: boolean; caption: string };
 
-function PopulationTable({ rows, metric, withNotes, caption }: TableProps) {
+function PopulationTable({ rows, metric, hi, withNotes, caption }: TableProps) {
   const { t, lang } = useLang();
   return (
     <div className="table-wrap">
@@ -506,7 +543,7 @@ function PopulationTable({ rows, metric, withNotes, caption }: TableProps) {
             const notes = rowNotes(r, metric, t);
             const mark = notes.length ? '*' : '';
             return (
-              <tr key={r.code}>
+              <tr key={r.code} className={hi.has(r.code) ? 'is-home' : undefined}>
                 <td className="num">{r.rank ?? '—'}</td>
                 <th scope="row">
                   {flag && <img className="flag" src={flag} alt="" width={20} height={15} loading="lazy" />} {countryName(r.code, lang)}
