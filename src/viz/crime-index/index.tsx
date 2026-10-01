@@ -14,6 +14,8 @@ import { countryName, flagUrl } from '../../lib/countries';
 import { formatMultiple, formatNumber } from '../../lib/format';
 import { paginate } from '../../lib/paginate';
 import { Pager } from '../../components/viz/Pager';
+import { CountryFocus } from '../../components/viz/CountryFocus'; // CHANGED (S3-uf)
+import { resolveFocus } from '../../lib/focus';
 import { REGIONS, REGION_LABELS } from '../../lib/regions';
 import type { Region } from '../../lib/regions';
 import { dataUrl, useDataset } from '../../lib/useDataset';
@@ -206,11 +208,15 @@ function CrimeView({ data, settings, update }: ViewProps) {
     () => (settings.region === 'all' ? ranked : ranked.filter((r) => r.region === settings.region)),
     [ranked, settings.region],
   );
+  // CHANGED (S3-uf): highlighted countries (default Ukraine) — accent row, Finder, table row.
+  const focus = useMemo(() => resolveFocus(settings.focus, (c) => ranked.some((r) => r.code === c)), [settings.focus, ranked]);
+  const hi = useMemo(() => new Set(focus), [focus]);
   const page = useMemo(() => paginate(filtered, settings.page, PAGE_SIZE), [filtered, settings.page]);
   const pageItems = page.items;
   const rows = useMemo(
-    () => pageItems.map((r) => toBarRow(r, show, lang, ranked.length, t, data.worldRate, data.latestYear)),
-    [pageItems, show, lang, ranked.length, t, data.worldRate, data.latestYear],
+    () =>
+      pageItems.map((r) => ({ ...toBarRow(r, show, lang, ranked.length, t, data.worldRate, data.latestYear), emphasis: hi.has(r.code) })),
+    [pageItems, show, lang, ranked.length, t, data.worldRate, data.latestYear, hi],
   );
   const tickFormat = useCallback((v: number) => formatNumber(v, lang), [lang]);
 
@@ -264,6 +270,18 @@ function CrimeView({ data, settings, update }: ViewProps) {
           </div>
         </div>
       </div>
+
+      <CountryFocus
+        codes={focus}
+        all={ranked}
+        filtered={filtered}
+        region={settings.region}
+        size={PAGE_SIZE}
+        rankOf={(r) => r.rank}
+        detail={(r) => toBarRow(r, show, lang, ranked.length, t, data.worldRate, data.latestYear).valueLabel}
+        onFocus={(f) => update({ focus: f })}
+        onJump={(to) => update({ ...to, view: 'chart' })}
+      />
 
       <p className="viz-status" aria-live="polite">
         {settings.view === 'chart'
@@ -319,7 +337,7 @@ function CrimeView({ data, settings, update }: ViewProps) {
                 const flag = flagUrl(r.code);
                 const note = rowNote(r, t);
                 return (
-                  <tr key={r.code}>
+                  <tr key={r.code} className={hi.has(r.code) ? 'is-home' : undefined}>
                     <td className="num">{r.rank}</td>
                     <th scope="row">
                       {flag && <img className="flag" src={flag} alt="" width={20} height={15} loading="lazy" />} {countryName(r.code, lang)}

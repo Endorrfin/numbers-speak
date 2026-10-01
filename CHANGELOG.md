@@ -2,6 +2,24 @@
 
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
+## 2026‑10‑01
+- **Updated:** Ukraine in focus on six country rankings —
+  [GDP by country / ВВП країн](https://endorrfin.github.io/numbers-speak/#/v/gdp-by-country) ·
+  [GDP (PPP) per capita / ВВП (ПКС) на душу населення](https://endorrfin.github.io/numbers-speak/#/v/gdp-ppp-per-capita) ·
+  [Population by country / Населення країн](https://endorrfin.github.io/numbers-speak/#/v/population-by-country) ·
+  [Land area by country / Площа країн світу](https://endorrfin.github.io/numbers-speak/#/v/land-area) ·
+  [Crime by country / Злочинність у країнах](https://endorrfin.github.io/numbers-speak/#/v/crime-index) ·
+  [Global Peace Index 2026 / Глобальний індекс миру 2026](https://endorrfin.github.io/numbers-speak/#/v/global-peace-index).
+  Ukraine's row is highlighted on the chart and in the table, and a button with its rank opens the page where it
+  stands — 58th of 218 by GDP, 99th of 185 by GDP (PPP) per capita, 40th of 237 by population, 45th of 234 by land
+  area, 68th of 166 by homicide rate, 160th of 163 in the Global Peace Index; if a region filter hides Ukraine, the
+  button clears it. Highlight up to three countries to compare them — the link keeps your choice
+  ([example](https://endorrfin.github.io/numbers-speak/#/v/gdp-by-country?focus=ua,pl,de)). /
+  Рядок України виділено на графіку й у таблиці, а кнопка з її місцем відкриває сторінку, де вона стоїть: 58-ма з 218
+  за ВВП, 99-та з 185 за ВВП (ПКС) на душу населення, 40-ва з 237 за населенням, 45-та з 234 за площею суходолу,
+  68-ма з 166 за рівнем убивств, 160-та з 163 у Глобальному індексі миру; якщо фільтр регіону її ховає, кнопка його
+  скидає. Виділіть до трьох країн, щоб порівняти, — посилання зберігає вибір.
+
 ## 2026‑09‑27
 - **New:** [Price per square metre in world cities, 2026 / Ціна квадратного метра в містах світу, 2026](https://endorrfin.github.io/numbers-speak/#/v/real-estate-world) —
   housing in 528 cities from Numbeo's snapshot of 27 September 2026, from six angles: rank the cities by any of

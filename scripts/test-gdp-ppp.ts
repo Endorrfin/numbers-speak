@@ -77,7 +77,7 @@ test('rankPpp: rank and multiple of the world average', () => {
 });
 test('state: default = latest year, defaults omitted, unknown year → latest', () => {
   const d = parsePppState({});
-  assert.deepEqual(d, { year: LATEST_YEAR, region: 'all', page: 1, view: 'chart' });
+  assert.deepEqual(d, { year: LATEST_YEAR, region: 'all', page: 1, view: 'chart', focus: null }); // CHANGED (S3-uf)
   assert.deepEqual(toPppParams(d), {});
   assert.equal(parsePppState({ year: '2019' }).year, LATEST_YEAR);
   assert.deepEqual(toPppParams(parsePppState({ year: '2023', region: 'asia', view: 'table' })), {

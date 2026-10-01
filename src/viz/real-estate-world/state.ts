@@ -5,6 +5,7 @@
 import type { VizParams } from '../../catalog/types';
 import { isRegion } from '../../lib/regions';
 import type { Region } from '../../lib/regions';
+import { idListParam, parseIdList } from '../../lib/focus';
 import { parsePage } from '../../lib/paginate';
 import { CITY_ID, MEASURES } from './data';
 import type { Measure } from './data';
@@ -45,10 +46,7 @@ const includes = <T extends string>(list: readonly T[], v: string | undefined): 
 
 /** '?cities=kyiv-ua,lviv-ua' → ids (well-formed, unique, at most MAX_CITIES); 'none' → []; absent → null. */
 export function parseCities(raw: string | undefined): string[] | null {
-  if (raw === undefined) return null;
-  if (raw === 'none') return [];
-  const ids = raw.split(',').filter((id) => CITY_ID.test(id));
-  return [...new Set(ids)].slice(0, MAX_CITIES);
+  return parseIdList(raw, CITY_ID, MAX_CITIES); // CHANGED (S3-uf): shared with `?focus=` (lib/focus.ts)
 }
 
 export function parseRealEstateState(params: VizParams): RealEstateState {
@@ -70,7 +68,8 @@ export function toRealEstateParams(state: RealEstateState): VizParams {
   if (state.region !== 'all') out.region = state.region;
   if (state.page > 1) out.page = String(state.page);
   if (state.view !== 'chart') out.view = state.view;
-  if (state.cities) out.cities = state.cities.length ? state.cities.slice(0, MAX_CITIES).join(',') : 'none';
+  const cities = idListParam(state.cities, MAX_CITIES); // CHANGED (S3-uf)
+  if (cities) out.cities = cities;
   if (state.sort !== 'premium') out.sort = state.sort;
   return out;
 }

@@ -3,13 +3,14 @@
 import type { VizParams } from '../../catalog/types';
 import { isRegion } from '../../lib/regions';
 import type { Region } from '../../lib/regions';
+import { focusParam, parseFocus } from '../../lib/focus';
 import { parsePage } from '../../lib/paginate';
 import { LATEST_YEAR, YEARS } from './data';
 
 export const PAGE_SIZE = 15;
 export type View = 'chart' | 'table';
 
-export type PppState = { year: number; region: Region | 'all'; page: number; view: View };
+export type PppState = { year: number; region: Region | 'all'; page: number; view: View; focus: string[] | null }; // CHANGED (S3-uf): focus null = default (Ukraine)
 
 export function parsePppState(params: VizParams): PppState {
   return {
@@ -17,6 +18,7 @@ export function parsePppState(params: VizParams): PppState {
     region: isRegion(params.region) ? params.region : 'all',
     page: parsePage(params.page),
     view: params.view === 'table' ? 'table' : 'chart',
+    focus: parseFocus(params.focus), // CHANGED (S3-uf)
   };
 }
 
@@ -26,5 +28,7 @@ export function toPppParams(state: PppState): VizParams {
   if (state.region !== 'all') out.region = state.region;
   if (state.page > 1) out.page = String(state.page);
   if (state.view !== 'chart') out.view = state.view;
+  const focus = focusParam(state.focus); // CHANGED (S3-uf)
+  if (focus) out.focus = focus;
   return out;
 }

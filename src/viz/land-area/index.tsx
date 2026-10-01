@@ -14,10 +14,13 @@ import type { VizBodyProps } from '../../catalog/types';
 import { useLang } from '../../i18n/lang';
 import type { Lang } from '../../i18n/lang';
 import { fill, ui } from '../../i18n/ui';
+import { focusText } from '../../components/viz/focusText';
 import { countryName, flagUrl } from '../../lib/countries';
 import { formatAreaCompact, formatAreaTick, formatAreaWhole, formatShare } from '../../lib/format';
 import { paginate } from '../../lib/paginate';
 import { Pager } from '../../components/viz/Pager';
+import { CountryFocus } from '../../components/viz/CountryFocus'; // CHANGED (S3-uf)
+import { resolveFocus } from '../../lib/focus';
 import { REGIONS, REGION_LABELS } from '../../lib/regions';
 import type { Region } from '../../lib/regions';
 import { dataUrl, useDataset } from '../../lib/useDataset';
@@ -229,12 +232,18 @@ function LandAreaView({ dataset, settings, update }: ViewProps) {
     () => (settings.region === 'all' ? ranked : ranked.filter((r) => r.region === settings.region)),
     [ranked, settings.region],
   );
+  // CHANGED (S3-uf): highlighted countries (default Ukraine) — accent row, Finder, table row.
+  const focus = useMemo(() => resolveFocus(settings.focus, (c) => ranked.some((r) => r.code === c)), [settings.focus, ranked]);
+  const hi = useMemo(() => new Set(focus), [focus]);
   const page = useMemo(() => paginate(filtered, settings.page, PAGE_SIZE), [filtered, settings.page]);
   const pageItems = page.items;
   const rows = useMemo(
-    () => pageItems.map((r) => toBarRow(r, metric, lang, ranked.length, t, metricLabel)),
-    [pageItems, metric, lang, ranked.length, t, metricLabel],
+    () => pageItems.map((r) => ({ ...toBarRow(r, metric, lang, ranked.length, t, metricLabel), emphasis: hi.has(r.code) })),
+    [pageItems, metric, lang, ranked.length, t, metricLabel, hi],
   );
+  // The tile follows the KPI row: the size ranking, whatever the sort.
+  const homeRow = byArea.find((r) => hi.has(r.code));
+  const homeTile = homeRow && { row: homeRow, label: fill(t(focusText.focusKpi), { name: countryName(homeRow.code, lang), rank: homeRow.rank, total: byArea.length }) };
   const tickFormat = useCallback((v: number) => formatAreaTick(v, lang), [lang]);
 
   const regionName = settings.region === 'all' ? t(ui.allRegions) : t(REGION_LABELS[settings.region]);
@@ -309,6 +318,17 @@ function LandAreaView({ dataset, settings, update }: ViewProps) {
         </div>
       </div>
 
+      <CountryFocus
+        codes={focus}
+        all={ranked}
+        filtered={filtered}
+        region={settings.region}
+        size={PAGE_SIZE}
+        rankOf={(r) => r.rank}
+        onFocus={(f) => update({ focus: f })}
+        onJump={(to) => update({ ...to, view: 'chart' })}
+      />
+
       <p className="viz-status" aria-live="polite">
         {settings.view === 'chart'
           ? fill(t(ui.showingRange), { from: page.from, to: page.to, total: page.total })
@@ -326,6 +346,7 @@ function LandAreaView({ dataset, settings, update }: ViewProps) {
         <LandAreaTable
           rows={filtered}
           metricLabel={metricLabel}
+          hi={hi}
           withNotes={markedCount > 0}
           caption={fill(t(txt.tableCaption), { metricLabel, region: regionName })}
         />
@@ -365,6 +386,12 @@ function LandAreaView({ dataset, settings, update }: ViewProps) {
           <li className="kpi">
             <span className="kpi-value">{countryName(smallest.code, lang)}</span>
             <span className="kpi-label">{fill(t(txt.kpiSmallest), { value: formatAreaCompact(smallest.value, lang) })}</span>
+          </li>
+        )}
+        {homeTile && (
+          <li className="kpi kpi-home">
+            <span className="kpi-value">{formatAreaCompact(homeTile.row.value, lang)}</span>
+            <span className="kpi-label">{homeTile.label}</span>
           </li>
         )}
       </ul>
@@ -409,9 +436,9 @@ function RegionShareStrip({ dataset, metric, metricLabel }: { dataset: AreaDatas
   );
 }
 
-type TableProps = { rows: readonly RankedAreaRow[]; metricLabel: string; withNotes: boolean; caption: string };
+type TableProps = { rows: readonly RankedAreaRow[]; metricLabel: string; hi: ReadonlySet<string>; withNotes: boolean; caption: string };
 
-function LandAreaTable({ rows, metricLabel, withNotes, caption }: TableProps) {
+function LandAreaTable({ rows, metricLabel, hi, withNotes, caption }: TableProps) {
   const { t, lang } = useLang();
   return (
     <div className="table-wrap">
@@ -437,7 +464,7 @@ function LandAreaTable({ rows, metricLabel, withNotes, caption }: TableProps) {
           {rows.map((r) => {
             const flag = flagUrl(r.code);
             return (
-              <tr key={r.code}>
+              <tr key={r.code} className={hi.has(r.code) ? 'is-home' : undefined}>
                 <td className="num">{r.rank}</td>
                 <th scope="row">
                   {flag && <img className="flag" src={flag} alt="" width={20} height={15} loading="lazy" />} {countryName(r.code, lang)}

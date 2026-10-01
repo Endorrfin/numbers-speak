@@ -1855,8 +1855,8 @@
   max-width: 24rem;
 }
 
-/* City picker */
-.re-picker {
+/* CHANGED (S3-uf): focus picker + Finder (were .re-picker / .re-find, S3-re) */
+.fp {
   display: grid;
   gap: 0.35rem;
   margin: 0 0 1rem;
@@ -1865,34 +1865,37 @@
   border-radius: var(--radius-sm);
   background: var(--surface);
 }
-.re-picker-field {
+.fp-compact {
+  margin: 0 0 0.6rem;
+}
+.fp-field {
   max-width: 34rem;
 }
-.re-picker-row {
+.fp-row {
   display: flex;
   gap: 0.4rem;
 }
-.re-picker-row input {
+.fp-row input {
   flex: 1 1 auto;
   min-width: 0;
 }
-.re-picker-message {
+.fp-message {
   min-height: 1.2em;
   margin: 0;
   color: var(--tx2);
   font-size: 0.85rem;
 }
-.re-picker-message:empty {
+.fp-message:empty {
   min-height: 0;
 }
-.re-picker-chips {
+.fp-chips {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.4rem 0.9rem;
 }
-.re-chips,
-.re-find-list,
+.fp-chip-list,
+.finder-list,
 .re-quadrants,
 .re-waffles,
 .re-compare {
@@ -1900,12 +1903,12 @@
   padding: 0;
   list-style: none;
 }
-.re-chips {
+.fp-chip-list {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
 }
-.re-chip {
+.fp-chip {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -1920,42 +1923,48 @@
   font-weight: 600;
   cursor: pointer;
 }
-.re-chip:hover {
+.fp-chip:hover {
   background: var(--s2);
 }
-.re-chip:focus-visible,
-.re-find-btn:focus-visible,
-.re-preset:focus-visible {
+.fp-chip:focus-visible,
+.finder-btn:focus-visible,
+.fp-preset:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
-.re-presets {
+.fp-presets {
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.35rem;
 }
-.re-preset,
-.re-find-btn {
+.fp-preset,
+.finder-btn {
   min-height: 2rem;
   padding: 0.2rem 0.7rem;
   font-size: 0.85rem;
 }
 
 /* Finder, quadrants, waffles */
-.re-find {
+.finder {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.4rem 0.6rem;
   margin: 0 0 0.6rem;
 }
-.re-find-list {
+.finder-list {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
 }
-.re-find-missing {
+.finder-list li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.finder-missing,
+.finder-detail {
   font-size: 0.85rem;
 }
 .re-quadrants {

@@ -53,6 +53,6 @@ export default defineViz({
   // secondary source" caveat gdp-by-country and global-brands-race already carry as published.
   status: 'published',
   added: '2026-09-22',
-  updated: '2026-09-22',
+  updated: '2026-10-01', // CHANGED (S3-uf): Ukraine in focus
   d3Modules: ['d3-selection', 'd3-scale', 'd3-axis', 'd3-transition', 'd3-interpolate', 'd3-array'],
 });
