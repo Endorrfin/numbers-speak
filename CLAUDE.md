@@ -90,7 +90,8 @@ _examples/     legacy D3 pages being ported (gitignored — never committed)
   YYYY‑MM‑DD) · `origin` (`original` or `adapted` with title/url/licence) · `data[]` (files under
   `public/data/<id>/`) · `status` (`draft` | `soon` | `published`) · `added` / `updated` (YYYY‑MM‑DD) ·
   `d3Modules?` (for "How it's built").
-- Visibility: `draft` only in dev; `soon` and `published` everywhere. "New" = `added` ≤ 30 days ago.
+- Visibility: `draft` only in dev; `soon` and `published` everywhere. "New" = the `NEW_MAX` (4) most recently
+  added visible entries with `added` ≤ 30 days ago (`newIds` in `catalog/filter.ts`; one set for badges and the New tab — S3‑nw).
 - Data rules: numbers as numbers, ISO 3166‑1 alpha‑2 codes (names via `Intl.DisplayNames` + short
   overrides in `lib/countries.ts`; flags from `flag-icons` copied to `public/flags/`), regions = UN M49 enum
   derived from the code at prep time, derived values (rank, share) computed at runtime, retrieval dates
@@ -876,3 +877,11 @@ Follow‑ups (owner): “hours without power” by city (Svitlobot — ask its a
   phone + Safari check is an owner step.
   Branch (proposed) `viz/2026-10-electricity`. Open: Ember's estimates for tiny territories (1,000 g/kWh) and
   Turkmenistan (1,306) show at the top of “dirtiest first”; Lesotho has no generation in Ember (not ranked).
+  Follow‑up (owner, same day): flags on the “From what” angle — `StackedRows` got an opt‑in `imageUrl` (20×15 flag between
+  the label and the bar; before the label on phones; `.sr-flag` ignores the pointer); rows without it draw as before.
+- **S3‑nw** (2026‑10‑07, owner report: 18 of 18 cards “New”) — the 30‑day window alone marked the whole gallery (first entry
+  17 Sep) and the New tab repeated All. Owner decision: keep 30 days, cap at 4 — `NEW_MAX`, `newIds(items, opts)` (visible
+  entries in the window, newest `added` first, equal dates by id), `isNew` → `inNewWindow`; `inTab` takes the set;
+  `CatalogPage` and `VizPage` share it. Today: electricity, oil, crime-index, global-peace-index. `test-filter` +1 (cap,
+  ties, draft only in dev). Scratch copy: typecheck · lint · check:catalog · 32 test files · 1,636 smoke checks — green.
+  Branch (proposed) `s3-nw-new-badge-cap`.
