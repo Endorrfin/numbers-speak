@@ -45,7 +45,7 @@ const get = (id: string): CardPreview => {
 
 await test('every published entry has a preview; every preview passes the contract', async () => {
   const { ids } = await generatePreviews();
-  assert.equal(ids.length, 17); // CHANGED (S3-re): + real-estate-world; CHANGED (S3-oil): + oil
+  assert.equal(ids.length, 18); // CHANGED (S3-re): + real-estate-world; CHANGED (S3-oil): + oil; CHANGED (S3-el): + electricity
   for (const [id, p] of built) assert.deepEqual(parseCardPreview(p, id), p);
 });
 
@@ -88,6 +88,20 @@ await test('oil: top five consumers, the two largest consumers’ share of the w
   close(one(p.key).value, (19_403.8 + 17_360.4) / 103_038.7, 1e-3);
   assert.equal(formatKeyValue(p.key, 'en'), '36%');
   assert.equal(formatKeyLabel(p.key, 'en'), 'United States + China: share of the world’s oil');
+});
+
+// CHANGED (S3-el): the electricity card — coal vs all renewables, share of world generation since 2000; key = renewables.
+await test('electricity: coal and renewables lines, renewables’ share in the latest year with coal’s beside it', () => {
+  const p = get('electricity');
+  assert.equal(p.marks.kind, 'series');
+  const m = p.marks as Extract<typeof p.marks, { kind: 'series' }>;
+  assert.equal(m.lines.length, 2);
+  assert.equal(m.from, '2000');
+  assert.equal(m.to, '2025');
+  assert.ok(m.lines[1]!.values.at(-1)! > m.lines[0]!.values.at(-1)!, 'renewables above coal in 2025');
+  assert.ok(m.lines[1]!.values.at(-2)! < m.lines[0]!.values.at(-2)!, 'below in 2024');
+  assert.equal(formatKeyValue(p.key, 'en'), '33.8%');
+  assert.equal(formatKeyLabel(p.key, 'en'), 'renewables, 2025 — coal 33.1%');
 });
 
 await test('rankings: gdp, gdp-ppp, land-area, crime-index, robotization', () => {

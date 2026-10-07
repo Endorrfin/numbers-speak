@@ -97,9 +97,9 @@ _examples/     legacy D3 pages being ported (gitignored — never committed)
   recorded. One parser per dataset (`data.ts`) runs in prep, `check:data` and the browser.
 
 ## 5. Catalog
-32 entries in 5 tabs — see `CATALOG.md` (authoritative). Waves: P2 golden → P3 MVP (16) → P4 full (30);
+33 entries in 5 tabs — see `CATALOG.md` (authoritative). Waves: P2 golden → P3 MVP (16) → P4 full (30);
 `births-deaths-ua` (#31, S3‑bd) and `births-deaths-per-day` (#5, S3‑bdd) shipped out of wave as priorities;
-`oil` (#32, S3‑oil) added on the owner's request.
+`oil` (#32, S3‑oil) and `electricity` (#33, S3‑el) added on the owner's request.
 
 ## 6. Charts & interactivity
 Chart kit: `RankedBar` (S2) · `YearChart` (S3‑bd: lines, gap fills, areas, bars, mirrored bars, period bands,
@@ -110,7 +110,7 @@ last slot, fixed layout for the whole race, big year ticker; the page owns the c
 ‹ › year steps) · `TimeSeries` (S3‑aa: calendar buckets — day · week · month · year — on a UTC time scale, stacked
 panels sharing the time axis instead of a second y‑axis, stacked segments with an optional hatch texture, partial
 buckets drawn lighter, bands per panel, lines with null gaps, one hover layer across panels) · `StackedRows` (S3‑aa:
-ranked horizontal bars split into segments, date + sub‑label column) · `HierarchyTree` + one‑offs. Every chart:
+ranked horizontal bars split into segments, date + sub‑label column; opt‑in `emphasis` since S3‑el) · `HierarchyTree` + one‑offs. Every chart:
 responsive width (ResizeObserver; labels stack above bars < 560 px), `role="img"` + a label that states the
 view, keyboard‑operable controls, a **table view** (the keyboard / screen‑reader path; tooltips are
 pointer‑only, text‑only), `prefers-reduced-motion` → no transitions, all settings in the URL query with
@@ -226,6 +226,8 @@ the existing entries (owner).
 "About the data") → births‑deaths‑per‑day UK 360 px heading → S3‑ux.
 **S3‑oil (2026‑10‑07):** new entry #32 `oil` (owner request, out of the improvement plan) — five angles on EI 2026,
 EIA and China customs. S3‑ps (births‑deaths‑per‑day → UN WPP) stays the next item.
+**S3‑el (2026‑10‑07):** new entry #33 `electricity` (owner request) — seven angles on Ember + World Bank + Energoatom.
+Follow‑ups (owner): “hours without power” by city (Svitlobot — ask its authors), EU electricity imports (ENTSO‑E token).
 
 ## 14. Status / progress log
 - **S0** (2026‑09‑17) — repo named `numbers-speak`; decisions D1–D10 accepted; `PROJECT-BRIEF.md`,
@@ -843,3 +845,34 @@ EIA and China customs. S3‑ps (births‑deaths‑per‑day → UN WPP) stays th
   throttled the background tab) — owner step.
   Branch (proposed) `viz/2026-10-oil`. Owner steps: letters to EI (statisticalreview@energyinst.org) and UNSD
   (comtrade@un.org); confirm the Comtrade stance (applied by analogy with EI); phone + Safari check of the five angles.
+- **S3‑el** (2026‑10‑07) — new entry #33 `electricity` **published** (owner request): “Electricity: who generates it and
+  from what, 2000–2025 / Електроенергія: хто виробляє і з чого, 2000–2025”, rubrics `world` + `economy` + `ukraine`.
+  Step 0 (previous turn): sources surveyed; no open city‑level consumption in Ukraine (DSO ≈ oblast, closed since 2022);
+  owner picked angles A·B·C·D·F·G·H·I of the plan and Ember as the one source. The owner's `docs/data/electricity`
+  export is OWID (total generation only, intermediary) — not used; Ember's long‑format files were reachable from the
+  device this time (curl) → `extract-ember.py` (stdlib) → `ember-yearly.csv` (countries + World 2000–2025) and
+  `ember-europe-ukraine.csv` (Ukraine 1990–2022); `extract-wb.py` → WB access + population 2000–2024; Energoatom's
+  *Звіт про управління 2021* p. 49 typed into `energoatom-2021.csv` (energoatom.com.ua answers 403 to the agent — owner
+  download; the other owner PDF is the radioactive‑waste report, not used). README with sha256 + decisions.
+  Owner decisions: rankings on **2024** (Ember 2025 = 91 of 214 countries), world totals to **2025**; Ukraine in the
+  rankings with its last published year (2022, “*”) and the reason stated on the page (Ukrstat notice of 5 Dec 2024 —
+  the martial‑law reporting law; Ukrenergo stopped publishing on 24 Feb 2022).
+  Page `src/viz/electricity/`: `data.ts` (five contracts, competition ranks — 121 countries at 100 % access share a
+  rank), `state.ts` (`?show=producers|mix|world|race|carbon|access|ukraine`, `metric`/`order` read per angle,
+  `source`, `year`, `region`, `page`, `focus`), `common.tsx` (RankingFrame: region · Pager · CountryFocus · status ·
+  legend; UkraineGap; DatedNote), `ranking.ts` (hook + “*”), one file per angle, `meta.ts`, `preview.ts` (coal vs
+  renewables since 2000; key 33.8 % / coal 33.1 %). Shared: `formatTwh`/`formatTwhTick`/`formatMwh`/`formatGramsPerKwh`;
+  `POWER_COLOR` = `--c-power-*` aliases of the six validated sector marks (coal neutral · gas blue · nuclear purple ·
+  hydro/bio green · wind light blue · solar ochre — no new validation); `StackedRows` opt‑in `emphasis` (+ CSS).
+  Facts on the page: renewables passed coal in 2025 and solar passed wind; China 32.6 % of 2024 generation; Iceland
+  48.4 MWh a person; 657 M people without electricity, 88 % in Sub‑Saharan Africa; Ukraine 300.7 TWh (1990) → 111.5
+  (2022), nuclear 55.1 % in 2021; Zaporizhzhia NPP 23.1 % of Ukraine's 2021 generation, 41.9 % of nuclear output.
+  Tests: `test-electricity.ts` (13: contracts + rejections, ranks/ties, state, shipped files vs raw CSV, both Ember files
+  agree, race end check), `test-previews` 17 → 18, `test-focus` guard + `electricity`; smoke 1,479 → 1,636 (every angle
+  EN + UK, tables, hostile params, the Ukraine note). `verify` green in a scratch copy (32 test files · build;
+  electricity chunk 20.9 kB gzip; initial `index` 45.01 → 47.06 kB gzip — the eager manifest + card preview, like oil).
+  Render check: jsdom with a real width (960 / 360) — all eight views draw, emphasis on RankedBar and StackedRows, 0
+  console errors. Chrome on the built site could not draw (the agent's window is hidden → no requestAnimationFrame) —
+  phone + Safari check is an owner step.
+  Branch (proposed) `viz/2026-10-electricity`. Open: Ember's estimates for tiny territories (1,000 g/kWh) and
+  Turkmenistan (1,306) show at the top of “dirtiest first”; Lesotho has no generation in Ember (not ranked).

@@ -3,6 +3,21 @@
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
 ## 2026‑10‑07
+- **New:** [Electricity: who generates it and from what, 2000–2025 / Електроенергія: хто виробляє і з чого, 2000–2025](https://endorrfin.github.io/numbers-speak/#/v/electricity) —
+  seven angles on Ember's data. In 2025 renewables gave 33.8 % of the world's electricity and coal 33.1 % — the first
+  year renewables came out ahead ([the world since 2000](https://endorrfin.github.io/numbers-speak/#/v/electricity?show=world));
+  solar passed wind the same year. China generated 32.6 % of the world's electricity in 2024; Iceland uses 48 MWh a
+  person, Chad, Somalia and Sierra Leone 0.02. Each country's mix, a solar and wind race 2000–2025, grams of CO2 per
+  kWh, and 657 million people still without electricity — 88 % of them in Sub-Saharan Africa. Ukraine: 300.7 TWh in
+  1990, 111.5 in 2022 (−63 %); the Zaporizhzhia plant gave 23.1 % of its electricity in 2021. Ukraine has not
+  published its generation since 24 February 2022 — the page says why, and its ranks use 2022, marked. /
+  Сім поглядів на даних Ember. У 2025 році відновлювані джерела дали 33,8 % світової електроенергії, вугілля — 33,1 %:
+  перший рік, коли відновлювані випередили вугілля; того ж року сонце обігнало вітер. Китай виробив 32,6 % світової
+  електроенергії у 2024 році; Ісландія споживає 48 МВт·год на людину, Чад, Сомалі й Сьєрра-Леоне — 0,02. Структура
+  кожної країни, перегони сонця й вітру 2000–2025, грамів CO2 на кВт·год і 657 млн людей без електрики — 88 % з них в
+  Африці на південь від Сахари. Україна: 300,7 ТВт·год у 1990 році, 111,5 у 2022 (−63 %); Запорізька АЕС дала 23,1 %
+  її електроенергії у 2021 році. Україна не публікує даних про виробництво з 24 лютого 2022 року — сторінка пояснює
+  чому, а її місця в рейтингах — за 2022 рік і позначені.
 - **New:** [Oil: who uses it and who sells it, 1965–2025 / Нафта: хто споживає і хто продає, 1965–2025](https://endorrfin.github.io/numbers-speak/#/v/oil) —
   five angles on primary sources. The world used 103 million barrels a day in 2025, the US and China 35.7 % of it;
   Ukraine 285 thousand (47th of 79 — 1.27 million in 1985). Sixty years as a bar chart race (China passes Japan, then

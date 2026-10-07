@@ -8,18 +8,19 @@ import meta1 from '../viz/births-deaths-per-day/meta';
 import meta2 from '../viz/births-deaths-ua/meta';
 import meta3 from '../viz/crime-index/meta';
 import meta4 from '../viz/donations/meta';
-import meta5 from '../viz/gdp-by-country/meta';
-import meta6 from '../viz/gdp-ppp-per-capita/meta';
-import meta7 from '../viz/global-brands-race/meta';
-import meta8 from '../viz/global-peace-index/meta';
-import meta9 from '../viz/land-area/meta';
-import meta10 from '../viz/oil/meta';
-import meta11 from '../viz/population-by-country/meta';
-import meta12 from '../viz/real-estate-world/meta';
-import meta13 from '../viz/robotization/meta';
-import meta14 from '../viz/time-of-life/meta';
-import meta15 from '../viz/volunteers-by-region/meta';
-import meta16 from '../viz/volunteers-growth/meta';
+import meta5 from '../viz/electricity/meta';
+import meta6 from '../viz/gdp-by-country/meta';
+import meta7 from '../viz/gdp-ppp-per-capita/meta';
+import meta8 from '../viz/global-brands-race/meta';
+import meta9 from '../viz/global-peace-index/meta';
+import meta10 from '../viz/land-area/meta';
+import meta11 from '../viz/oil/meta';
+import meta12 from '../viz/population-by-country/meta';
+import meta13 from '../viz/real-estate-world/meta';
+import meta14 from '../viz/robotization/meta';
+import meta15 from '../viz/time-of-life/meta';
+import meta16 from '../viz/volunteers-by-region/meta';
+import meta17 from '../viz/volunteers-growth/meta';
 
 export type VizLoader = () => Promise<{ default: ComponentType<VizBodyProps> }>;
 
@@ -41,6 +42,7 @@ export const VIZ_METAS: readonly VizMeta[] = [
   meta14,
   meta15,
   meta16,
+  meta17,
 ];
 
 export const VIZ_LOADERS: Readonly<Record<string, VizLoader>> = {
@@ -49,6 +51,7 @@ export const VIZ_LOADERS: Readonly<Record<string, VizLoader>> = {
   'births-deaths-ua': () => import('../viz/births-deaths-ua/index'),
   'crime-index': () => import('../viz/crime-index/index'),
   'donations': () => import('../viz/donations/index'),
+  'electricity': () => import('../viz/electricity/index'),
   'gdp-by-country': () => import('../viz/gdp-by-country/index'),
   'gdp-ppp-per-capita': () => import('../viz/gdp-ppp-per-capita/index'),
   'global-brands-race': () => import('../viz/global-brands-race/index'),

@@ -80,3 +80,16 @@ export const AIR_COLOR = {
 // Index 0 = no data / zero (the existing --s2 token); the top step reuses --c-air-through (same hue:
 // "not intercepted"), so the ramp reads as "this hue = attack intensity" across the whole page.
 export const HEAT_COLOR = ['var(--c-heat-0)', 'var(--c-heat-1)', 'var(--c-heat-2)', 'var(--c-heat-3)', 'var(--c-heat-4)'] as const;
+
+// CHANGED (S3-el): electricity — six fuel groups on the six validated sector marks (S3-br, all-pairs in both themes),
+// aliased in theme/tokens.css as --c-power-*, so no new validation pass is needed. Meaning picked per hue: coal = the
+// neutral, gas & oil = blue (a gas flame), nuclear = purple, hydro & other renewables = green, wind = light blue,
+// solar = ochre/orange. Colour follows the fuel, never the rank.
+export const POWER_COLOR = {
+  coal: 'var(--c-power-coal)',
+  gas: 'var(--c-power-gas)',
+  nuclear: 'var(--c-power-nuclear)',
+  hydro: 'var(--c-power-hydro)',
+  wind: 'var(--c-power-wind)',
+  solar: 'var(--c-power-solar)',
+} as const;

@@ -198,3 +198,26 @@ export function formatBarrels(value: number, lang: Lang): string {
 export function formatChangePct(ratio: number, lang: Lang): string {
   return nf(lang, 'chg-pct', { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1, signDisplay: 'exceptZero' }).format(ratio);
 }
+
+// CHANGED (S3-el): electricity. Units are plain text after the number with a non-breaking space, like km² above.
+/** Terawatt-hours: 10_086.9 → '10,087 TWh' / '10 087 ТВт·год', 300.72 → '300.7 TWh', 0.58 → '0.58 TWh'. */
+export function formatTwh(value: number, lang: Lang): string {
+  const digits = value >= 1000 ? 0 : value >= 10 ? 1 : 2;
+  return nf(lang, `twh-${digits}`, { maximumFractionDigits: digits }).format(value) + (lang === 'uk' ? '\u00a0ТВт·год' : '\u00a0TWh');
+}
+
+/** Axis ticks in TWh: 10_000 → '10K' / '10 тис.' (the axis title names the unit). */
+export function formatTwhTick(value: number, lang: Lang): string {
+  return nf(lang, 'twh-tick', { notation: 'compact', maximumFractionDigits: 1 }).format(value);
+}
+
+/** Megawatt-hours per person: 48.42 → '48.4 MWh' / '48,4 МВт·год'; below 1 two decimals ('0.02 MWh'). */
+export function formatMwh(value: number, lang: Lang): string {
+  const digits = value < 1 ? 2 : 1;
+  return nf(lang, `mwh-${digits}`, { minimumFractionDigits: digits, maximumFractionDigits: digits }).format(value) + (lang === 'uk' ? '\u00a0МВт·год' : '\u00a0MWh');
+}
+
+/** Grams of CO2 per kWh: 471.46 → '471 g/kWh' / '471 г/кВт·год'. */
+export function formatGramsPerKwh(value: number, lang: Lang): string {
+  return nf(lang, 'whole', { maximumFractionDigits: 0 }).format(value) + (lang === 'uk' ? '\u00a0г/кВт·год' : '\u00a0g/kWh');
+}
