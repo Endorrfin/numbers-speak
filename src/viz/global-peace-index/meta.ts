@@ -33,6 +33,8 @@ export default defineViz({
   ],
   origin: { kind: 'original' },
   data: ['gpi-2026.json'],
+  // CHANGED (S3-nav): "See also" — the author's picks, in this order.
+  related: ['crime-index', 'air-attacks-on-ukraine', 'gdp-ppp-per-capita'],
   status: 'published',
   added: '2026-09-25',
   updated: '2026-10-01', // CHANGED (S3-uf): Ukraine in focus

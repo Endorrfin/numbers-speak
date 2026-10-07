@@ -208,6 +208,14 @@ async function main(): Promise<void> {
       const panels = html.slice(html.indexOf('class="panels"'));
       ok((panels.match(lang === 'en' ? /Loading…/g : /Завантаження…/g) ?? []).length === 2, `viz:${meta.id}:loading [${lang}] one loading line per panel`);
       ok(!panels.includes('class="sources"'), `viz:${meta.id}:loading [${lang}] no sources yet`);
+      // CHANGED (S3-nav): "See also" draws from the cards — before the manifest — with the author's first pick first.
+      const related = html.slice(html.indexOf('id="related-title"'));
+      ok(html.includes(lang === 'en' ? '>See also</h2>' : '>Дивіться також</h2>'), `viz:${meta.id} [${lang}] has "See also"`);
+      const links = [...related.matchAll(/class="card-link" href="#\/v\/([a-z0-9-]+)"/g)].map((m) => m[1]!);
+      ok(links.length === 3, `viz:${meta.id} [${lang}] "See also" shows 3 cards (got ${links.length})`);
+      ok(!links.includes(meta.id), `viz:${meta.id} [${lang}] "See also" does not list the page itself`);
+      ok(links.every((id) => CATALOG.find((c) => c.id === id)?.status === 'published'), `viz:${meta.id} [${lang}] "See also" lists published entries only`);
+      if (meta.related?.[0]) ok(links[0] === meta.related[0], `viz:${meta.id} [${lang}] "See also" starts with the author's first pick`);
     }
   }
   for (const full of MANIFESTS) primeDetails(full);

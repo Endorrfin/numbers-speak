@@ -26,6 +26,8 @@ export default defineViz({
   ],
   origin: { kind: 'original' },
   data: ['volunteers-2022-2025.json'],
+  // CHANGED (S3-nav): "See also" — the author's picks, in this order.
+  related: ['volunteers-by-region', 'donations', 'air-attacks-on-ukraine'],
   status: 'published',
   added: '2026-09-22',
   updated: '2026-09-22',

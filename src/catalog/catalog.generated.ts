@@ -47,7 +47,12 @@ export const VIZ_CARDS: readonly VizCard[] = [
     },
     "status": "published",
     "added": "2026-09-21",
-    "updated": "2026-09-24"
+    "updated": "2026-09-24",
+    "related": [
+      "volunteers-growth",
+      "donations",
+      "global-peace-index"
+    ]
   },
   {
     "id": "births-deaths-per-day",
@@ -86,7 +91,12 @@ export const VIZ_CARDS: readonly VizCard[] = [
     },
     "status": "published",
     "added": "2026-09-19",
-    "updated": "2026-09-21"
+    "updated": "2026-09-21",
+    "related": [
+      "births-deaths-ua",
+      "population-by-country",
+      "time-of-life"
+    ]
   },
   {
     "id": "births-deaths-ua",
@@ -122,7 +132,12 @@ export const VIZ_CARDS: readonly VizCard[] = [
     },
     "status": "published",
     "added": "2026-09-19",
-    "updated": "2026-09-19"
+    "updated": "2026-09-19",
+    "related": [
+      "births-deaths-per-day",
+      "population-by-country",
+      "air-attacks-on-ukraine"
+    ]
   },
   {
     "id": "crime-index",
@@ -160,7 +175,12 @@ export const VIZ_CARDS: readonly VizCard[] = [
     },
     "status": "published",
     "added": "2026-09-25",
-    "updated": "2026-10-01"
+    "updated": "2026-10-01",
+    "related": [
+      "global-peace-index",
+      "real-estate-world",
+      "gdp-ppp-per-capita"
+    ]
   },
   {
     "id": "donations",
@@ -197,7 +217,12 @@ export const VIZ_CARDS: readonly VizCard[] = [
     },
     "status": "published",
     "added": "2026-09-22",
-    "updated": "2026-09-22"
+    "updated": "2026-09-22",
+    "related": [
+      "volunteers-growth",
+      "volunteers-by-region",
+      "air-attacks-on-ukraine"
+    ]
   },
   {
     "id": "electricity",
@@ -245,7 +270,12 @@ export const VIZ_CARDS: readonly VizCard[] = [
     },
     "status": "published",
     "added": "2026-10-07",
-    "updated": "2026-10-07"
+    "updated": "2026-10-07",
+    "related": [
+      "oil",
+      "gdp-by-country",
+      "population-by-country"
+    ]
   },
   {
     "id": "gdp-by-country",
@@ -282,7 +312,12 @@ export const VIZ_CARDS: readonly VizCard[] = [
     },
     "status": "published",
     "added": "2026-09-17",
-    "updated": "2026-10-01"
+    "updated": "2026-10-01",
+    "related": [
+      "gdp-ppp-per-capita",
+      "population-by-country",
+      "global-brands-race"
+    ]
   },
   {
     "id": "gdp-ppp-per-capita",
@@ -322,7 +357,12 @@ export const VIZ_CARDS: readonly VizCard[] = [
     },
     "status": "published",
     "added": "2026-09-24",
-    "updated": "2026-10-01"
+    "updated": "2026-10-01",
+    "related": [
+      "gdp-by-country",
+      "real-estate-world",
+      "robotization"
+    ]
   },
   {
     "id": "global-brands-race",
@@ -359,7 +399,12 @@ export const VIZ_CARDS: readonly VizCard[] = [
     },
     "status": "published",
     "added": "2026-09-21",
-    "updated": "2026-09-21"
+    "updated": "2026-09-21",
+    "related": [
+      "gdp-by-country",
+      "robotization",
+      "oil"
+    ]
   },
   {
     "id": "global-peace-index",
@@ -399,7 +444,12 @@ export const VIZ_CARDS: readonly VizCard[] = [
     },
     "status": "published",
     "added": "2026-09-25",
-    "updated": "2026-10-01"
+    "updated": "2026-10-01",
+    "related": [
+      "crime-index",
+      "air-attacks-on-ukraine",
+      "gdp-ppp-per-capita"
+    ]
   },
   {
     "id": "land-area",
@@ -435,7 +485,12 @@ export const VIZ_CARDS: readonly VizCard[] = [
     },
     "status": "published",
     "added": "2026-09-22",
-    "updated": "2026-10-01"
+    "updated": "2026-10-01",
+    "related": [
+      "population-by-country",
+      "gdp-by-country",
+      "births-deaths-per-day"
+    ]
   },
   {
     "id": "oil",
@@ -478,7 +533,12 @@ export const VIZ_CARDS: readonly VizCard[] = [
     },
     "status": "published",
     "added": "2026-10-07",
-    "updated": "2026-10-07"
+    "updated": "2026-10-07",
+    "related": [
+      "electricity",
+      "gdp-by-country",
+      "global-brands-race"
+    ]
   },
   {
     "id": "population-by-country",
@@ -517,7 +577,12 @@ export const VIZ_CARDS: readonly VizCard[] = [
     },
     "status": "published",
     "added": "2026-09-24",
-    "updated": "2026-10-01"
+    "updated": "2026-10-01",
+    "related": [
+      "land-area",
+      "births-deaths-per-day",
+      "gdp-by-country"
+    ]
   },
   {
     "id": "real-estate-world",
@@ -566,7 +631,12 @@ export const VIZ_CARDS: readonly VizCard[] = [
     },
     "status": "published",
     "added": "2026-09-25",
-    "updated": "2026-09-27"
+    "updated": "2026-09-27",
+    "related": [
+      "gdp-ppp-per-capita",
+      "crime-index",
+      "time-of-life"
+    ]
   },
   {
     "id": "robotization",
@@ -604,7 +674,12 @@ export const VIZ_CARDS: readonly VizCard[] = [
     },
     "status": "published",
     "added": "2026-09-24",
-    "updated": "2026-09-24"
+    "updated": "2026-09-24",
+    "related": [
+      "global-brands-race",
+      "gdp-ppp-per-capita",
+      "electricity"
+    ]
   },
   {
     "id": "time-of-life",
@@ -641,7 +716,12 @@ export const VIZ_CARDS: readonly VizCard[] = [
     },
     "status": "published",
     "added": "2026-09-20",
-    "updated": "2026-09-20"
+    "updated": "2026-09-20",
+    "related": [
+      "births-deaths-per-day",
+      "real-estate-world",
+      "gdp-ppp-per-capita"
+    ]
   },
   {
     "id": "volunteers-by-region",
@@ -676,7 +756,12 @@ export const VIZ_CARDS: readonly VizCard[] = [
     },
     "status": "published",
     "added": "2026-09-22",
-    "updated": "2026-09-22"
+    "updated": "2026-09-22",
+    "related": [
+      "volunteers-growth",
+      "donations",
+      "air-attacks-on-ukraine"
+    ]
   },
   {
     "id": "volunteers-growth",
@@ -711,7 +796,12 @@ export const VIZ_CARDS: readonly VizCard[] = [
     },
     "status": "published",
     "added": "2026-09-22",
-    "updated": "2026-09-22"
+    "updated": "2026-09-22",
+    "related": [
+      "volunteers-by-region",
+      "donations",
+      "air-attacks-on-ukraine"
+    ]
   },
 ];
 

@@ -52,6 +52,7 @@ await test('toCard keeps exactly the card fields, origin by kind only', () => {
     added: '2026-01-01',
     updated: '2026-01-02',
     d3Modules: ['d3-scale'],
+    related: ['y'], // CHANGED (S3-nav): a card field
   };
   const card = toCard(full);
   assert.deepEqual(Object.keys(card), [...CARD_FIELDS]); // order = CARD_FIELDS, so the generated file is stable

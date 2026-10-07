@@ -6,6 +6,7 @@ import { existsSync, readFileSync, statSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { join } from 'node:path';
 import { loadCatalog } from '../src/catalog';
+import { RELATED_MAX } from '../src/catalog/related'; // CHANGED (S3-nav)
 import { CHART_KINDS, GEOS, RUBRIC_IDS, STATUSES } from '../src/catalog/types';
 import type { Localized, VizMeta } from '../src/catalog/types';
 import { ID_PATTERN, PUBLIC_DATA_DIR, VIZ_DIR, listVizFolders } from './lib/viz-folders';
@@ -96,6 +97,18 @@ function checkMeta(m: VizMeta): void {
   err(isDate(m.updated), `${at}: updated must be YYYY-MM-DD`);
   err(m.added <= m.updated, `${at}: updated is earlier than added`);
   err(m.updated <= today, `${at}: updated is in the future`);
+
+  // CHANGED (S3-nav): "See also" picks — published entries other than itself, at most RELATED_MAX, no repeats.
+  if (m.related) {
+    err(m.related.length > 0 && m.related.length <= RELATED_MAX, `${at}: related lists 1–${RELATED_MAX} ids`);
+    err(new Set(m.related).size === m.related.length, `${at}: duplicate related ids`);
+    for (const id of m.related) {
+      const target = CATALOG.find((x) => x.id === id);
+      err(id !== m.id, `${at}: related must not list the entry itself`);
+      err(target !== undefined, `${at}: related '${id}' is not a visualization id`);
+      if (target) err(target.status === 'published', `${at}: related '${id}' is '${target.status}', not published`);
+    }
+  }
 
   for (const mod of m.d3Modules ?? []) err(D3_MODULE.test(mod), `${at}: '${mod}' is not a D3 module name`);
 }

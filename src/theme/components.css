@@ -2514,3 +2514,15 @@
     transition: left 0.3s ease;
   }
 }
+
+/* ── See also (S3-nav) ─────────────────────────────────────────────────────
+   The gallery's own cards and grid under the page (3 in a row on the 1000px column, 2 on a tablet, 1 on a phone).
+   A one-column override was tried and dropped: at 768px a full-width card stretched its preview to ~430px tall. */
+.related {
+  margin-top: calc(var(--gap) * 1.5);
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+.related h2 {
+  margin: 0 0 0.9rem;
+}

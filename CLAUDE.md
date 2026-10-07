@@ -24,7 +24,7 @@ to its sources. Quality bar: the Definition of Done in `PROJECT-BRIEF.md` §9, t
   `#/v/<id>` (S3‑cl). The shell never imports a page body eagerly.
 - **Cards eager, manifests lazy (S3‑lz).** `gen-catalog` evaluates every `meta.ts` and writes only the card fields
   (`CARD_FIELDS` / `VizCard` / `toCard` in `types.ts`: id, title, subtitle, rubrics, chart, geo, period, tags,
-  `origin.kind`, status, added, updated) as literals (`VIZ_CARDS`); the full manifest is a lazy chunk per entry
+  `origin.kind`, status, added, updated, related — S3‑nav) as literals (`VIZ_CARDS`); the full manifest is a lazy chunk per entry
   (`VIZ_META_LOADERS`). `CATALOG`/`getViz` return cards; `catalog/details.ts` (`useDetails`, `loadDetails`,
   `primeDetails` — cache like `useDataset`) feeds `AboutData`/`HowBuilt`, which draw period, dates, chart type, stack
   and code link at once and description, sources, licence, data files, d3 modules when the chunk arrives. Scripts and
@@ -46,6 +46,12 @@ to its sources. Quality bar: the Definition of Done in `PROJECT-BRIEF.md` §9, t
   fails when it is stale. The profile `#/c/ua` (`components/country/`, pure logic `lib/profile.ts`) is public for
   Ukraine only (`PROFILE_CODES` in `lib/home.ts`; other codes → 404); phase 2 opens other countries without new data.
   No `'UA'`‑style literals in `facts.ts` (test); every page with `CountryFocus` must have a `facts.ts` (test).
+- **“See also” (S3‑nav).** Every visualization page ends with 3 gallery cards (`components/viz/Related.tsx`, the
+  gallery's `VizCard` + `card-grid`): `meta.related` (≤ 3 published ids, the author's order; `check:data` rejects
+  self, unknown, non‑published, repeats) first, then `relatedFor` in `catalog/related.ts` fills by 2 × shared rubrics +
+  shared tags without the generic `countries`/`ranking`/`world`. Drawn from the eager cards — no wait for the manifest.
+  `related` is a card field (+0.27 kB gzip on `index`). A new entry: give it `related`, and consider adding it to the
+  picks of its neighbours (old entries never see a new one otherwise — the score only fills gaps).
 - **Bilingual at the data layer:** `Localized {en, uk}` everywhere; `check:data` rejects empty strings.
 - **Anonymous page counts (S3‑an) — the one runtime third party.** `src/lib/analytics.ts` (own client, not
   GoatCounter's count.js — that counts `location.pathname`, has no DNT/GPC check, logs warnings, can `alert()`):
@@ -69,7 +75,7 @@ src/
   main.tsx · App.tsx · vite-env.d.ts
   catalog/     types.ts (VizMeta contract + VizCard, S3‑lz) · rubrics.ts (tabs + facet labels) · index.ts (lookups,
                loadCatalog) · details.ts (lazy full manifests, S3‑lz)
-               filter.ts (pure filtering, unit‑tested) · catalog.generated.ts (GENERATED)
+               filter.ts (pure filtering, unit‑tested) · related.ts (“See also” picks, S3‑nav) · catalog.generated.ts (GENERATED)
                preview.ts (CardPreview contract + validator) · previewKit.ts (build‑time helpers) ·
                previews.ts (lookup) · previews.generated.json (GENERATED, S3‑th) ·
                facts.ts (country-facts contract + FACT_ORDER) · factKit.ts (S3‑cp)
@@ -83,7 +89,7 @@ src/
                renderStackedRows.ts · StackedRows.tsx (S3‑aa) · renderScatter.ts · Scatter.tsx · renderSwarm.ts ·
                Swarm.tsx · renderDumbbell.ts · Dumbbell.tsx · renderPointMap.ts · PointMap.tsx (S3‑re) · hooks.ts · palette.ts
   components/  layout/ (TopBar, Footer) · catalog/ (CatalogPage, FilterBar, VizCard, CardPreview + previewFormat — S3‑th)
-               viz/ (VizPage, AboutData, Pager — S3‑fx; Finder · FocusPicker · CountryFocus · focusText — S3‑uf) ·
+               viz/ (VizPage, AboutData, Related — S3‑nav, Pager — S3‑fx; Finder · FocusPicker · CountryFocus · focusText — S3‑uf) ·
                pages/ (AboutPage, NotFound) · country/ (CountryPage, text, factFormat — S3‑cp) · AppStateProvider.tsx
   i18n/        lang.ts · LangProvider.tsx · ui.ts
   lib/         hashRouter.ts · appState.ts · format.ts · utils.ts · countries.ts (ISO → name, flag URL) ·
@@ -110,7 +116,7 @@ _examples/     legacy D3 pages being ported (gitignored — never committed)
   `languages` (languages the legacy data/labels exist in) · `sources[]` (`title`, https `url`, `retrieved`
   YYYY‑MM‑DD) · `origin` (`original` or `adapted` with title/url/licence) · `data[]` (files under
   `public/data/<id>/`) · `status` (`draft` | `soon` | `published`) · `added` / `updated` (YYYY‑MM‑DD) ·
-  `d3Modules?` (for "How it's built").
+  `d3Modules?` (for "How it's built") · `related?` (≤ 3 published ids for “See also”, S3‑nav).
 - Visibility: `draft` only in dev; `soon` and `published` everywhere. "New" = the `NEW_MAX` (4) most recently
   added visible entries with `added` ≤ 30 days ago (`newIds` in `catalog/filter.ts`; one set for badges and the New tab — S3‑nw).
 - Data rules: numbers as numbers, ISO 3166‑1 alpha‑2 codes (names via `Intl.DisplayNames` + short
@@ -261,6 +267,10 @@ for every next item). Next: **S3‑lz** (owner, 2026‑10‑07), then S3‑cp ph
 Next: S3‑cp phase 2 (any country, search, `?vs=`) per `docs/IMPROVEMENTS.md`.
 **S3‑el (2026‑10‑07):** new entry #33 `electricity` (owner request) — seven angles on Ember + World Bank + Energoatom.
 Follow‑ups (owner): “hours without power” by city (Svitlobot — ask its authors), EU electricity imports (ENTSO‑E token).
+**S3‑cp2 → deferred (2026‑10‑07):** profiles of other countries duplicate the rankings' `?focus=` and the Ukraine page;
+return only as `?vs=` on `#/c/ua`, if GoatCounter shows `/#/c/ua` is read (`docs/IMPROVEMENTS.md` §2.6).
+**S3‑nav (2026‑10‑07):** “See also” on every page; the “Updated” badge and gallery sorting deferred (noise today).
+Next per `docs/IMPROVEMENTS.md` §1: S3‑ps (births‑deaths‑per‑day → UN WPP).
 
 ## 14. Status / progress log
 - **S0** (2026‑09‑17) — repo named `numbers-speak`; decisions D1–D10 accepted; `PROJECT-BRIEF.md`,
@@ -981,3 +991,31 @@ Follow‑ups (owner): “hours without power” by city (Svitlobot — ask its a
   Not in CHANGELOG (nothing new for a reader beyond speed). Branch (proposed) `perf/2026-10-lazy-details`.
   Open: `.nvmrc` says 22 while `package.json` `engines` says `~25.7.0` (npm prints `EBADENGINE`) — align them;
   manifest chunks are all named `meta-<hash>.js` (fine for users; a `chunkFileNames` rule could name them per id).
+- **S3‑cp2, step 0 only** (2026‑10‑07) — profile of any country (`#/c/<iso>`), search, `?vs=`. Audit of
+  `country-facts.json`: 237 codes, 226 with ≥ 8 of 19 tables (11 small territories with 3–6), every code has a flag and an
+  Intl name EN/UK, SU/AN absent; dead ends — robotization ranks 16–22 open a top‑15 page without the row,
+  births‑deaths‑per‑day ignores `?focus=`. Owner answers + mockup (https://claude.ai/artifact/DRXpuPsvsNmj8bgLVHptZm),
+  then the owner asked what it is for: it duplicates the rankings' `?focus=` + Finder and the Ukraine page, hash routes
+  are not indexed, 6–8 h + upkeep. **Deferred**, no code — `docs/IMPROVEMENTS.md` §2.6 (return as `?vs=` on `#/c/ua` only,
+  if `/#/c/ua` gets read).
+- **S3‑nav** (2026‑10‑07) — “See also” at the end of every visualization page. Step 0: the page ended at “How it's built”
+  (back via breadcrumbs only); tag scores found the first pair well (gdp ↔ ppp 7 shared tags, births ×2 7, crime ↔ GPI 4,
+  oil ↔ electricity 4) but then noise (`countries`/`ranking` pulled electricity everywhere; time‑of‑life 0 matches); the
+  planned “Updated” badge from `meta.updated` would mark 14 of 18 (the gallery is younger than 30 days; six “updates” of
+  10‑01 were S3‑uf UI); gallery sorting adds nothing (already newest first, search, 18 cards). Owner decisions
+  (AskUserQuestion, all as recommended): only “See also”; manual `related` + score fill; after “How it's built”.
+  Built: `VizMeta.related?` + card field; `catalog/related.ts` (`relatedFor`, `relatedScore`, `RELATED_MAX` 3, published
+  only, ties → newer `added`, then id); `check:data` rules; `components/viz/Related.tsx` in `VizPage`; `ui.seeAlso`;
+  `.related` CSS (the gallery's own `card-grid` — a one‑column override stretched previews to ~430 px at 768 and was
+  dropped); 18 × `related` picks (owner may edit; every entry is suggested somewhere — test). `meta.updated` not touched
+  (no content change). Tests: `test-related.ts` (7: picks first in order, self/draft/soon/unknown/repeat skipped, generic
+  tags, deterministic ties, short lists, real catalog = 3 published + picks kept, no orphan entry); `test-catalog-split`
+  fixture + `related`; smoke 2,164 → 2,344 (every page EN + UK before the manifest: heading, 3 cards, not itself, published
+  only, first = the first pick); mutation — `related: ['oil', 'nope', …]` on oil → three `check:data` errors.
+  `verify` green in a scratch copy (35 test files · 2,344 smoke checks · build); initial `index` 25.56 → 25.84 kB gzip.
+  Playwright (playwright-core 1.62 + Chromium 1234, built site under the production URL): oil, time‑of‑life,
+  volunteers‑growth, gdp‑by‑country × 360/390/768/1280 × EN dark / UK light — 3 cards, nothing outside the column, no
+  horizontal scroll, 0 console messages; a card click opens the page at the top with focus on `<main>` (the first run
+  measured mid‑way through the smooth scroll — the check now waits for `scrollY = 0`, 3 clean runs).
+  CHANGELOG **Updated** line. Branch (proposed) `feat/2026-10-see-also`. Live dev server regenerated
+  `catalog.generated.ts` itself (S3‑lz plugin) — identical to the scratch output.
