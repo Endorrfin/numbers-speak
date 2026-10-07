@@ -34,6 +34,8 @@ export default defineViz({
   origin: { kind: 'original' },
   // CHANGED (S3-rb): the owner's Numbeo copy shipped (2026-09-25) — its file is listed, so its tab is on; published.
   data: ['homicide-rate.json', 'numbeo-crime-2026-mid.json'],
+  // CHANGED (S3-nav): "See also" — the author's picks, in this order.
+  related: ['global-peace-index', 'real-estate-world', 'gdp-ppp-per-capita'],
   status: 'published',
   added: '2026-09-25',
   updated: '2026-10-01', // CHANGED (S3-uf): Ukraine in focus

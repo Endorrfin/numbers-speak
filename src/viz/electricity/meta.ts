@@ -62,6 +62,8 @@ export default defineViz({
   ],
   origin: { kind: 'original' },
   data: ['countries.json', 'world.json', 'race.json', 'ukraine.json', 'access.json'],
+  // CHANGED (S3-nav): "See also" — the author's picks, in this order.
+  related: ['oil', 'gdp-by-country', 'population-by-country'],
   status: 'published',
   added: '2026-10-07',
   updated: '2026-10-07',

@@ -80,6 +80,8 @@ export default defineViz({
   origin: { kind: 'original' },
   data: ['numbeo-2026-09.json', 'land-110m.json'],
   // CHANGED (S3-re): published with the full rebuild (six angles, 2026-09-27).
+  // CHANGED (S3-nav): "See also" — the author's picks, in this order.
+  related: ['gdp-ppp-per-capita', 'crime-index', 'time-of-life'],
   status: 'published',
   added: '2026-09-25',
   updated: '2026-09-27',

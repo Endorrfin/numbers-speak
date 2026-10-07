@@ -65,6 +65,8 @@ export default defineViz({
   ],
   origin: { kind: 'original' },
   data: ['consumption.json', 'us-imports.json', 'china-imports.json', 'crude-trade-2025.json'],
+  // CHANGED (S3-nav): "See also" — the author's picks, in this order.
+  related: ['electricity', 'gdp-by-country', 'global-brands-race'],
   status: 'published',
   added: '2026-10-07',
   updated: '2026-10-07',

@@ -45,6 +45,8 @@ export default defineViz({
   ],
   origin: { kind: 'original' },
   data: ['attacks-2022-2026.json', 'civilians-hrmmu-2023-2026.json'],
+  // CHANGED (S3-nav): "See also" — the author's picks, in this order.
+  related: ['volunteers-growth', 'donations', 'global-peace-index'],
   status: 'published',
   added: '2026-09-21',
   // CHANGED (S3-cl): the calendar heatmap (angle F) landed 2026-09-24 — `updated` now says so.

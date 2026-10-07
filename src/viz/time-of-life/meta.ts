@@ -45,6 +45,8 @@ export default defineViz({
   ],
   origin: { kind: 'original' },
   data: ['time-use-oecd-2026.json'],
+  // CHANGED (S3-nav): "See also" — the author's picks, in this order.
+  related: ['births-deaths-per-day', 'real-estate-world', 'gdp-ppp-per-capita'],
   status: 'published',
   added: '2026-09-20',
   updated: '2026-09-20',

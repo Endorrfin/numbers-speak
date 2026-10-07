@@ -14,6 +14,7 @@ import { ISSUES_URL } from '../../lib/links';
 import { NotFound } from '../pages/NotFound';
 import { AboutData, HowBuilt } from './AboutData';
 import { ErrorBoundary } from './ErrorBoundary';
+import { Related } from './Related'; // CHANGED (S3-nav)
 import { ShareButton } from './ShareButton';
 
 // One lazy component per id, created once — React.lazy must not be re-created on every render.
@@ -105,6 +106,9 @@ export function VizPage({ id, params }: { id: string; params: VizParams }) {
         <AboutData card={meta} details={details} />
         <HowBuilt card={meta} details={details} />
       </div>
+
+      {/* CHANGED (S3-nav): the page used to end here — "See also" gives the reader a next step. */}
+      <Related card={meta} fresh={fresh} />
     </article>
   );
 }

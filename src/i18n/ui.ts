@@ -93,6 +93,7 @@ export const ui = {
 
   aboutData: { en: 'About the data', uk: 'Про дані' },
   howBuilt: { en: 'How it’s built', uk: 'Як побудовано' },
+  seeAlso: { en: 'See also', uk: 'Дивіться також' }, // CHANGED (S3-nav)
   period: { en: 'Period', uk: 'Період' },
   sources: { en: 'Sources', uk: 'Джерела' },
   retrieved: { en: 'retrieved', uk: 'отримано' },

@@ -41,6 +41,8 @@ export default defineViz({
   ],
   origin: { kind: 'original' },
   data: ['gdp-ppp-per-capita-2023.json', 'gdp-ppp-per-capita-2024.json', 'gdp-ppp-per-capita-2025.json'],
+  // CHANGED (S3-nav): "See also" — the author's picks, in this order.
+  related: ['gdp-by-country', 'real-estate-world', 'robotization'],
   status: 'published',
   added: '2026-09-24',
   updated: '2026-10-01', // CHANGED (S3-uf): Ukraine in focus

@@ -36,6 +36,8 @@ export default defineViz({
   ],
   origin: { kind: 'original' },
   data: ['births-deaths-1990-2025.json'],
+  // CHANGED (S3-nav): "See also" — the author's picks, in this order.
+  related: ['births-deaths-per-day', 'population-by-country', 'air-attacks-on-ukraine'],
   status: 'published',
   added: '2026-09-19',
   updated: '2026-09-19',

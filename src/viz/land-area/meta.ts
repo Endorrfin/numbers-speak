@@ -51,6 +51,8 @@ export default defineViz({
   // 6 land-area checks. The entry meets the Definition of Done (PROJECT-BRIEF.md §9): bilingual, ≥1
   // dated source, dataset schema-validated, 29 unit tests green — same "not independently verified
   // secondary source" caveat gdp-by-country and global-brands-race already carry as published.
+  // CHANGED (S3-nav): "See also" — the author's picks, in this order.
+  related: ['population-by-country', 'gdp-by-country', 'births-deaths-per-day'],
   status: 'published',
   added: '2026-09-22',
   updated: '2026-10-01', // CHANGED (S3-uf): Ukraine in focus

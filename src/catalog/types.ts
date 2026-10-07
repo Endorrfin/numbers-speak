@@ -70,6 +70,11 @@ export type VizMeta = {
   updated: string;
   /** D3 modules used, for the "How it's built" panel. */
   d3Modules?: readonly string[];
+  /**
+   * CHANGED (S3-nav): up to RELATED_MAX published entries for "See also", in the author's order; the rest of the
+   * block is filled by catalog/related.ts (shared rubrics and specific tags).
+   */
+  related?: readonly string[];
 };
 
 // CHANGED (S3-lz): the shell (gallery, filters, page head, profile, page counter) needs only these fields; they
@@ -88,6 +93,7 @@ export const CARD_FIELDS = [
   'status',
   'added',
   'updated',
+  'related', // CHANGED (S3-nav): "See also" is drawn by the shell, before the manifest chunk arrives
 ] as const satisfies readonly (keyof VizMeta)[];
 
 /** What the shell knows about an entry before its page opens. `origin` keeps only its kind (the gallery filter). */

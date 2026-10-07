@@ -36,6 +36,8 @@ export default defineViz({
     license: 'ISC',
   },
   data: ['brands-2000-2025.json'],
+  // CHANGED (S3-nav): "See also" — the author's picks, in this order.
+  related: ['gdp-by-country', 'robotization', 'oil'],
   status: 'published',
   added: '2026-09-21',
   updated: '2026-09-21',

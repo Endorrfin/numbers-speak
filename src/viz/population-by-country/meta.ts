@@ -50,6 +50,8 @@ export default defineViz({
   ],
   origin: { kind: 'original' },
   data: ['population-2025.json'],
+  // CHANGED (S3-nav): "See also" — the author's picks, in this order.
+  related: ['land-area', 'births-deaths-per-day', 'gdp-by-country'],
   status: 'published',
   added: '2026-09-24',
   updated: '2026-10-01', // CHANGED (S3-uf): Ukraine in focus

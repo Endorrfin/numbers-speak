@@ -3,6 +3,12 @@
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
 ## 2026‑10‑07
+- **Updated:** every visualization page now ends with “See also” — three related visualizations as gallery cards,
+  with their data previews: GDP leads to GDP (PPP) per person, the volunteer registry to donations, oil to
+  electricity. /
+  Кожна сторінка інфографіки тепер закінчується блоком «Дивіться також» — три пов'язані інфографіки у вигляді карток
+  галереї з прев'ю їхніх даних: від ВВП до ВВП за ПКС на людину, від реєстру волонтерів до донатів, від нафти до
+  електроенергії.
 - **New:** [Ukraine in numbers / Україна в цифрах](https://endorrfin.github.io/numbers-speak/#/c/ua) — Ukraine's place
   in 18 rankings of the gallery on one page, in five sections (economy, people, land, security, energy), each row
   computed from the same file as the visualization's page and opening it with Ukraine in view: 58th of 218 by GDP

@@ -47,6 +47,8 @@ export default defineViz({
   ],
   origin: { kind: 'original' },
   data: ['per-day-2026.json'],
+  // CHANGED (S3-nav): "See also" — the author's picks, in this order.
+  related: ['births-deaths-ua', 'population-by-country', 'time-of-life'],
   status: 'published',
   added: '2026-09-19',
   updated: '2026-09-21',

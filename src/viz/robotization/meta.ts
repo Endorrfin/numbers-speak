@@ -46,6 +46,8 @@ export default defineViz({
   ],
   origin: { kind: 'original' },
   data: ['robot-density-2024.json'],
+  // CHANGED (S3-nav): "See also" — the author's picks, in this order.
+  related: ['global-brands-race', 'gdp-ppp-per-capita', 'electricity'],
   status: 'published',
   added: '2026-09-24',
   updated: '2026-09-24',
