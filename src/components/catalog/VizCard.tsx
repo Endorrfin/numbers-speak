@@ -1,6 +1,6 @@
 import { getPreview } from '../../catalog/previews'; // CHANGED (S3-th)
 import { CHART_LABELS, GEO_LABELS } from '../../catalog/rubrics';
-import type { VizMeta } from '../../catalog/types';
+import type { VizCard as VizCardData } from '../../catalog/types'; // CHANGED (S3-lz): the card, not the manifest
 import { useLang } from '../../i18n/lang';
 import { ui } from '../../i18n/ui';
 import { formatPeriod } from '../../lib/format';
@@ -8,7 +8,7 @@ import { hrefViz } from '../../lib/hashRouter';
 import { ChartGlyph } from '../viz/ChartGlyph';
 import { CardPreview } from './CardPreview'; // CHANGED (S3-th)
 
-export function VizCard({ meta, isNew }: { meta: VizMeta; isNew: boolean }) {
+export function VizCard({ meta, isNew }: { meta: VizCardData; isNew: boolean }) {
   const { t } = useLang();
   const preview = getPreview(meta.id); // CHANGED (S3-th): data-driven preview; the glyph stays as the fallback
   return (

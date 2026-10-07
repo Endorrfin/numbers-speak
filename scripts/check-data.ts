@@ -5,10 +5,13 @@
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { join } from 'node:path';
-import { CATALOG } from '../src/catalog';
+import { loadCatalog } from '../src/catalog';
 import { CHART_KINDS, GEOS, RUBRIC_IDS, STATUSES } from '../src/catalog/types';
 import type { Localized, VizMeta } from '../src/catalog/types';
 import { ID_PATTERN, PUBLIC_DATA_DIR, VIZ_DIR, listVizFolders } from './lib/viz-folders';
+
+// CHANGED (S3-lz): the full manifests (the shell's CATALOG holds only the card fields).
+const CATALOG = await loadCatalog();
 
 const errors: string[] = [];
 const err = (ok: unknown, msg: string): void => {

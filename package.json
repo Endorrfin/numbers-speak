@@ -34,7 +34,7 @@
     "smoke": "tsx --tsconfig tsconfig.app.json scripts/smoke.ts",
     "verify": "npm run gen:catalog && npm run gen:previews && npm run gen:facts && npm run typecheck && npm run lint && npm run check:catalog && npm run check:data && npm run test && npm run smoke && npm run build"
   },
-  "//catalog": "One folder per visualization: src/viz/<id>/meta.ts + index.tsx. gen:catalog writes src/catalog/catalog.generated.ts (committed; predev/prebuild refresh it); check:catalog fails when it is stale. Card previews (S3-th): src/viz/<id>/preview.ts → gen:previews → src/catalog/previews.generated.json (committed; predev/prebuild refresh it; check:catalog guards staleness, coverage of published entries and the 12 kB gzip budget).",
+  "//catalog": "One folder per visualization: src/viz/<id>/meta.ts + index.tsx. gen:catalog writes src/catalog/catalog.generated.ts (committed; predev/prebuild refresh it) — card fields as literals + lazy loaders of each meta.ts (S3-lz; check:catalog caps cards at 400 B gzip per entry); check:catalog fails when it is stale. Card previews (S3-th): src/viz/<id>/preview.ts → gen:previews → src/catalog/previews.generated.json (committed; predev/prebuild refresh it; check:catalog guards staleness, coverage of published entries and the 12 kB gzip budget).",
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.3.0",
     "@fontsource-variable/inter": "^5.3.0",

@@ -3,14 +3,14 @@ import { CHART_LABELS, GEO_LABELS } from '../../catalog/rubrics';
 import { hasActiveFilters } from '../../catalog/filter';
 import type { CatalogQuery, OriginFilter } from '../../catalog/filter';
 import { CHART_KINDS, GEOS } from '../../catalog/types';
-import type { ChartKind, Geo, VizMeta } from '../../catalog/types';
+import type { ChartKind, Geo, VizCard } from '../../catalog/types';
 import { useLang } from '../../i18n/lang';
 import { ui } from '../../i18n/ui';
 
 type Props = {
   query: CatalogQuery;
   /** Entries of the current tab — facet options come from them, so no option leads to nothing. */
-  pool: readonly VizMeta[];
+  pool: readonly VizCard[]; // CHANGED (S3-lz): cards
   onChange: (next: CatalogQuery) => void;
 };
 

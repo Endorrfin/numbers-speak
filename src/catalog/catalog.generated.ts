@@ -2,47 +2,717 @@
 // Regenerate with `npm run gen:catalog` (predev/prebuild do it for you); `npm run check:catalog`
 // fails the build when this file is stale. Source of truth: src/viz/<id>/meta.ts.
 import type { ComponentType } from 'react';
-import type { VizBodyProps, VizMeta } from './types';
-import meta0 from '../viz/air-attacks-on-ukraine/meta';
-import meta1 from '../viz/births-deaths-per-day/meta';
-import meta2 from '../viz/births-deaths-ua/meta';
-import meta3 from '../viz/crime-index/meta';
-import meta4 from '../viz/donations/meta';
-import meta5 from '../viz/electricity/meta';
-import meta6 from '../viz/gdp-by-country/meta';
-import meta7 from '../viz/gdp-ppp-per-capita/meta';
-import meta8 from '../viz/global-brands-race/meta';
-import meta9 from '../viz/global-peace-index/meta';
-import meta10 from '../viz/land-area/meta';
-import meta11 from '../viz/oil/meta';
-import meta12 from '../viz/population-by-country/meta';
-import meta13 from '../viz/real-estate-world/meta';
-import meta14 from '../viz/robotization/meta';
-import meta15 from '../viz/time-of-life/meta';
-import meta16 from '../viz/volunteers-by-region/meta';
-import meta17 from '../viz/volunteers-growth/meta';
+import type { VizBodyProps, VizCard, VizMeta } from './types';
 
 export type VizLoader = () => Promise<{ default: ComponentType<VizBodyProps> }>;
+export type VizMetaLoader = () => Promise<{ default: VizMeta }>;
 
-export const VIZ_METAS: readonly VizMeta[] = [
-  meta0,
-  meta1,
-  meta2,
-  meta3,
-  meta4,
-  meta5,
-  meta6,
-  meta7,
-  meta8,
-  meta9,
-  meta10,
-  meta11,
-  meta12,
-  meta13,
-  meta14,
-  meta15,
-  meta16,
-  meta17,
+export const VIZ_CARDS: readonly VizCard[] = [
+  {
+    "id": "air-attacks-on-ukraine",
+    "title": {
+      "en": "Russian missile and drone attacks on Ukraine, 2022–2026",
+      "uk": "Російські ракетні й дронові атаки на Україну, 2022–2026"
+    },
+    "subtitle": {
+      "en": "Launched, shot down, not intercepted — every national Air Force report since autumn 2022",
+      "uk": "Запущено, збито, не перехоплено — усі загальнонаціональні звіти Повітряних сил з осені 2022 року"
+    },
+    "rubrics": [
+      "ukraine",
+      "security"
+    ],
+    "chart": "bar",
+    "geo": "ukraine",
+    "period": {
+      "from": 2022,
+      "to": 2026
+    },
+    "tags": [
+      "war",
+      "air attacks",
+      "missiles",
+      "drones",
+      "shahed",
+      "air defence",
+      "civilians",
+      "війна",
+      "ракети",
+      "дрони",
+      "ппо",
+      "обстріли"
+    ],
+    "origin": {
+      "kind": "original"
+    },
+    "status": "published",
+    "added": "2026-09-21",
+    "updated": "2026-09-24"
+  },
+  {
+    "id": "births-deaths-per-day",
+    "title": {
+      "en": "Born and died per day, 2026",
+      "uk": "Народжуються й помирають щодня, 2026"
+    },
+    "subtitle": {
+      "en": "Births and deaths per day in 235 countries — a live world clock and every country",
+      "uk": "Народження і смерті за добу у 235 країнах — живий світовий лічильник і всі країни поруч"
+    },
+    "rubrics": [
+      "world",
+      "ukraine"
+    ],
+    "chart": "butterfly",
+    "geo": "world",
+    "period": {
+      "from": 2026,
+      "to": 2026
+    },
+    "tags": [
+      "demography",
+      "births",
+      "deaths",
+      "natural change",
+      "population",
+      "countries",
+      "per day",
+      "демографія",
+      "народжуваність",
+      "смертність"
+    ],
+    "origin": {
+      "kind": "original"
+    },
+    "status": "published",
+    "added": "2026-09-19",
+    "updated": "2026-09-21"
+  },
+  {
+    "id": "births-deaths-ua",
+    "title": {
+      "en": "Births and deaths in Ukraine, 1990–2025",
+      "uk": "Народжуваність і смертність в Україні, 1990–2025"
+    },
+    "subtitle": {
+      "en": "Registered births and deaths per year — five ways to see the same 36 years",
+      "uk": "Зареєстровані народження і смерті за рік — п’ять поглядів на ті самі 36 років"
+    },
+    "rubrics": [
+      "ukraine"
+    ],
+    "chart": "line",
+    "geo": "ukraine",
+    "period": {
+      "from": 1990,
+      "to": 2025
+    },
+    "tags": [
+      "demography",
+      "births",
+      "deaths",
+      "natural decrease",
+      "population",
+      "демографія",
+      "народжуваність",
+      "смертність"
+    ],
+    "origin": {
+      "kind": "original"
+    },
+    "status": "published",
+    "added": "2026-09-19",
+    "updated": "2026-09-19"
+  },
+  {
+    "id": "crime-index",
+    "title": {
+      "en": "Crime by country: homicides and perceived crime",
+      "uk": "Злочинність у країнах: убивства й відчуття небезпеки"
+    },
+    "subtitle": {
+      "en": "Official homicide rates (UNODC) next to Numbeo’s crowd-sourced Crime Index",
+      "uk": "Офіційний рівень убивств (UNODC) поруч з індексом злочинності Numbeo, зібраним від користувачів"
+    },
+    "rubrics": [
+      "security"
+    ],
+    "chart": "ranked-bar",
+    "geo": "world",
+    "period": {
+      "from": 2015,
+      "to": 2026
+    },
+    "tags": [
+      "crime",
+      "homicide",
+      "safety",
+      "security",
+      "unodc",
+      "numbeo",
+      "ranking",
+      "злочинність",
+      "убивства",
+      "безпека"
+    ],
+    "origin": {
+      "kind": "original"
+    },
+    "status": "published",
+    "added": "2026-09-25",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "donations",
+    "title": {
+      "en": "Wartime donations, 2022–2025",
+      "uk": "Пожертви воєнного часу, 2022–2025"
+    },
+    "subtitle": {
+      "en": "UAH 112.7 billion through monobank alone, February 2022 – November 2025",
+      "uk": "112,7 млрд грн лише через monobank, лютий 2022 — листопад 2025"
+    },
+    "rubrics": [
+      "ukraine"
+    ],
+    "chart": "line",
+    "geo": "ukraine",
+    "period": {
+      "from": 2022,
+      "to": 2025
+    },
+    "tags": [
+      "donations",
+      "monobank",
+      "united24",
+      "funds",
+      "war",
+      "contribution",
+      "донати",
+      "пожертви",
+      "війна"
+    ],
+    "origin": {
+      "kind": "original"
+    },
+    "status": "published",
+    "added": "2026-09-22",
+    "updated": "2026-09-22"
+  },
+  {
+    "id": "electricity",
+    "title": {
+      "en": "Electricity: who generates it and from what, 2000–2025",
+      "uk": "Електроенергія: хто виробляє і з чого, 2000–2025"
+    },
+    "subtitle": {
+      "en": "In 2025 renewables generated more of the world’s electricity than coal for the first time; Ukraine, 1990–2022, and the Zaporizhzhia plant",
+      "uk": "У 2025 році відновлювані джерела вперше дали світові більше електроенергії, ніж вугілля; Україна, 1990–2022, і Запорізька АЕС"
+    },
+    "rubrics": [
+      "world",
+      "economy",
+      "ukraine"
+    ],
+    "chart": "ranked-bar",
+    "geo": "world",
+    "period": {
+      "from": 1990,
+      "to": 2025
+    },
+    "tags": [
+      "electricity",
+      "energy",
+      "power",
+      "renewables",
+      "solar",
+      "wind",
+      "nuclear",
+      "coal",
+      "co2",
+      "emissions",
+      "zaporizhzhia",
+      "countries",
+      "ranking",
+      "електроенергія",
+      "енергетика",
+      "відновлювані",
+      "атом",
+      "аес"
+    ],
+    "origin": {
+      "kind": "original"
+    },
+    "status": "published",
+    "added": "2026-10-07",
+    "updated": "2026-10-07"
+  },
+  {
+    "id": "gdp-by-country",
+    "title": {
+      "en": "GDP by country, 2023–2025",
+      "uk": "ВВП країн, 2023–2025"
+    },
+    "subtitle": {
+      "en": "Nominal GDP and GDP per capita in current US dollars: the ranking and how each economy compares with the world",
+      "uk": "Номінальний ВВП і ВВП на душу населення в поточних доларах США: рейтинг і порівняння кожної економіки зі світом"
+    },
+    "rubrics": [
+      "economy"
+    ],
+    "chart": "ranked-bar",
+    "geo": "world",
+    "period": {
+      "from": 2023,
+      "to": 2025
+    },
+    "tags": [
+      "gdp",
+      "gdp per capita",
+      "economy",
+      "countries",
+      "ranking",
+      "world bank",
+      "ввп",
+      "ввп на душу населення",
+      "економіка"
+    ],
+    "origin": {
+      "kind": "original"
+    },
+    "status": "published",
+    "added": "2026-09-17",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "gdp-ppp-per-capita",
+    "title": {
+      "en": "GDP (PPP) per capita, 2023–2025",
+      "uk": "ВВП (ПКС) на душу населення, 2023–2025"
+    },
+    "subtitle": {
+      "en": "Output per person at purchasing-power parity — and how far each economy is from the world average",
+      "uk": "Виробництво на одну особу за паритетом купівельної спроможності — і наскільки кожна економіка далека від світового середнього"
+    },
+    "rubrics": [
+      "economy"
+    ],
+    "chart": "ranked-bar",
+    "geo": "world",
+    "period": {
+      "from": 2023,
+      "to": 2025
+    },
+    "tags": [
+      "gdp",
+      "ppp",
+      "purchasing power parity",
+      "gdp per capita",
+      "income",
+      "economy",
+      "countries",
+      "ranking",
+      "ввп",
+      "пкс",
+      "економіка",
+      "доходи"
+    ],
+    "origin": {
+      "kind": "original"
+    },
+    "status": "published",
+    "added": "2026-09-24",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "global-brands-race",
+    "title": {
+      "en": "Global brands race, 2000–2025",
+      "uk": "Перегони глобальних брендів, 2000–2025"
+    },
+    "subtitle": {
+      "en": "The world’s most valuable brands year by year, from Interbrand’s Best Global Brands ranking",
+      "uk": "Найдорожчі бренди світу рік за роком — за рейтингом Interbrand Best Global Brands"
+    },
+    "rubrics": [
+      "economy"
+    ],
+    "chart": "bar-race",
+    "geo": "world",
+    "period": {
+      "from": 2000,
+      "to": 2025
+    },
+    "tags": [
+      "brands",
+      "brand value",
+      "interbrand",
+      "companies",
+      "ranking",
+      "technology",
+      "бренди",
+      "вартість бренду",
+      "компанії"
+    ],
+    "origin": {
+      "kind": "adapted"
+    },
+    "status": "published",
+    "added": "2026-09-21",
+    "updated": "2026-09-21"
+  },
+  {
+    "id": "global-peace-index",
+    "title": {
+      "en": "Global Peace Index 2026",
+      "uk": "Глобальний індекс миру 2026"
+    },
+    "subtitle": {
+      "en": "163 countries ranked by peacefulness: Iceland first for the 19th year, Russia last, Ukraine 160th",
+      "uk": "163 країни за рівнем миру: Ісландія — перша 19-й рік поспіль, Росія — остання, Україна — 160-та"
+    },
+    "rubrics": [
+      "security"
+    ],
+    "chart": "ranked-bar",
+    "geo": "world",
+    "period": {
+      "from": 2026,
+      "to": 2026
+    },
+    "tags": [
+      "peace",
+      "conflict",
+      "security",
+      "militarisation",
+      "safety",
+      "ranking",
+      "iep",
+      "gpi",
+      "мир",
+      "конфлікти",
+      "безпека",
+      "рейтинг"
+    ],
+    "origin": {
+      "kind": "original"
+    },
+    "status": "published",
+    "added": "2026-09-25",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "land-area",
+    "title": {
+      "en": "Land area by country",
+      "uk": "Площа країн світу"
+    },
+    "subtitle": {
+      "en": "Total area and land area of 234 countries and territories, and how much of each is not land",
+      "uk": "Загальна площа й площа суходолу 234 країн і територій — і яка їх частка не є суходолом"
+    },
+    "rubrics": [
+      "world"
+    ],
+    "chart": "ranked-bar",
+    "geo": "world",
+    "tags": [
+      "land area",
+      "total area",
+      "geography",
+      "countries",
+      "territories",
+      "ranking",
+      "world",
+      "borders",
+      "площа",
+      "територія",
+      "країни",
+      "кордони"
+    ],
+    "origin": {
+      "kind": "original"
+    },
+    "status": "published",
+    "added": "2026-09-22",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "oil",
+    "title": {
+      "en": "Oil: who uses it and who sells it, 1965–2025",
+      "uk": "Нафта: хто споживає і хто продає, 1965–2025"
+    },
+    "subtitle": {
+      "en": "103 million barrels a day — the US and China burn over a third; where the two largest importers buy their crude",
+      "uk": "103 млн барелів на добу — США й Китай спалюють понад третину; де купують нафту два найбільші імпортери"
+    },
+    "rubrics": [
+      "economy",
+      "world"
+    ],
+    "chart": "ranked-bar",
+    "geo": "world",
+    "period": {
+      "from": 1965,
+      "to": 2025
+    },
+    "tags": [
+      "oil",
+      "crude oil",
+      "energy",
+      "consumption",
+      "imports",
+      "trade",
+      "countries",
+      "ranking",
+      "china",
+      "united states",
+      "нафта",
+      "енергетика",
+      "споживання",
+      "імпорт"
+    ],
+    "origin": {
+      "kind": "original"
+    },
+    "status": "published",
+    "added": "2026-10-07",
+    "updated": "2026-10-07"
+  },
+  {
+    "id": "population-by-country",
+    "title": {
+      "en": "Population by country, 2025",
+      "uk": "Населення країн, 2025"
+    },
+    "subtitle": {
+      "en": "8.23 billion people in 237 countries and territories — and how densely each one is settled",
+      "uk": "8,23 млрд людей у 237 країнах і територіях — і наскільки щільно заселена кожна"
+    },
+    "rubrics": [
+      "world"
+    ],
+    "chart": "ranked-bar",
+    "geo": "world",
+    "period": {
+      "from": 2025,
+      "to": 2025
+    },
+    "tags": [
+      "population",
+      "population density",
+      "demographics",
+      "countries",
+      "ranking",
+      "world",
+      "united nations",
+      "населення",
+      "щільність населення",
+      "демографія",
+      "країни"
+    ],
+    "origin": {
+      "kind": "original"
+    },
+    "status": "published",
+    "added": "2026-09-24",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "real-estate-world",
+    "title": {
+      "en": "Price per square metre in world cities, 2026",
+      "uk": "Ціна квадратного метра в містах світу, 2026"
+    },
+    "subtitle": {
+      "en": "Numbeo, about 530 cities: price per m² in and outside the centre, years of income, mortgage and rent — six angles",
+      "uk": "Numbeo, близько 530 міст: ціна м² у центрі й поза ним, роки доходу, іпотека й оренда — шість ракурсів"
+    },
+    "rubrics": [
+      "economy"
+    ],
+    "chart": "ranked-bar",
+    "geo": "world",
+    "period": {
+      "from": 2026,
+      "to": 2026
+    },
+    "tags": [
+      "real estate",
+      "housing",
+      "property",
+      "apartments",
+      "prices",
+      "cities",
+      "affordability",
+      "price to income",
+      "numbeo",
+      "ranking",
+      "mortgage",
+      "rent",
+      "map",
+      "нерухомість",
+      "житло",
+      "квартири",
+      "ціни",
+      "міста",
+      "доступність",
+      "іпотека",
+      "оренда"
+    ],
+    "origin": {
+      "kind": "original"
+    },
+    "status": "published",
+    "added": "2026-09-25",
+    "updated": "2026-09-27"
+  },
+  {
+    "id": "robotization",
+    "title": {
+      "en": "Industrial robots per 10,000 workers, 2024 (top 15)",
+      "uk": "Роботизація виробництва, 2024 (топ-15)"
+    },
+    "subtitle": {
+      "en": "Robot density in manufacturing: South Korea leads with more than nine times the world average",
+      "uk": "Щільність роботів у промисловості: Південна Корея — понад удев’ятеро вище за світове середнє"
+    },
+    "rubrics": [
+      "economy"
+    ],
+    "chart": "ranked-bar",
+    "geo": "world",
+    "period": {
+      "from": 2024,
+      "to": 2024
+    },
+    "tags": [
+      "robots",
+      "robot density",
+      "automation",
+      "manufacturing",
+      "industry",
+      "ranking",
+      "роботи",
+      "автоматизація",
+      "промисловість",
+      "виробництво"
+    ],
+    "origin": {
+      "kind": "original"
+    },
+    "status": "published",
+    "added": "2026-09-24",
+    "updated": "2026-09-24"
+  },
+  {
+    "id": "time-of-life",
+    "title": {
+      "en": "Human life in numbers",
+      "uk": "Людське життя в цифрах"
+    },
+    "subtitle": {
+      "en": "Where the 50 years from 15 to 64 go: sleep, work, chores and free time — time-use surveys of 35 countries",
+      "uk": "Куди йдуть 50 років від 15 до 64: сон, робота, обов’язки й вільний час — опитування використання часу в 35 країнах"
+    },
+    "rubrics": [
+      "knowledge"
+    ],
+    "chart": "waffle",
+    "geo": "world",
+    "tags": [
+      "time use",
+      "life",
+      "sleep",
+      "work",
+      "leisure",
+      "housework",
+      "gender",
+      "oecd",
+      "час",
+      "життя",
+      "сон",
+      "робота",
+      "вільний час"
+    ],
+    "origin": {
+      "kind": "original"
+    },
+    "status": "published",
+    "added": "2026-09-20",
+    "updated": "2026-09-20"
+  },
+  {
+    "id": "volunteers-by-region",
+    "title": {
+      "en": "Registered volunteers by region, 2024",
+      "uk": "Волонтери за областями, 2024"
+    },
+    "subtitle": {
+      "en": "Kyiv and Kharkiv lead the official registry — Crimea cannot register at all",
+      "uk": "Київ і Харківщина лідирують у офіційному реєстрі — Крим зареєструватися не може"
+    },
+    "rubrics": [
+      "ukraine"
+    ],
+    "chart": "ranked-bar",
+    "geo": "ukraine",
+    "period": {
+      "from": 2024,
+      "to": 2024
+    },
+    "tags": [
+      "volunteers",
+      "regions",
+      "oblasts",
+      "war",
+      "волонтери",
+      "області",
+      "війна"
+    ],
+    "origin": {
+      "kind": "original"
+    },
+    "status": "published",
+    "added": "2026-09-22",
+    "updated": "2026-09-22"
+  },
+  {
+    "id": "volunteers-growth",
+    "title": {
+      "en": "Growth of registered volunteers, 2022–2025",
+      "uk": "Динаміка кількості волонтерів, 2022–2025"
+    },
+    "subtitle": {
+      "en": "From 320 to nearly 11,800 — the official registry, month by month",
+      "uk": "Від 320 до майже 11 800 — офіційний реєстр, місяць за місяцем"
+    },
+    "rubrics": [
+      "ukraine"
+    ],
+    "chart": "line",
+    "geo": "ukraine",
+    "period": {
+      "from": 2022,
+      "to": 2025
+    },
+    "tags": [
+      "volunteers",
+      "registry",
+      "war",
+      "contribution",
+      "волонтери",
+      "реєстр",
+      "війна"
+    ],
+    "origin": {
+      "kind": "original"
+    },
+    "status": "published",
+    "added": "2026-09-22",
+    "updated": "2026-09-22"
+  },
 ];
 
 export const VIZ_LOADERS: Readonly<Record<string, VizLoader>> = {
@@ -64,4 +734,25 @@ export const VIZ_LOADERS: Readonly<Record<string, VizLoader>> = {
   'time-of-life': () => import('../viz/time-of-life/index'),
   'volunteers-by-region': () => import('../viz/volunteers-by-region/index'),
   'volunteers-growth': () => import('../viz/volunteers-growth/index'),
+};
+
+export const VIZ_META_LOADERS: Readonly<Record<string, VizMetaLoader>> = {
+  'air-attacks-on-ukraine': () => import('../viz/air-attacks-on-ukraine/meta'),
+  'births-deaths-per-day': () => import('../viz/births-deaths-per-day/meta'),
+  'births-deaths-ua': () => import('../viz/births-deaths-ua/meta'),
+  'crime-index': () => import('../viz/crime-index/meta'),
+  'donations': () => import('../viz/donations/meta'),
+  'electricity': () => import('../viz/electricity/meta'),
+  'gdp-by-country': () => import('../viz/gdp-by-country/meta'),
+  'gdp-ppp-per-capita': () => import('../viz/gdp-ppp-per-capita/meta'),
+  'global-brands-race': () => import('../viz/global-brands-race/meta'),
+  'global-peace-index': () => import('../viz/global-peace-index/meta'),
+  'land-area': () => import('../viz/land-area/meta'),
+  'oil': () => import('../viz/oil/meta'),
+  'population-by-country': () => import('../viz/population-by-country/meta'),
+  'real-estate-world': () => import('../viz/real-estate-world/meta'),
+  'robotization': () => import('../viz/robotization/meta'),
+  'time-of-life': () => import('../viz/time-of-life/meta'),
+  'volunteers-by-region': () => import('../viz/volunteers-by-region/meta'),
+  'volunteers-growth': () => import('../viz/volunteers-growth/meta'),
 };

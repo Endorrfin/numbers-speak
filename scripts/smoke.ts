@@ -108,7 +108,10 @@ async function main(): Promise<void> {
   const { VizPage } = await import('../src/components/viz/VizPage');
   const { AboutPage } = await import('../src/components/pages/AboutPage');
   const { NotFound } = await import('../src/components/pages/NotFound');
-  const { CATALOG, getVizLoader } = await import('../src/catalog');
+  const { CATALOG, getVizLoader, loadCatalog } = await import('../src/catalog');
+  // CHANGED (S3-lz): CATALOG holds the cards; checks that read description, sources or data use the full manifests.
+  const MANIFESTS = await loadCatalog();
+  const { primeDetails } = await import('../src/catalog/details');
   const { TAB_IDS } = await import('../src/catalog/filter');
 
   const langs = ['en', 'uk'] as const;
@@ -191,9 +194,37 @@ async function main(): Promise<void> {
   for (const lang of langs) check('notFound', h(NotFound), lang, 150);
 
   // ── C: every visualization page + an unknown id ───────────────────────────────────────────────
+  // CHANGED (S3-lz): before its manifest loads, a page shows the head, period and dates from the card and one
+  // "Loading…" line in each panel; once loaded (primed here, as the browser's cache would hold it), the
+  // description, every source, the licence and the d3 modules.
   for (const meta of CATALOG) {
-    check(`viz:${meta.id}`, h(VizPage, { id: meta.id, params: {} }), 'en', 1200, [meta.title.en, 'About the data']);
-    check(`viz:${meta.id}`, h(VizPage, { id: meta.id, params: {} }), 'uk', 1200, [meta.title.uk, 'Про дані']);
+    for (const lang of langs) {
+      const html = check(`viz:${meta.id}:loading`, h(VizPage, { id: meta.id, params: {} }), lang, 1000, [
+        lang === 'en' ? meta.title.en : meta.title.uk,
+        lang === 'en' ? 'About the data' : 'Про дані',
+        `dateTime="${meta.updated}"`,
+        'aria-busy="true"',
+      ]);
+      const panels = html.slice(html.indexOf('class="panels"'));
+      ok((panels.match(lang === 'en' ? /Loading…/g : /Завантаження…/g) ?? []).length === 2, `viz:${meta.id}:loading [${lang}] one loading line per panel`);
+      ok(!panels.includes('class="sources"'), `viz:${meta.id}:loading [${lang}] no sources yet`);
+    }
+  }
+  for (const full of MANIFESTS) primeDetails(full);
+  const escapeText = (v: string) =>
+    v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
+  for (const full of MANIFESTS) {
+    for (const lang of langs) {
+      const firstParagraph = full.description[lang].split(/\n\s*\n/)[0]!.trim();
+      const html = check(`viz:${full.id}`, h(VizPage, { id: full.id, params: {} }), lang, 1200, [
+        lang === 'en' ? full.title.en : full.title.uk,
+        lang === 'en' ? 'About the data' : 'Про дані',
+        escapeText(firstParagraph).slice(0, 80),
+        ...full.sources.map((src) => `href="${escapeText(src.url)}"`),
+        ...(full.d3Modules ?? []).slice(0, 1),
+      ]);
+      ok(!html.includes('aria-busy'), `viz:${full.id} [${lang}] panels are not busy once the manifest is there`);
+    }
   }
   check('viz:unknown', h(VizPage, { id: 'does-not-exist', params: {} }), 'en', 150, ['There is no visualization']);
 
@@ -213,7 +244,7 @@ async function main(): Promise<void> {
   // CHANGED (S2): renders controls, legend and table with the real dataset, and hostile params.
   const { readFileSync } = await import('node:fs');
   const { primeDataset, dataUrl } = await import('../src/lib/useDataset');
-  for (const meta of CATALOG) {
+  for (const meta of MANIFESTS) {
     if (meta.data.length === 0) continue;
     for (const file of meta.data) {
       primeDataset(dataUrl(meta.id, file), JSON.parse(readFileSync(`public/data/${meta.id}/${file}`, 'utf8')));

@@ -22,6 +22,16 @@ to its sources. Quality bar: the Definition of Done in `PROJECT-BRIEF.md` §9, t
   `scripts/gen-catalog.ts` writes `src/catalog/catalog.generated.ts` (eager manifests + lazy page loaders);
   `check:catalog` fails when it is stale or when a `published` entry has no CHANGELOG line that links
   `#/v/<id>` (S3‑cl). The shell never imports a page body eagerly.
+- **Cards eager, manifests lazy (S3‑lz).** `gen-catalog` evaluates every `meta.ts` and writes only the card fields
+  (`CARD_FIELDS` / `VizCard` / `toCard` in `types.ts`: id, title, subtitle, rubrics, chart, geo, period, tags,
+  `origin.kind`, status, added, updated) as literals (`VIZ_CARDS`); the full manifest is a lazy chunk per entry
+  (`VIZ_META_LOADERS`). `CATALOG`/`getViz` return cards; `catalog/details.ts` (`useDetails`, `loadDetails`,
+  `primeDetails` — cache like `useDataset`) feeds `AboutData`/`HowBuilt`, which draw period, dates, chart type, stack
+  and code link at once and description, sources, licence, data files, d3 modules when the chunk arrives. Scripts and
+  tests that need full manifests call `await loadCatalog()`. Initial `index` 47.6 → 25.6 kB gzip; `check:catalog`
+  caps the card data at 400 B gzip per entry on average (265 now); `test-catalog-split.ts` guards that nothing outside
+  `src/viz/<id>/` imports a `meta.ts` and that no description/source URL lands in the generated file. `meta.ts` stays
+  the one file the author writes; in `npm run dev` a Vite plugin re‑runs `gen-catalog` on any `meta.ts` change.
 - **Card previews are data too (S3‑th).** `src/viz/<id>/preview.ts` = pure `preview(dataset) → CardPreview`
   (contract + validator `src/catalog/preview.ts`, helpers `previewKit.ts`), run at build time by
   `scripts/gen-previews.ts` into `src/catalog/previews.generated.json` (committed; numbers + format ids only,
@@ -57,7 +67,8 @@ to its sources. Quality bar: the Definition of Done in `PROJECT-BRIEF.md` §9, t
 ```
 src/
   main.tsx · App.tsx · vite-env.d.ts
-  catalog/     types.ts (VizMeta contract) · rubrics.ts (tabs + facet labels) · index.ts (lookups)
+  catalog/     types.ts (VizMeta contract + VizCard, S3‑lz) · rubrics.ts (tabs + facet labels) · index.ts (lookups,
+               loadCatalog) · details.ts (lazy full manifests, S3‑lz)
                filter.ts (pure filtering, unit‑tested) · catalog.generated.ts (GENERATED)
                preview.ts (CardPreview contract + validator) · previewKit.ts (build‑time helpers) ·
                previews.ts (lookup) · previews.generated.json (GENERATED, S3‑th) ·
@@ -183,6 +194,11 @@ current. **Agent sessions never push.**
 - The agent sandbox cannot reach api.worldbank.org; data refreshes are owner steps (see `data-raw/<id>/README.md`).
 - `catalog.generated.ts` is committed (typecheck needs it); `predev`/`prebuild` regenerate it; `check:catalog`
   guards staleness. Adding a visualization = new folder + `npm run gen:catalog`.
+- **Since S3‑lz the generated file holds card literals**, so *any* edit of a card field in `meta.ts` (title, tags,
+  status, dates…) makes it stale — `verify` / `predev` / `prebuild` / the dev plugin regenerate it; commit it with the
+  manifest. `CATALOG` in scripts is cards only: a check or test that reads `description`, `sources`, `data` or
+  `d3Modules` must use `await loadCatalog()` (or import the entry's `meta.ts`). A shell file that imports a `meta.ts`
+  fails `test-catalog-split` (it would pull every description back into the initial chunk).
 - `previews.generated.json` likewise (S3‑th): regenerated automatically by `npm run prep` (after a successful
   prep), `verify` (first step, together with `gen:catalog`), `predev` and `prebuild` — commit it together with the
   data. CI runs the gates step by step (not `verify`), so a JSON left uncommitted still fails `check:catalog` there
@@ -240,7 +256,9 @@ the existing entries (owner).
 **S3‑oil (2026‑10‑07):** new entry #32 `oil` (owner request, out of the improvement plan) — five angles on EI 2026,
 EIA and China customs. S3‑ps (births‑deaths‑per‑day → UN WPP) stays the next item.
 **S3‑cp (2026‑10‑07):** «Україна в цифрах» (`#/c/ua`) — improvement plan item 1 (`docs/IMPROVEMENTS.md`, the plan
-for every next item). Next: S3‑cp phase 2 (any country, country search, `?vs=`) or S3‑lz — owner's choice.
+for every next item). Next: **S3‑lz** (owner, 2026‑10‑07), then S3‑cp phase 2 (any country, search, `?vs=`).
+**S3‑lz (2026‑10‑07):** manifests split — cards eager, description/sources lazy; initial `index` 47.6 → 25.6 kB gzip.
+Next: S3‑cp phase 2 (any country, search, `?vs=`) per `docs/IMPROVEMENTS.md`.
 **S3‑el (2026‑10‑07):** new entry #33 `electricity` (owner request) — seven angles on Ember + World Bank + Energoatom.
 Follow‑ups (owner): “hours without power” by city (Svitlobot — ask its authors), EU electricity imports (ENTSO‑E token).
 
@@ -928,6 +946,38 @@ Follow‑ups (owner): “hours without power” by city (Svitlobot — ask its a
   GDP row → `#/v/gdp-by-country?page=4`, access row → `?page=14&show=access`, Ukraine on the opened page; `#/c/pl` →
   404. One fix from the screenshots: the rank column 8.5 → 11 rem (“shared 94–214 of 214” overlapped the line).
   Branch (proposed) `feat/2026-10-ukraine-in-numbers`.
-  Open: on a phone the top bar's short “Україна” sits next to the gallery's “Україна” tab; robot density lists only 22
-  economies and its page shows the top 15 (phase 2: a country ranked 16–22 opens a page without its row); Safari check
-  (owner).
+  Owner (2026‑10‑07): the short “Україна” in the top bar next to the gallery's tab — fine as is; Safari — OK; next item
+  S3‑lz (fresh session, prompt in `docs/IMPROVEMENTS.md` §4).
+  Open (phase 2): robot density lists only 22 economies and its page shows the top 15 — a country ranked 16–22 would open
+  a page without its row.
+- **S3‑lz** (2026‑10‑07) — faster first load: entry descriptions and sources out of the initial chunk (plan item 2,
+  `docs/IMPROVEMENTS.md`). Step 0 (9 scratch builds, manifests inlined minus one field, `gzip -9` of `index`): of
+  47.4 kB, `description` 18.1 · `sources` 3.8 · `subtitle` 1.3 · `tags` 0.9 · `data` 0.2 · `d3Modules` 0.1 · origin
+  details 0.02; all page‑only fields together 22.5 kB (−47 %); each entry cost ≈ 1.25 kB of `index` (≈ +19 kB more by
+  33 entries). Owner decisions (AskUserQuestion): **A** — `gen-catalog` splits, `meta.ts` stays one file (not two
+  authored files, not JSON in `public/`); panels draw the card part at once and the rest when the manifest arrives.
+  Built: `CARD_FIELDS` / `VizCard` / `toCard` (`types.ts`); `gen-catalog` async — evaluates each `meta.ts` (folder id
+  checked), writes `VIZ_CARDS` (JSON literals, key order = `CARD_FIELDS`) + `VIZ_META_LOADERS`, returns the card gzip
+  size; `CARD_BUDGET_GZIP` 400 B per entry on average in `check:catalog` (now 265); `catalog/index.ts` (`getMetaLoader`,
+  `loadCatalog`), `catalog/details.ts` (`useDetails(id | null)` — nothing loads for unknown/hidden ids; failed load not
+  cached, “Try again”); `AboutData`/`HowBuilt` take `card` + `details` (one “Loading…” line per panel, `aria-busy`
+  while loading; new `ui.detailsLoadError`); `filter.ts`, `FilterBar`, `VizCard` typed on cards; `check-data` and
+  smoke section E on `loadCatalog()`; Vite dev plugin `numbers-speak:gen-catalog` (re‑runs gen on add/change/unlink
+  of `src/viz/*/meta.ts`, one run at a time — checked with a real dev server: edit → regenerated, revert → restored).
+  Tests: `test-catalog-split.ts` (6: `toCard` fields and order, `CATALOG` = `toCard` of every manifest, no static
+  `viz/` import / description / source URL in the generated file, guard — only an entry's own files import its
+  `meta.ts` and nothing outside `src/viz` imports a viz folder, budget (cards + descriptions would break it),
+  `loadDetails` cache / unknown id rejects uncached / prime); smoke 1,708 → 2,164 (every page EN + UK before the manifest:
+  title, dates, `aria-busy`, two loading lines, no sources; after: first description paragraph, every source href, a
+  d3 module, not busy). Mutation checks: `description` added to `CARD_FIELDS` → check:catalog “1265 B per entry” +
+  test red; a shell file importing `oil/meta` → guard red; an edited title without gen → STALE.
+  `verify` green in a scratch copy (Node 25.7.0; 34 test files · 2,164 smoke checks · build): `index` **47.60 → 25.56 kB
+  gzip** (Vite; `gzip -9` 47,439 → 25,283 B); 18 `meta-*.js` chunks of 1.6–2.9 kB gzip, fetched only on their page.
+  Playwright (playwright-core 1.62.1 + cached Chromium 1234, built site under the production URL): gallery 360 EN dark /
+  1280 UK light — 18 cards, 0 manifest chunks requested; card click → oil → one manifest chunk, 5 sources; oil,
+  electricity, gdp-by-country, real-estate-world at both sizes — panels filled, no `aria-busy`, no “Loading…” left, no
+  horizontal scroll, 0 console messages; blocked manifest chunk → the one‑time `chunkReload`, then the error notice
+  with “Try again”, chart still drawn (Chrome logs the two blocked requests as `ERR_FAILED`).
+  Not in CHANGELOG (nothing new for a reader beyond speed). Branch (proposed) `perf/2026-10-lazy-details`.
+  Open: `.nvmrc` says 22 while `package.json` `engines` says `~25.7.0` (npm prints `EBADENGINE`) — align them;
+  manifest chunks are all named `meta-<hash>.js` (fine for users; a `chunkFileNames` rule could name them per id).

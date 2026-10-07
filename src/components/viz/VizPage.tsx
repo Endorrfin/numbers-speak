@@ -1,6 +1,7 @@
 import { Suspense, lazy, useMemo } from 'react';
 import type { ComponentType } from 'react';
 import { CATALOG, getViz, getVizLoader } from '../../catalog';
+import { useDetails } from '../../catalog/details';
 import { CHART_LABELS, GEO_LABELS, getRubric } from '../../catalog/rubrics';
 import { isVisible, newIds } from '../../catalog/filter';
 import type { VizBodyProps, VizParams } from '../../catalog/types';
@@ -30,6 +31,9 @@ function bodyFor(id: string): ComponentType<VizBodyProps> | undefined {
 export function VizPage({ id, params }: { id: string; params: VizParams }) {
   const { t } = useLang();
   const meta = getViz(id);
+  // CHANGED (S3-lz): the full manifest (About the data, How it's built) loads next to the body chunk; an unknown
+  // or hidden id loads nothing (it ends at NotFound below).
+  const details = useDetails(meta && isVisible(meta, IS_DEV) ? meta.id : null);
   // (S3-nw): the same "New" set as the gallery (the NEW_MAX newest), not a per-entry date check.
   const fresh = useMemo(() => newIds(CATALOG, { now: new Date(), dev: IS_DEV }), []);
 
@@ -98,8 +102,8 @@ export function VizPage({ id, params }: { id: string; params: VizParams }) {
       <ShareButton />
 
       <div className="panels">
-        <AboutData meta={meta} />
-        <HowBuilt meta={meta} />
+        <AboutData card={meta} details={details} />
+        <HowBuilt card={meta} details={details} />
       </div>
     </article>
   );

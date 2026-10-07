@@ -11,7 +11,8 @@
 |---|---|---|
 | S3‑uf | «Україна в фокусі» в рейтингах | ✅ 2026‑10‑01 |
 | S3‑nw | «New» — не більше 4 найновіших за 30 днів | ✅ 2026‑10‑07 |
-| S3‑cp | «Україна в цифрах» — профіль країни, фаза 1 (`#/c/ua`) | ✅ 2026‑10‑07 (фаза 2 — далі) |
+| S3‑cp | «Україна в цифрах» — профіль країни, фаза 1 (`#/c/ua`) | ✅ 2026‑10‑07 (фаза 2 — після S3‑lz) |
+| S3‑lz | Лінива підвантажка описів і джерел | ✅ 2026‑10‑07 — `index` 47,6 → 25,6 kB gzip (CLAUDE.md §14) |
 
 ## 1. Порядок (ранжований)
 
@@ -117,3 +118,38 @@
 - **S3‑gl**: `lib/glossary.ts` (`Localized` визначення + джерело), компонент `<Term id>` з кнопкою-підказкою.
 - **S3‑an2**: інвентар кутів без висновку в заголовку; спільний список подій (`lib/events.ts`) для часових графіків.
 - **S3‑mob / S3‑ux / S5**: див. таблицю §1.
+
+## 4. Промпт наступної сесії — S3‑lz
+
+```
+Numbers Speak / Цифри говорять — сесія S3‑lz (пункт 2 плану docs/IMPROVEMENTS.md): швидше перше завантаження —
+описи й джерела записів ліниво.
+
+ПРОЧИТАЙ: CLAUDE.md повністю (особливо §2 «Catalog = data», §3, §10–§12, §14 — записи S3‑th, S3‑oil, S3‑el, S3‑cp),
+docs/IMPROVEMENTS.md (§1 рядок S3‑lz, §3).
+
+ФАКТИ НА СТАРТ (перевір, не вір на слово):
+- Початковий чанк index: 42,7 kB gzip до oil → 45,0 (oil) → 47,1 (electricity) → 47,6 (S3‑cp). Кожен новий запис
+  додає ≈ 2 kB, переважно довгий двомовний description + sources у eager-маніфесті (catalog.generated.ts імпортує
+  meta.ts кожного запису); прев'ю карток — 3,9 kB gzip (окремо, потрібні галереї).
+- Галерея (картки, фільтри, пошук) використовує: id, title, subtitle, rubrics, chart, geo, tags, status, added, updated,
+  origin.kind, languages(?) — перевір у CatalogPage / FilterBar / VizCard / filter.ts / matchesText. Сторінка запису
+  (VizPage, AboutData, HowBuilt) — description, sources, data, d3Modules, period тощо.
+- Аналітика (hitFor) бере title.en з маніфесту; check:data, check:catalog, smoke і тести читають повні маніфести.
+
+КРОК 0 — аудит і вимір: які поля VizMeta потрібні оболонці, які лише сторінці; скільки байт gzip дає кожне поле в
+index-чанку (збірка в scratch, порівняння з/без). Результат — таблицею мені.
+КРОК 1 — пропозиція (AskUserQuestion з варіантами), напр.: (A) gen-catalog розділяє маніфест: eager «card» поля +
+lazy «details» модуль на запис (VIZ_DETAILS loaders), VizPage/AboutData чекають details; (B) details — JSON у public/;
+(C) інше, якщо аудит покаже. Критерії: SSR-smoke рендерить сторінку з деталями (prime як useDataset), check:data і
+check:catalog бачать повні маніфести, meta.ts лишається одним файлом для автора (без ручного дублювання), немає
+«Завантаження…»-спалаху там, де зараз його немає, бюджет index — виміряти й зафіксувати тестом/check.
+КРОК 2 — реалізація, тести (unit на розбиття, guard «оболонка не імпортує details»), smoke EN/UK, verify у scratch,
+Playwright (playwright-core 1.62 + кешований Chromium 1234 у scratchpad — див. S3‑cp) 360/1280 на 3–4 сторінках.
+КРОК 3 — документи: CLAUDE.md §2/§3/§12/§13/§14, docs/IMPROVEMENTS.md статус, CHANGELOG лише якщо змінилося видиме.
+
+ПРАВИЛА: як у CLAUDE.md §10–§12 — у живій папці не запускати npm і git (навіть git status); verify лише в
+scratch-копії (rsync без node_modules/.git/dist*/_examples/docs/data); перед змінами — що й чому; маркери
+// CHANGED (S3-lz); комітів не робити — запропонуй гілку (perf/2026-10-lazy-details), commit title
+«📊 Numbers Speak S3-lz: …» і description. Відповідай українською.
+```

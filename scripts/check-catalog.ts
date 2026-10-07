@@ -12,7 +12,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import type { VizMeta } from '../src/catalog/types';
-import { generate, readGenerated } from './gen-catalog';
+import { CARD_BUDGET_GZIP, generate, readGenerated } from './gen-catalog';
 import { CHANGELOG_PATH, missingFromChangelog } from './lib/changelog';
 import { FACTS_BUDGET_GZIP, generateFacts, gzipSize as factsGzip } from './lib/facts'; // CHANGED (S3-cp)
 import { PREVIEWS_BUDGET_GZIP, generatePreviews, gzipSize } from './lib/previews'; // CHANGED (S3-th)
@@ -21,9 +21,9 @@ import { listVizFolders } from './lib/viz-folders';
 // CHANGED (S3-cl): failures are collected and reported together.
 const errors: string[] = [];
 
-let result: { path: string; source: string };
+let result: Awaited<ReturnType<typeof generate>>;
 try {
-  result = generate();
+  result = await generate(); // CHANGED (S3-lz): async — it evaluates every meta.ts
 } catch (e) {
   console.error(`✗ check:catalog — ${(e as Error).message}`);
   process.exit(1);
@@ -37,6 +37,14 @@ if (onDisk !== result.source) {
   const line = (found === -1 ? Math.min(a.length, b.length) : found) + 1;
   const where = onDisk === '' ? 'is MISSING' : `is STALE (first difference at line ${line})`;
   errors.push(`src/catalog/catalog.generated.ts ${where}.\n  Fix: npm run gen:catalog`); // CHANGED (S3-cl)
+}
+
+// CHANGED (S3-lz): the cards are the catalog's whole share of the initial chunk — keep each one small.
+if (result.count > 0 && result.cardsGzip / result.count > CARD_BUDGET_GZIP) {
+  errors.push(
+    `the card data averages ${Math.round(result.cardsGzip / result.count)} B gzip per entry, over the ${CARD_BUDGET_GZIP} B` +
+      ' budget.\n  Fix: keep long text (description, sources) out of CARD_FIELDS in src/catalog/types.ts.',
+  );
 }
 
 // CHANGED (S3-cl): every published entry needs a CHANGELOG line that links its page.
