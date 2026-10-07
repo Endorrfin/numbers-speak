@@ -1,5 +1,5 @@
 // Tiny hash router (no router library — CLAUDE.md §2).
-// Routes: #/ · #/t/<tab> · #/v/<id> · #/about, each with an optional ?query for filters and chart
+// Routes: #/ · #/t/<tab> · #/v/<id> · #/c/<iso> (S3-cp) · #/about, each with an optional ?query for filters and chart
 // settings. Hash routing + vite base './' works under any GitHub Pages sub-path.
 import { useMemo, useSyncExternalStore } from 'react';
 import { isTabId } from '../catalog/filter';
@@ -9,6 +9,7 @@ import type { VizParams } from '../catalog/types';
 export type Route =
   | { name: 'catalog'; tab: TabId }
   | { name: 'viz'; id: string }
+  | { name: 'country'; code: string } // CHANGED (S3-cp): ISO 3166-1 alpha-2, upper case (#/c/ua → 'UA')
   | { name: 'about' }
   | { name: 'notFound' };
 
@@ -68,6 +69,7 @@ export function parseHash(raw: string): HashLocation {
   if (parts.length === 0) route = { name: 'catalog', tab: 'all' };
   else if (head === 't' && parts.length === 2 && arg !== undefined && isTabId(arg)) route = { name: 'catalog', tab: arg };
   else if (head === 'v' && parts.length === 2 && arg !== undefined && ID_PATTERN.test(arg)) route = { name: 'viz', id: arg };
+  else if (head === 'c' && parts.length === 2 && arg !== undefined && /^[a-z]{2}$/.test(arg)) route = { name: 'country', code: arg.toUpperCase() }; // CHANGED (S3-cp)
   else if (head === 'about' && parts.length === 1) route = { name: 'about' };
 
   return { route, params, path };
@@ -82,6 +84,8 @@ export const hrefCatalog = (tab: TabId = 'all', params?: VizParams): string =>
   withQuery(tab === 'all' ? '/' : `/t/${tab}`, params);
 export const hrefViz = (id: string, params?: VizParams): string => withQuery(`/v/${id}`, params);
 export const hrefAbout = (): string => '#/about';
+/** CHANGED (S3-cp): a country profile — '#/c/ua'. */
+export const hrefCountry = (code: string): string => `#/c/${code.toLowerCase()}`;
 
 /** Real navigation: a new history entry (hashchange fires). */
 export function navigate(href: string): void {

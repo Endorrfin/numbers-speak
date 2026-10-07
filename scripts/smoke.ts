@@ -918,6 +918,78 @@ async function main(): Promise<void> {
     check('ready:realestate one city', h(Re, { params: { cities: 'warsaw-pl' }, setParams: noop }), 'en', 1500, ['aria-label="Remove Warsaw"', 'Warsaw · #']);
   }
 
+  // CHANGED (S3-cp): "Ukraine in numbers" (#/c/ua) — loading state, ready state in EN + UK, 404 for other codes,
+  // the top-bar link, the banner on the Ukraine tab only.
+  {
+    const { CountryPage } = await import('../src/components/country/CountryPage');
+    const { FACTS_URL, FACTS_FILE } = await import('../src/catalog/facts');
+    check('country:loading', h(CountryPage, { code: 'UA' }), 'en', 300, ['Ukraine in numbers', 'Loading']);
+    primeDataset(FACTS_URL, JSON.parse(readFileSync(`public/data/${FACTS_FILE}`, 'utf8')));
+    const en = check('country:ua', h(CountryPage, { code: 'UA' }), 'en', 6000, [
+      'Ukraine in numbers',
+      'in 18 rankings of the gallery',
+      'Population, 2025',
+      'Economy',
+      'Energy',
+      '3 rankings',
+      '#58',
+      'of 218',
+      '▲1 since 2024',
+      'shared 94–214',
+      'same as 120 other countries',
+      'Figure for 2022; the ranking is for 2024',
+      'Figure for 2021; the ranking is for 2024',
+      '#1 = most peaceful',
+      '#1 = most (the source lists 79 countries)',
+      'Not in the data:',
+      'Industrial robots per 10,000 workers (the ranking lists 22 countries)',
+      'About Ukraine only',
+      'href="#/v/gdp-by-country?page=4"',
+      'href="#/v/gdp-by-country?metric=per-capita&amp;page=10"',
+      'href="#/v/births-deaths-per-day?sort=ratio"',
+      'href="#/v/air-attacks-on-ukraine"',
+      '* Internationally recognized borders',
+      'aria-label="Open the ranking: GDP"',
+    ]);
+    const uk = check('country:ua', h(CountryPage, { code: 'UA' }), 'uk', 6000, [
+      'Україна в цифрах',
+      'Де Україна у 18 рейтингах галереї',
+      'Населення, 2025',
+      'Економіка',
+      'Територія',
+      '1 рейтинг',
+      '7 рейтингів',
+      '№58',
+      'з 218',
+      '▲1 з 2024',
+      'спільне 94–214',
+      'як і ще 120 країн',
+      'Дані за 2022 рік, рейтинг — за 2024',
+      'Немає в даних:',
+      '(у рейтингу 22 країни)',
+      'Лише про Україну',
+      'Відкрити →',
+    ]);
+    for (const [lang, html] of [['en', en], ['uk', uk]] as const) {
+      ok(!/NaN|undefined|\{[a-z]+\}/.test(html), `country:ua [${lang}] has no NaN / undefined / unfilled placeholder`);
+      ok((html.match(/class="prof-row"/g) ?? []).length === 18, `country:ua [${lang}] draws 18 rows`);
+      ok((html.match(/class="prof-group"/g) ?? []).length === 6, `country:ua [${lang}] has 5 sections + "about Ukraine only"`);
+    }
+    check('country:pl', h(CountryPage, { code: 'PL' }), 'en', 150, ['Page not found']);
+    ok(!ssr(h(CountryPage, { code: 'PL' }), 'en').includes('prof-row'), 'country: no public profile for PL yet');
+    loc.hash = '#/c/ua';
+    check('App #/c/ua', h(App), 'en', 600, ['href="#/c/ua"', 'aria-current="page"', 'Ukraine in numbers']);
+    check('App #/c/ua', h(App), 'uk', 600, ['href="#/c/ua"', 'Україна в цифрах']);
+    loc.hash = '#/c/pl';
+    check('App #/c/pl', h(App), 'en', 600, ['Page not found']);
+    loc.hash = '#/c/ukr';
+    check('App #/c/ukr', h(App), 'en', 600, ['Page not found']);
+    loc.hash = '';
+    check('catalog:ukraine banner', h(CatalogPage, { tab: 'ukraine', params: {} }), 'en', 1500, ['class="country-banner" href="#/c/ua"', 'Where Ukraine stands in every ranking']);
+    check('catalog:ukraine banner', h(CatalogPage, { tab: 'ukraine', params: {} }), 'uk', 1500, ['Місце України в кожному рейтингу галереї']);
+    ok(!ssr(h(CatalogPage, { tab: 'all', params: {} }), 'en').includes('country-banner'), 'catalog: no banner outside the Ukraine tab');
+  }
+
   ok(ssr(h(AboutPage), 'en') !== ssr(h(AboutPage), 'uk'), 'EN and UK renders differ (language toggle works)');
   // CHANGED (S3-an): every page above rendered without a single request (fetch · sendBeacon · Image).
   ok(network.fetch + network.beacon + network.image === 0, `no request during render (${JSON.stringify(network)})`);

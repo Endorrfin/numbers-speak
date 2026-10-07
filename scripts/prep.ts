@@ -19,4 +19,7 @@ const r = spawnSync(process.execPath, ['--import', 'tsx', script], { stdio: 'inh
 if (r.status !== 0) process.exit(r.status ?? 1);
 // CHANGED (S3-th): keep the committed previews in step with the new data (commit the JSON with the data).
 const previews = spawnSync(process.execPath, ['--import', 'tsx', join(ROOT, 'scripts', 'gen-previews.ts')], { stdio: 'inherit' });
-process.exit(previews.status ?? 1);
+if (previews.status !== 0) process.exit(previews.status ?? 1);
+// CHANGED (S3-cp): the country facts are derived from the same data (commit public/data/country-facts.json too).
+const facts = spawnSync(process.execPath, ['--import', 'tsx', join(ROOT, 'scripts', 'gen-facts.ts')], { stdio: 'inherit' });
+process.exit(facts.status ?? 1);

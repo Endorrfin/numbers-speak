@@ -3,10 +3,12 @@
 // `focus=none` = nothing highlighted; absent = the default (Ukraine, when the list has it). The same list parser
 // serves real-estate-world's `?cities=` (city ids instead of codes).
 
+// CHANGED (S3-cp): HOME_CODE lives in home.ts (the shell needs it without this module); re-exported for the pages.
+import { HOME_CODE } from './home';
+export { HOME_CODE };
+
 /** Most countries highlighted at once on a country ranking (each one adds a Finder button). */
 export const MAX_FOCUS = 3;
-/** The reader's own country on a Ukrainian site: highlighted unless the URL says otherwise. */
-export const HOME_CODE = 'UA';
 
 const FOCUS_CODE = /^[a-z]{2}$/;
 

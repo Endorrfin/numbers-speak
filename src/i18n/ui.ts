@@ -11,6 +11,14 @@ export const ui = {
   mainNav: { en: 'Main', uk: 'Головна навігація' },
   gallery: { en: 'Gallery', uk: 'Галерея' },
   about: { en: 'About', uk: 'Про проєкт' },
+  // CHANGED (S3-cp): the country profile — top-bar link (short form on phones) and the banner on the Ukraine tab.
+  countryNav: { en: 'Ukraine in numbers', uk: 'Україна в цифрах' },
+  countryNavShort: { en: 'Ukraine', uk: 'Україна' },
+  countryBannerText: {
+    en: 'Where Ukraine stands in every ranking of the gallery, on one page.',
+    uk: 'Місце України в кожному рейтингу галереї на одній сторінці.',
+  },
+  countryBannerOpen: { en: 'Open', uk: 'Відкрити' },
   languageToggle: { en: 'Українською', uk: 'In English' },
   languageToggleLabel: { en: 'Switch the language to Ukrainian', uk: 'Перемкнути мову на англійську' },
   theme: { en: 'Theme', uk: 'Тема' },

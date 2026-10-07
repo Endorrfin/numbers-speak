@@ -16,7 +16,7 @@ to its sources. Quality bar: the Definition of Done in `PROJECT-BRIEF.md` §9, t
   there are no CDN calls and the code is typed (`@types/d3`).
 - **React owns layout and controls; D3 owns everything inside one `<svg>`.** Chart renderers are pure
   functions `render(svg, rows, options) → cleanup` (from S2), called from `useEffect`.
-- **No router library** — `src/lib/hashRouter.ts`: `#/` · `#/t/<tab>` · `#/v/<id>` · `#/about`, with a query
+- **No router library** — `src/lib/hashRouter.ts`: `#/` · `#/t/<tab>` · `#/v/<id>` · `#/c/<iso>` (S3‑cp) · `#/about`, with a query
   string for filters and chart settings. Hash routing + `vite base: './'` = works under any Pages sub‑path.
 - **Catalog = data.** One folder per visualization (`src/viz/<id>/meta.ts` + `index.tsx`).
   `scripts/gen-catalog.ts` writes `src/catalog/catalog.generated.ts` (eager manifests + lazy page loaders);
@@ -29,6 +29,13 @@ to its sources. Quality bar: the Definition of Done in `PROJECT-BRIEF.md` §9, t
   fails when it is stale, when a published entry has no preview, or over 12 kB gzip (now 3.4 kB). Rows are
   chosen by rank (top N / extremes), never by a country code — a test rejects `'UA'`‑style literals in
   `preview.ts`; ≤ 3 flags per card. No preview → the card falls back to `ChartGlyph`.
+- **Country facts are data too (S3‑cp).** `src/viz/<id>/facts.ts` = pure `facts(read) → FactTable[]` on the entry's own
+  parsers and ranking functions (contract + validator `src/catalog/facts.ts`, helpers `factKit.ts`; `FACT_ORDER` places
+  every table on the page), run by `scripts/gen-facts.ts` into `public/data/country-facts.json` (committed; every
+  country, numbers + format ids only; 29.5 kB gzip, budget 48 kB; fetched only by the profile page). `check:catalog`
+  fails when it is stale. The profile `#/c/ua` (`components/country/`, pure logic `lib/profile.ts`) is public for
+  Ukraine only (`PROFILE_CODES` in `lib/home.ts`; other codes → 404); phase 2 opens other countries without new data.
+  No `'UA'`‑style literals in `facts.ts` (test); every page with `CountryFocus` must have a `facts.ts` (test).
 - **Bilingual at the data layer:** `Localized {en, uk}` everywhere; `check:data` rejects empty strings.
 - **Anonymous page counts (S3‑an) — the one runtime third party.** `src/lib/analytics.ts` (own client, not
   GoatCounter's count.js — that counts `location.pathname`, has no DNT/GPC check, logs warnings, can `alert()`):
@@ -53,9 +60,11 @@ src/
   catalog/     types.ts (VizMeta contract) · rubrics.ts (tabs + facet labels) · index.ts (lookups)
                filter.ts (pure filtering, unit‑tested) · catalog.generated.ts (GENERATED)
                preview.ts (CardPreview contract + validator) · previewKit.ts (build‑time helpers) ·
-               previews.ts (lookup) · previews.generated.json (GENERATED, S3‑th)
+               previews.ts (lookup) · previews.generated.json (GENERATED, S3‑th) ·
+               facts.ts (country-facts contract + FACT_ORDER) · factKit.ts (S3‑cp)
   viz/<id>/    meta.ts (manifest) · index.tsx (page body, default export) · data.ts (types, parser,
-               validateDataFile) · state.ts (URL state ↔ params) · preview.ts (card preview, S3‑th)
+               validateDataFile) · state.ts (URL state ↔ params) · preview.ts (card preview, S3‑th) ·
+               facts.ts (country rankings for #/c/ua, S3‑cp)
   charts/      renderRankedBar.ts (pure renderer) · RankedBar.tsx (wrapper) · renderYearChart.ts ·
                YearChart.tsx (S3‑bd) ·
                renderButterfly.ts · Butterfly.tsx (S3‑bdd) · renderWaffle.ts · Waffle.tsx · renderStrip.ts · Strip.tsx ·
@@ -64,18 +73,19 @@ src/
                Swarm.tsx · renderDumbbell.ts · Dumbbell.tsx · renderPointMap.ts · PointMap.tsx (S3‑re) · hooks.ts · palette.ts
   components/  layout/ (TopBar, Footer) · catalog/ (CatalogPage, FilterBar, VizCard, CardPreview + previewFormat — S3‑th)
                viz/ (VizPage, AboutData, Pager — S3‑fx; Finder · FocusPicker · CountryFocus · focusText — S3‑uf) ·
-               pages/ (AboutPage, NotFound) · AppStateProvider.tsx
+               pages/ (AboutPage, NotFound) · country/ (CountryPage, text, factFormat — S3‑cp) · AppStateProvider.tsx
   i18n/        lang.ts · LangProvider.tsx · ui.ts
   lib/         hashRouter.ts · appState.ts · format.ts · utils.ts · countries.ts (ISO → name, flag URL) ·
                regions.ts (M49 enum) · dataset.ts (validators) · useDataset.ts · paginate.ts (+ pageRanges) ·
                analytics.ts (GoatCounter page counts, S3‑an) · links.ts (external URLs + counter endpoint) ·
-               focus.ts (`?focus=` / `?cities=` lists, default highlight, Finder jump — S3‑uf)
+               focus.ts (`?focus=` / `?cities=` lists, default highlight, Finder jump — S3‑uf) ·
+               home.ts (HOME_CODE, PROFILE_CODES — shell‑safe) · profile.ts (one country across fact tables — S3‑cp)
   theme/       tokens.css · global.css · components.css
-public/        favicon.svg · .nojekyll · data/<id>/*.json · flags/ (GENERATED by sync:flags, gitignored) ·
+public/        favicon.svg · .nojekyll · data/<id>/*.json · data/country-facts.json (GENERATED, committed, S3‑cp) · flags/ (GENERATED by sync:flags, gitignored) ·
                og/<id>.webp (OG share images, S5 — gallery cards use data previews, S3‑th)
 data-raw/      <id>/ raw files + prep.ts + README.md · _shared/m49.ts · _shared/numbeo.ts (Numbeo names → ISO,
                S3‑re) · _shared/world-atlas-land-110m.json + LICENSE (Natural Earth land, S3‑re) (committed, not deployed)
-scripts/       gen-catalog.ts · gen-previews.ts (S3‑th) · check-catalog.ts · check-data.ts · prep.ts · sync-flags.ts · run-tests.ts ·
+scripts/       gen-catalog.ts · gen-previews.ts (S3‑th) · gen-facts.ts (S3‑cp) · check-catalog.ts · check-data.ts · prep.ts · sync-flags.ts · run-tests.ts ·
                test-*.ts (incl. jsdom render tests) · smoke.ts · css-stub-hooks.mjs ·
                lib/ (viz-folders.ts · changelog.ts — the CHANGELOG check, S3‑cl · previews.ts — build/round/budget, S3‑th)
 _examples/     legacy D3 pages being ported (gitignored — never committed)
@@ -178,6 +188,8 @@ current. **Agent sessions never push.**
   data. CI runs the gates step by step (not `verify`), so a JSON left uncommitted still fails `check:catalog` there
   (only a hand edit of `public/data` committed without prep or verify can reach CI stale). It is imported by the
   shell, so it counts against the initial bundle (budget 12 kB gzip).
+- `public/data/country-facts.json` (S3‑cp) follows the previews: `gen:facts` runs in `prep`, `verify`, `predev`, `prebuild`;
+  commit it with the data — CI's `check:catalog` fails when it is stale.
 - Playwright cannot download a browser in the device VM; screenshots of a scratch build go through the cloud
   sandbox (tar the build into the gitignored `dist-*/`, stage it, serve it there).
 - The SSR smoke runs under `tsx` (no Vite): keep `import.meta.env` access optional (`import.meta.env?.DEV`).
@@ -227,6 +239,8 @@ the existing entries (owner).
 "About the data") → births‑deaths‑per‑day UK 360 px heading → S3‑ux.
 **S3‑oil (2026‑10‑07):** new entry #32 `oil` (owner request, out of the improvement plan) — five angles on EI 2026,
 EIA and China customs. S3‑ps (births‑deaths‑per‑day → UN WPP) stays the next item.
+**S3‑cp (2026‑10‑07):** «Україна в цифрах» (`#/c/ua`) — improvement plan item 1 (`docs/IMPROVEMENTS.md`, the plan
+for every next item). Next: S3‑cp phase 2 (any country, country search, `?vs=`) or S3‑lz — owner's choice.
 **S3‑el (2026‑10‑07):** new entry #33 `electricity` (owner request) — seven angles on Ember + World Bank + Energoatom.
 Follow‑ups (owner): “hours without power” by city (Svitlobot — ask its authors), EU electricity imports (ENTSO‑E token).
 
@@ -885,3 +899,35 @@ Follow‑ups (owner): “hours without power” by city (Svitlobot — ask its a
   `CatalogPage` and `VizPage` share it. Today: electricity, oil, crime-index, global-peace-index. `test-filter` +1 (cap,
   ties, draft only in dev). Scratch copy: typecheck · lint · check:catalog · 32 test files · 1,636 smoke checks — green.
   Branch (proposed) `s3-nw-new-badge-cap`.
+- **S3‑cp** (2026‑10‑07) — «Україна в цифрах / Ukraine in numbers» (`#/c/ua`), item 1 of the new plan
+  `docs/IMPROVEMENTS.md` (owner asked for a written plan; it merges `docs/info.txt` items 2–6 with the review of
+  2026‑10‑07). Step 0 audit: Ukraine is in 25 lists of the gallery (all but IFR robots and OECD time use); rank 1 means
+  different things (largest GDP, most peaceful, most deaths per birth); years differ (UNODC 2021, Ember 2022, WPP
+  2025/26); 121 countries share rank 94 at 100 % electricity access. Owner decisions: only `#/c/ua` public, data for
+  every country; neutral — no good/bad colours, a 1…N line with a dot + “#1 = …” under each name; name «Україна в
+  цифрах», top‑bar link + banner on the Ukraine tab; mockup approved (v2: sections with a heavy rule + display heading);
+  all five mockup questions as recommended (18 rankings, latest year, one variant; “Not in the data” line; rank change
+  where the source has the previous edition; KPIs population · GDP · deaths per birth · GPI; “About Ukraine only” from
+  the card previews' key figures). Built: contract `catalog/facts.ts` (19 tables in `FACT_ORDER`, rows `[code, rank,
+  value]` in the page's list order, `years` / `marked` / `prev`, `link` + `pageSize` so a row opens the page that shows
+  the country), `factKit.ts`, ten `src/viz/<id>/facts.ts`, `scripts/gen-facts.ts` + `scripts/lib/facts.ts` →
+  `public/data/country-facts.json` (29.5 kB gzip), `check:catalog` staleness + budget, `gen:facts` in prep / verify /
+  predev / prebuild; route `country` + `hrefCountry`, page counter `/#/c/ua` (other codes `/#/404`), `App` sends a code
+  without a profile straight to NotFound; `lib/home.ts` (HOME_CODE moved out of focus.ts, re‑exported there, so the
+  shell does not pull focus.ts); `lib/profile.ts` (ties, own year, borders, change, link with `page` and — for other
+  countries — `focus`); `components/country/` (CountryPage, text.ts with Ukrainian plurals, factFormat.ts); TopBar link
+  (“Україна” / “Ukraine” under 760 px, full accessible name), banner on `#/t/ukraine`; `.prof-*` / `.country-*` CSS.
+  Tests: `test-facts.ts` (10: order + budget + freshness, Ukraine's 18 places, raw‑file cross‑checks (population, GPI
+  with its rank changes, land), ties / own years / borders / changes, links and pages, competition ranks, 10 validator
+  rejections, no country literal + every CountryFocus page has facts.ts, route + counter path, words and numbers EN/UK).
+  Smoke 1,636 → 1,708 (loading and ready states EN + UK, 18 rows, 6 sections, hrefs with page, no NaN / placeholders,
+  404 for PL and `ukr`, top bar `aria-current`, banner only on the Ukraine tab). `verify` green in a scratch copy (33
+  test files · 1,708 smoke checks · build); initial `index` chunk 47.06 → 47.60 kB gzip, `CountryPage` chunk 5.3 kB
+  gzip. Playwright (Chromium 1234 via playwright-core 1.62 in the scratchpad, built site under the production URL):
+  360 / 390 / 768 / 1280 EN dark and UK light — no horizontal scroll, nothing outside the column, 0 console messages;
+  GDP row → `#/v/gdp-by-country?page=4`, access row → `?page=14&show=access`, Ukraine on the opened page; `#/c/pl` →
+  404. One fix from the screenshots: the rank column 8.5 → 11 rem (“shared 94–214 of 214” overlapped the line).
+  Branch (proposed) `feat/2026-10-ukraine-in-numbers`.
+  Open: on a phone the top bar's short “Україна” sits next to the gallery's “Україна” tab; robot density lists only 22
+  economies and its page shows the top 15 (phase 2: a country ranked 16–22 opens a page without its row); Safari check
+  (owner).

@@ -2,7 +2,8 @@ import { useLang } from '../../i18n/lang';
 import { ui } from '../../i18n/ui';
 import { useAppState } from '../../lib/appState';
 import type { ThemeMode } from '../../lib/appState';
-import { hrefAbout, hrefCatalog } from '../../lib/hashRouter';
+import { hrefAbout, hrefCatalog, hrefCountry } from '../../lib/hashRouter';
+import { HOME_CODE } from '../../lib/home';
 import type { Route } from '../../lib/hashRouter';
 import { cx } from '../../lib/utils';
 
@@ -40,6 +41,18 @@ export function TopBar({ route }: { route: Route }) {
           aria-current={route.name === 'catalog' ? 'page' : undefined}
         >
           {t(ui.gallery)}
+        </a>
+        {/* CHANGED (S3-cp): the country profile. Phones show the short word; the accessible name stays full. */}
+        <a
+          className={cx('topnav-link', route.name === 'country' && 'is-active')}
+          href={hrefCountry(HOME_CODE)}
+          aria-current={route.name === 'country' ? 'page' : undefined}
+          aria-label={t(ui.countryNav)}
+        >
+          <span className="nav-long">{t(ui.countryNav)}</span>
+          <span className="nav-short" aria-hidden="true">
+            {t(ui.countryNavShort)}
+          </span>
         </a>
         <a
           className={cx('topnav-link', route.name === 'about' && 'is-active')}

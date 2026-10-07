@@ -3,6 +3,18 @@
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
 ## 2026‑10‑07
+- **New:** [Ukraine in numbers / Україна в цифрах](https://endorrfin.github.io/numbers-speak/#/c/ua) — Ukraine's place
+  in 18 rankings of the gallery on one page, in five sections (economy, people, land, security, energy), each row
+  computed from the same file as the visualization's page and opening it with Ukraine in view: 58th of 218 by GDP
+  (▲1 since 2024), 40th of 237 by population, 1st of 224 by deaths per birth, 160th of 163 in the Global Peace Index,
+  36th of 211 by electricity generation (2022, the last published year). Then the key figures of the five entries about
+  Ukraine only. Linked from the top bar and the Ukraine tab. /
+  Місце України у 18 рейтингах галереї на одній сторінці, у п'яти розділах (економіка, люди, територія, безпека,
+  енергетика). Кожен рядок пораховано з того самого файлу, що й на сторінці інфографіки, і він відкриває ту сторінку з
+  Україною на видноті: 58-ме з 218 за ВВП (▲1 з 2024 року), 40-ве з 237 за населенням, 1-ше з 224 за кількістю смертей
+  на одне народження, 160-те з 163 у Global Peace Index, 36-те з 211 за виробництвом електроенергії (2022 — останній
+  опублікований рік). Далі — ключові числа п'яти записів лише про Україну. Посилання — у шапці сайту й на вкладці
+  «Україна».
 - **New:** [Electricity: who generates it and from what, 2000–2025 / Електроенергія: хто виробляє і з чого, 2000–2025](https://endorrfin.github.io/numbers-speak/#/v/electricity) —
   seven angles on Ember's data. In 2025 renewables gave 33.8 % of the world's electricity and coal 33.1 % — the first
   year renewables came out ahead ([the world since 2000](https://endorrfin.github.io/numbers-speak/#/v/electricity?show=world));
