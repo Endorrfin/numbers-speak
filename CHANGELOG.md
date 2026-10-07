@@ -2,6 +2,20 @@
 
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
+## 2026‑10‑07
+- **New:** [Oil: who uses it and who sells it, 1965–2025 / Нафта: хто споживає і хто продає, 1965–2025](https://endorrfin.github.io/numbers-speak/#/v/oil) —
+  five angles on primary sources. The world used 103 million barrels a day in 2025, the US and China 35.7 % of it;
+  Ukraine 285 thousand (47th of 79 — 1.27 million in 1985). Sixty years as a bar chart race (China passes Japan, then
+  everyone but the US). Where U.S. crude imports come from, any year since 1973 and Jan–Jul 2026: Canada 63 % in 2025
+  ([Venezuela 2nd in 2026](https://endorrfin.github.io/numbers-speak/#/v/oil?show=us&year=2026)). Where China's come
+  from, as its customs record them: Russia 17.4 %, then Saudi Arabia and “Malaysia” — oil relabelled at sea. Who buys
+  crude from whom between world areas: the Middle East sells 43 % of it, China buys 26 %. /
+  П’ять поглядів на основі першоджерел. Світ спожив 103 млн барелів на добу у 2025 році, США й Китай — 35,7 % з них;
+  Україна — 285 тис. (47-ме місце з 79; 1,27 млн у 1985 році). Шістдесят років як перегони стовпців. Звідки імпорт
+  сирої нафти США — будь-який рік з 1973-го і січень–липень 2026-го: Канада — 63 % у 2025 році. Звідки нафта Китаю за
+  даними його митниці: Росія — 17,4 %, далі Саудівська Аравія й «Малайзія» — нафта, перемаркована в морі. Хто в кого
+  купує: Близький Схід продає 43 % світової сирої нафти, Китай купує 26 %.
+
 ## 2026‑10‑01
 - **Updated:** Ukraine in focus on six country rankings —
   [GDP by country / ВВП країн](https://endorrfin.github.io/numbers-speak/#/v/gdp-by-country) ·

@@ -45,7 +45,7 @@ const get = (id: string): CardPreview => {
 
 await test('every published entry has a preview; every preview passes the contract', async () => {
   const { ids } = await generatePreviews();
-  assert.equal(ids.length, 16); // CHANGED (S3-re): + real-estate-world
+  assert.equal(ids.length, 17); // CHANGED (S3-re): + real-estate-world; CHANGED (S3-oil): + oil
   for (const [id, p] of built) assert.deepEqual(parseCardPreview(p, id), p);
 });
 
@@ -79,6 +79,15 @@ await test('population-by-country: top five, India + China share of the world', 
   close(one(p.key).value, (1_463_865_525 + 1_416_096_094) / 8_231_613_070, 1e-5);
   assert.equal(formatKeyValue(p.key, 'en'), '35%');
   assert.equal(formatKeyLabel(p.key, 'en'), 'India + China: share of the world population');
+});
+
+// CHANGED (S3-oil): the oil card — five largest consumers of the EI's latest year, the top two's share of the world.
+await test('oil: top five consumers, the two largest consumers’ share of the world', () => {
+  const p = get('oil');
+  assert.deepEqual(rowsOf(p).rows.map((r) => r.code), ['US', 'CN', 'IN', 'SA', 'RU']);
+  close(one(p.key).value, (19_403.8 + 17_360.4) / 103_038.7, 1e-3);
+  assert.equal(formatKeyValue(p.key, 'en'), '36%');
+  assert.equal(formatKeyLabel(p.key, 'en'), 'United States + China: share of the world’s oil');
 });
 
 await test('rankings: gdp, gdp-ppp, land-area, crime-index, robotization', () => {

@@ -465,6 +465,68 @@ async function main(): Promise<void> {
     ok(!europe.includes(' India</th>'), 'ready:population europe filter excludes Asia (the global KPI still names India)');
   }
 
+  // CHANGED (S3-oil): oil — five angles (consumption + per person, race, U.S. imports incl. the partial year and the
+  // unitemised remainder, China customs + the relabelling note, trade between areas both sides), tables, EN + UK,
+  // hostile params. Expectations come from the shipped files through the entry's own derivations.
+  if (CATALOG.some((m) => m.id === 'oil')) {
+    const { default: Oil } = await import('../src/viz/oil/index');
+    const oD = await import('../src/viz/oil/data');
+    const { formatKbd } = await import('../src/lib/format');
+    const { countryName: cName } = await import('../src/lib/countries');
+    const O = (f: string): unknown => JSON.parse(readFileSync(`public/data/oil/${f}`, 'utf8'));
+    const cons = oD.parseConsumption(O(oD.FILES.consumption));
+    const usD = oD.parseUsImports(O(oD.FILES.us));
+    const cnD = oD.parseChinaImports(O(oD.FILES.china));
+    const ranked = oD.rankConsumption(cons, 'total', null);
+    const uaPos = ranked.find((r) => r.code === 'UA')!;
+    const r = (label: string, params: Record<string, string>, lang: 'en' | 'uk', inc: string[]): string => {
+      const html = check(`ready:oil ${label}`, h(Oil, { params, setParams: noop }), lang, 1500, inc);
+      ok(!/NaN|undefined|\{[a-z]+\}/.test(html.replace(/<[^>]+>/g, ' ')), `ready:oil ${label} [${lang}] no NaN / undefined / unfilled {placeholder}`);
+      return html;
+    };
+    const top2 = `${cName(ranked[0]!.code, 'en')} + ${cName(ranked[1]!.code, 'en')}: share of the world`;
+    r('consumption', {}, 'en', [
+      'role="img"',
+      `Showing 1–15 of ${ranked.length}`,
+      `World, ${cons.to}: ${formatKbd(cons.world.at(-1)!, 'en')}`,
+      top2,
+      `Ukraine · #${uaPos.rank}`,
+      'kpi kpi-home',
+      `Ukraine: rank ${uaPos.rank} of ${ranked.length}`,
+      'Barrels a day',
+    ]);
+    r('consumption uk', {}, 'uk', ['Хто споживає', `Україна · №${uaPos.rank}`, 'Світ, 2025']);
+    const pc = r('per person', { metric: 'per-capita' }, 'en', ['Per person', 'Highest per person', 'Population by country', 'ships and aircraft']);
+    ok(pc.includes('Singapore'), 'ready:oil per person names the top hub');
+    const table = r('table', { view: 'table' }, 'en', ['<table', '19,404', 'Change since 2015', '<tr class="is-home">']);
+    ok(inTable(table).indexOf('United States') < inTable(table).indexOf('China'), 'ready:oil table order');
+    ok(!inTable(r('europe', { region: 'europe', view: 'table' }, 'en', ['Germany'])).includes('>  India<'), 'ready:oil europe filter');
+    r('race', { show: 'race' }, 'en', ['Race controls', `${cons.to} · #1 United States`, 'USSR: the EI reports']);
+    r('race 1970 table', { show: 'race', year: '1970', view: 'table' }, 'en', ['<table', 'USSR', 'Oil consumption by country, 1970']);
+    r('race uk', { show: 'race', year: '1990' }, 'uk', ['Керування перегонами', `1990 · №1 ${cName('US', 'uk')}`]);
+    const top = oD.usSuppliers(usD, usD.to)[0]!;
+    r('us', { show: 'us' }, 'en', [
+      `U.S. crude imports, ${usD.to}: ${formatKbd(usD.total.at(-1)!, 'en')}`,
+      `#1 ${cName(top.code, 'en')}: share of all imports`,
+      'The five largest suppliers ever',
+      `${usD.partial.year} (Jan–Jul)`,
+    ]);
+    r('us partial', { show: 'us', year: String(usD.partial.year) }, 'en', [`U.S. crude imports, ${usD.partial.year} (Jan–Jul)`]);
+    r('us 1980 table', { show: 'us', year: '1980', view: 'table' }, 'en', ['Not itemised by the EIA', 'not itemised by country']);
+    r('us uk', { show: 'us' }, 'uk', ['Імпорт сирої нафти США', 'П’ять найбільших постачальників']);
+    const cnTop = oD.chinaSuppliers(cnD, cnD.years.at(-1)!)[0]!;
+    r('china', { show: 'china' }, 'en', [`#1 ${cName(cnTop.code, 'en')}: share of all imports`, 'Malaysia', 'Other Middle East', 'Iran itself does not appear', '7.33 barrels a tonne']);
+    const cn24 = r('china 2024', { show: 'china', year: '2024' }, 'en', ['China’s crude imports, 2024']);
+    ok(!cn24.includes('Other Middle East'), 'ready:oil china 2024: no EI 2025 note');
+    r('china table', { show: 'china', view: 'table' }, 'en', ['<table', '≈ US$ a barrel', 'Change vs 2024']);
+    r('china uk', { show: 'china' }, 'uk', ['Імпорт сирої нафти Китаю', 'Малайзія']);
+    r('flows', { show: 'flows' }, 'en', ['Buyers', 'Sellers', 'Where the oil comes from', 'Middle East: share of world exports', 'China: share of world imports']);
+    r('flows exporters table', { show: 'flows', side: 'exporters', view: 'table' }, 'en', ['<table', 'Saudi Arabia', 'Crude oil exports by area and buyer']);
+    r('flows uk', { show: 'flows' }, 'uk', ['Хто в кого купує', 'Звідки нафта']);
+    r('hostile', { show: 'x', metric: '<b>', year: '99999', side: 'all', page: '-3', focus: 'qq', region: 'mars' }, 'en', ['QQ: not in this list']);
+    r('hostile us year', { show: 'us', year: '1900' }, 'en', [`U.S. crude imports, ${usD.to}:`]);
+  }
+
   // CHANGED (S3-rb): GDP (PPP) per capita — three years, "× world average", table, region filter, EN + UK.
   if (CATALOG.some((m) => m.id === 'gdp-ppp-per-capita')) {
     const { default: Ppp } = await import('../src/viz/gdp-ppp-per-capita/index');

@@ -173,3 +173,28 @@ export function formatSquareMetres(value: number, lang: Lang): string {
 export function formatPercentTick(value: number, lang: Lang): string {
   return nf(lang, 'pct-tick', { style: 'percent', maximumFractionDigits: 0 }).format(value / 100);
 }
+
+// CHANGED (S3-oil): oil volumes. Thousand barrels a day (kb/d) are written in barrels with Intl's compact words;
+// the unit is plain text ("b/d" / "б/д"), like the area and density formatters above.
+/** Thousand barrels a day: 19_403.8 → '19.4M b/d' / '19,4 млн б/д', 284.8 → '285K b/d' (3 significant digits). */
+export function formatKbd(kbd: number, lang: Lang): string {
+  return (
+    nf(lang, 'kbd', { notation: 'compact', minimumSignificantDigits: 3, maximumSignificantDigits: 3 }).format(kbd * 1000) +
+    (lang === 'uk' ? ' б/д' : ' b/d')
+  );
+}
+
+/** Axis ticks for kb/d: 20_000 → '20M' / '20 млн' (the axis title names the unit). */
+export function formatKbdTick(kbd: number, lang: Lang): string {
+  return nf(lang, 'kbd-tick', { notation: 'compact', maximumFractionDigits: 1 }).format(kbd * 1000);
+}
+
+/** Barrels per person a year: 21.64 → '21.6 bbl' / '21,6 бар.'; below 10 one decimal too, never '0'. */
+export function formatBarrels(value: number, lang: Lang): string {
+  return nf(lang, 'bbl', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(value) + (lang === 'uk' ? ' бар.' : ' bbl');
+}
+
+/** Signed change as a percentage with one decimal: 0.0123 → '+1.2%', −0.78 → '−78.0%'; 0 → '0.0%'. */
+export function formatChangePct(ratio: number, lang: Lang): string {
+  return nf(lang, 'chg-pct', { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1, signDisplay: 'exceptZero' }).format(ratio);
+}
