@@ -3,7 +3,9 @@ import assert from 'node:assert/strict';
 import {
   filterCatalog,
   hasActiveFilters,
-  isNew,
+  inNewWindow,
+  NEW_MAX,
+  newIds,
   parseCatalogQuery,
   tabEntries,
   toCatalogParams,
@@ -80,10 +82,28 @@ test('topic tabs include primary and secondary members, primary first', () => {
 });
 
 test('the New tab keeps entries added within 30 days', () => {
-  assert.equal(isNew(viz({ added: '2026-08-18' }), now), true);
-  assert.equal(isNew(viz({ added: '2026-08-17' }), now), false);
-  assert.equal(isNew(viz({ added: '2026-09-18' }), now), false); // future dates are not "new"
+  assert.equal(inNewWindow(viz({ added: '2026-08-18' }), now), true);
+  assert.equal(inNewWindow(viz({ added: '2026-08-17' }), now), false);
+  assert.equal(inNewWindow(viz({ added: '2026-09-18' }), now), false); // future dates are not "new"
   assert.deepEqual(filterCatalog(ITEMS, { tab: 'new' }, prod).map((m) => m.id), ['air']);
+});
+
+// (S3-nw): a young gallery (every entry inside the window) must not show "New" everywhere.
+test(`"New" is capped at the ${NEW_MAX} most recent entries, equal dates in id order`, () => {
+  const young = [
+    viz({ id: 'a', added: '2026-09-01' }),
+    viz({ id: 'b', added: '2026-09-05' }),
+    viz({ id: 'c', added: '2026-09-10' }),
+    viz({ id: 'e', added: '2026-09-12' }),
+    viz({ id: 'd', added: '2026-09-12' }),
+    viz({ id: 'f', added: '2026-09-15' }),
+    viz({ id: 'g', added: '2026-09-16', status: 'draft' }),
+  ];
+  assert.equal(NEW_MAX, 4);
+  assert.deepEqual([...newIds(young, prod)], ['f', 'd', 'e', 'c']); // the draft is invisible in prod
+  assert.deepEqual([...newIds(young, { now, dev: true })], ['g', 'f', 'd', 'e']);
+  assert.deepEqual(filterCatalog(young, { tab: 'new' }, prod).map((m) => m.id).sort(), ['c', 'd', 'e', 'f']);
+  assert.equal(tabEntries(young, 'all', prod).length, 6);
 });
 
 test('facets combine with AND', () => {

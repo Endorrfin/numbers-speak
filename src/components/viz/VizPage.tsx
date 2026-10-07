@@ -1,8 +1,8 @@
 import { Suspense, lazy, useMemo } from 'react';
 import type { ComponentType } from 'react';
-import { getViz, getVizLoader } from '../../catalog';
+import { CATALOG, getViz, getVizLoader } from '../../catalog';
 import { CHART_LABELS, GEO_LABELS, getRubric } from '../../catalog/rubrics';
-import { isNew, isVisible } from '../../catalog/filter';
+import { isVisible, newIds } from '../../catalog/filter';
 import type { VizBodyProps, VizParams } from '../../catalog/types';
 import { useLang } from '../../i18n/lang';
 import { ui } from '../../i18n/ui';
@@ -30,7 +30,8 @@ function bodyFor(id: string): ComponentType<VizBodyProps> | undefined {
 export function VizPage({ id, params }: { id: string; params: VizParams }) {
   const { t } = useLang();
   const meta = getViz(id);
-  const now = useMemo(() => new Date(), []);
+  // (S3-nw): the same "New" set as the gallery (the NEW_MAX newest), not a per-entry date check.
+  const fresh = useMemo(() => newIds(CATALOG, { now: new Date(), dev: IS_DEV }), []);
 
   if (!meta || !isVisible(meta, IS_DEV)) {
     return <NotFound message={t(ui.vizNotFound)} />;
@@ -51,7 +52,7 @@ export function VizPage({ id, params }: { id: string; params: VizParams }) {
         <div className="card-badges">
           {meta.status === 'soon' && <span className="badge badge-soon">{t(ui.badgeSoon)}</span>}
           {meta.status === 'draft' && <span className="badge badge-draft">{t(ui.badgeDraft)}</span>}
-          {isNew(meta, now) && <span className="badge badge-new">{t(ui.badgeNew)}</span>}
+          {fresh.has(meta.id) && <span className="badge badge-new">{t(ui.badgeNew)}</span>}
         </div>
       </div>
 

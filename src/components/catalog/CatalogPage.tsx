@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { CATALOG } from '../../catalog';
 import { getRubric } from '../../catalog/rubrics';
-import { filterCatalog, isNew, parseCatalogQuery, TAB_IDS, tabEntries, toCatalogParams } from '../../catalog/filter';
+import { filterCatalog, newIds, parseCatalogQuery, TAB_IDS, tabEntries, toCatalogParams } from '../../catalog/filter';
 import type { CatalogQuery, TabId } from '../../catalog/filter';
 import type { VizParams } from '../../catalog/types';
 import { useLang } from '../../i18n/lang';
@@ -17,6 +17,7 @@ export function CatalogPage({ tab, params }: { tab: TabId; params: VizParams }) 
   // `now` is read once per render: "New" badges and the New tab agree within a page view.
   const now = useMemo(() => new Date(), []);
   const opts = useMemo(() => ({ now, dev: IS_DEV }), [now]);
+  const fresh = useMemo(() => newIds(CATALOG, opts), [opts]);
 
   const query = useMemo(() => parseCatalogQuery(tab, params), [tab, params]);
   const pool = useMemo(() => tabEntries(CATALOG, tab, opts), [tab, opts]);
@@ -52,7 +53,7 @@ export function CatalogPage({ tab, params }: { tab: TabId; params: VizParams }) 
         <ul className="card-grid">
           {items.map((m) => (
             <li key={m.id}>
-              <VizCard meta={m} isNew={isNew(m, now)} />
+              <VizCard meta={m} isNew={fresh.has(m.id)} />
             </li>
           ))}
         </ul>

@@ -4,6 +4,9 @@ import { CHART_KINDS, GEOS, RUBRIC_IDS } from './types';
 import type { ChartKind, Geo, RubricId, VizMeta, VizParams } from './types';
 
 export const NEW_WINDOW_DAYS = 30;
+// (S3-nw): at most this many entries wear "New" — with a 30-day window alone, a gallery younger than
+// 30 days showed "New" on every card and the New tab repeated All (18 of 18 on 2026-10-07).
+export const NEW_MAX = 4;
 const DAY_MS = 86_400_000;
 
 export type TabId = 'all' | 'new' | RubricId;
@@ -56,8 +59,8 @@ export function isVisible(meta: VizMeta, dev: boolean): boolean {
   return meta.status !== 'draft' || dev;
 }
 
-/** "New" = added 0…30 calendar days ago (UTC dates, so the hour of the visit doesn't matter). */
-export function isNew(meta: VizMeta, now: Date): boolean {
+/** Added 0…30 calendar days ago (UTC dates, so the hour of the visit doesn't matter). */
+export function inNewWindow(meta: VizMeta, now: Date): boolean {
   const added = Date.parse(`${meta.added}T00:00:00Z`);
   if (Number.isNaN(added)) return false;
   const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
@@ -65,9 +68,19 @@ export function isNew(meta: VizMeta, now: Date): boolean {
   return days >= 0 && days <= NEW_WINDOW_DAYS;
 }
 
-export function inTab(meta: VizMeta, tab: TabId, now: Date): boolean {
+// (S3-nw): "New" = the NEW_MAX most recently added visible entries inside the window
+// (equal dates → id order, so the set is deterministic). One set feeds the badges and the New tab.
+export function newIds(items: readonly VizMeta[], opts: FilterOptions): ReadonlySet<string> {
+  const recent = items
+    .filter((m) => isVisible(m, opts.dev) && inNewWindow(m, opts.now))
+    .sort((a, b) => (a.added !== b.added ? (a.added < b.added ? 1 : -1) : a.id.localeCompare(b.id)))
+    .slice(0, NEW_MAX);
+  return new Set(recent.map((m) => m.id));
+}
+
+export function inTab(meta: VizMeta, tab: TabId, fresh: ReadonlySet<string>): boolean {
   if (tab === 'all') return true;
-  if (tab === 'new') return isNew(meta, now);
+  if (tab === 'new') return fresh.has(meta.id);
   return meta.rubrics.includes(tab);
 }
 
@@ -101,7 +114,8 @@ export type FilterOptions = { now: Date; dev: boolean };
 
 /** Entries visible in a tab, before facet filters (used for tab counts and facet options). */
 export function tabEntries(items: readonly VizMeta[], tab: TabId, opts: FilterOptions): VizMeta[] {
-  return items.filter((m) => isVisible(m, opts.dev) && inTab(m, tab, opts.now));
+  const fresh = newIds(items, opts);
+  return items.filter((m) => isVisible(m, opts.dev) && inTab(m, tab, fresh));
 }
 
 export function filterCatalog(items: readonly VizMeta[], query: CatalogQuery, opts: FilterOptions): VizMeta[] {
