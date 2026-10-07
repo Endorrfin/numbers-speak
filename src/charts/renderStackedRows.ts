@@ -13,13 +13,28 @@ import { scaleLinear, select } from 'd3';
 import type { YearTooltip } from './renderYearChart';
 
 export type SrSegment = { key: string; value: number; color: string };
-export type SrRow = { key: string; label: string; sublabel?: string; segments: readonly SrSegment[]; valueLabel: string; tooltip?: YearTooltip };
+// CHANGED (S3-el): optional `emphasis` (accent band + bold label, as RankedBar's); omitted = the row is drawn as before.
+export type SrRow = {
+  key: string;
+  label: string;
+  sublabel?: string;
+  segments: readonly SrSegment[];
+  valueLabel: string;
+  tooltip?: YearTooltip;
+  emphasis?: boolean;
+  /** CHANGED (S3-el): optional 4:3 image beside the label (a flag), as in RankedBar; omitted = no space reserved. */
+  imageUrl?: string;
+};
 export type SrSpec = { rows: readonly SrRow[] };
 export type SrOptions = { width: number; reducedMotion: boolean; tooltip: HTMLElement | null; narrowBelow?: number };
 export type SrLayout = { narrow: boolean; height: number; labelW: number; rowH: number; barX: number; barMaxW: number };
 
 const CHAR = 0.58;
 const FADE = 350;
+const FLAG_W = 20;
+const FLAG_H = 15;
+/** Room a flag takes: the flag + 8 px before the bar (wide) or before the label (narrow). */
+const FLAG_SPACE = FLAG_W + 8;
 
 export function layoutStackedRows(spec: SrSpec, width: number, narrowBelow = 560): SrLayout {
   const narrow = width < narrowBelow;
@@ -27,7 +42,8 @@ export function layoutStackedRows(spec: SrSpec, width: number, narrowBelow = 560
   const labelW = narrow ? 0 : Math.min(260, Math.ceil(longest * 13 * CHAR) + 16);
   const valueW = Math.ceil(Math.max(1, ...spec.rows.map((r) => r.valueLabel.length)) * 12 * CHAR) + 14;
   const rowH = narrow ? 46 : spec.rows.some((r) => r.sublabel) ? 38 : 30;
-  const barX = labelW;
+  // CHANGED (S3-el): flags sit between the label and the bar; on phones before the label (the bar keeps x = 0).
+  const barX = narrow ? 0 : labelW + (spec.rows.some((r) => r.imageUrl) ? FLAG_SPACE : 0);
   return { narrow, height: spec.rows.length * rowH + 8, labelW, rowH, barX, barMaxW: Math.max(40, width - barX - valueW) };
 }
 
@@ -51,13 +67,27 @@ export function renderStackedRows(svgEl: SVGSVGElement, spec: SrSpec, options: S
     .join('g')
     .attr('class', 'sr-row')
     .attr('transform', (_, i) => `translate(0,${i * L.rowH})`);
+  rows.filter((d) => Boolean(d.emphasis)).classed('is-emphasis', true); // CHANGED (S3-el)
 
   rows.append('rect').attr('class', 'sr-hit').attr('x', 0).attr('y', 0).attr('width', width).attr('height', L.rowH);
   const barY = (L.narrow ? 26 : (L.rowH - barH) / 2);
+  const flagged = spec.rows.some((r) => r.imageUrl);
+  if (flagged) {
+    rows
+      .filter((d) => Boolean(d.imageUrl))
+      .append('image')
+      .attr('class', 'sr-flag')
+      .attr('href', (d) => d.imageUrl ?? null)
+      .attr('width', FLAG_W)
+      .attr('height', FLAG_H)
+      .attr('x', L.narrow ? 0 : L.labelW - 4)
+      .attr('y', L.narrow ? 3 : barY + barH / 2 - FLAG_H / 2)
+      .attr('preserveAspectRatio', 'xMidYMid slice');
+  }
   rows
     .append('text')
     .attr('class', 'sr-label')
-    .attr('x', L.narrow ? 0 : L.labelW - 12)
+    .attr('x', L.narrow ? (flagged ? FLAG_SPACE - 2 : 0) : L.labelW - 12)
     .attr('y', L.narrow ? 14 : barY + barH / 2 + (spec.rows.some((r) => r.sublabel) ? -2 : 4))
     .attr('text-anchor', L.narrow ? 'start' : 'end')
     .text((d) => (L.narrow && d.sublabel ? `${d.label} · ${d.sublabel}` : d.label));

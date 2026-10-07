@@ -198,4 +198,12 @@
   /* CHANGED (S3-aa3): calendar heatmap's "no data / zero" cell — the existing secondary-surface token,
      not a new colour (it isn't part of the magnitude ramp). */
   --c-heat-0: var(--s2);
+  /* CHANGED (S3-el): electricity fuel groups — the six validated sector marks (S3-br, CVD all-pairs in both themes)
+     under fuel names (charts/palette.ts POWER_COLOR); late-bound, so each follows the active theme. */
+  --c-power-coal: var(--c-sector-industry);
+  --c-power-gas: var(--c-sector-tech);
+  --c-power-nuclear: var(--c-sector-fashion);
+  --c-power-hydro: var(--c-sector-consumer);
+  --c-power-wind: var(--c-sector-finance);
+  --c-power-solar: var(--c-sector-auto);
 }

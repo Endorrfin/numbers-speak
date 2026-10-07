@@ -650,8 +650,9 @@
   font-size: 12px;
   font-variant-numeric: tabular-nums;
 }
-.rb-flag {
-  pointer-events: none;
+.rb-flag,
+.sr-flag {
+  pointer-events: none; /* CHANGED (S3-el): + StackedRows flags */
 }
 
 .legend {
@@ -2189,6 +2190,13 @@
   font-size: 13px;
 }
 .db-row.is-emphasis .db-label {
+  font-weight: 700;
+}
+/* CHANGED (S3-el): StackedRows highlight (electricity mix) — the same accent band + bold label. */
+.sr-row.is-emphasis .sr-hit {
+  fill: var(--accent-soft);
+}
+.sr-row.is-emphasis .sr-label {
   font-weight: 700;
 }
 .db-line {

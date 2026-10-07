@@ -142,6 +142,7 @@ test('guard: every page with a Pager and a RankedBar whose data has Ukraine show
   }
   assert.deepEqual(guarded.sort(), [
     'crime-index',
+    'electricity', // CHANGED (S3-el)
     'gdp-by-country',
     'gdp-ppp-per-capita',
     'global-peace-index',

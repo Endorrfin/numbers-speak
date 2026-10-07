@@ -527,6 +527,61 @@ async function main(): Promise<void> {
     r('hostile us year', { show: 'us', year: '1900' }, 'en', [`U.S. crude imports, ${usD.to}:`]);
   }
 
+  // CHANGED (S3-el): electricity — seven angles (producers + per person, mix in three orders, the world since 2000, the
+  // solar / wind race, carbon both orders, access both measures, Ukraine + Zaporizhzhia), tables, EN + UK, the note on
+  // Ukraine's missing years, hostile params. Expectations come from the shipped files through the entry's own derivations.
+  if (CATALOG.some((m) => m.id === 'electricity')) {
+    const { default: El } = await import('../src/viz/electricity/index');
+    const eD = await import('../src/viz/electricity/data');
+    const { formatTwh } = await import('../src/lib/format');
+    const { countryName: cName } = await import('../src/lib/countries');
+    const E = (f: string): unknown => JSON.parse(readFileSync(`public/data/electricity/${f}`, 'utf8'));
+    const cds = eD.parseCountries(E(eD.FILES.countries));
+    const producers = eD.rankProducers(cds, 'total');
+    const ua = producers.find((r) => r.code === 'UA')!;
+    const r = (label: string, params: Record<string, string>, lang: 'en' | 'uk', inc: string[]): string => {
+      const html = check(`ready:electricity ${label}`, h(El, { params, setParams: noop }), lang, 1500, inc);
+      ok(!/NaN|undefined|\{[a-z]+\}/.test(html.replace(/<[^>]+>/g, ' ')), `ready:electricity ${label} [${lang}] no NaN / undefined / unfilled {placeholder}`);
+      return html;
+    };
+    r('producers', {}, 'en', [
+      'role="img"',
+      `Showing 1–15 of ${producers.length}`,
+      `World, ${cds.rankYear}: ${formatTwh(eD.worldTotal(cds), 'en')}`,
+      `${cName(producers[0]!.code, 'en')} + ${cName(producers[1]!.code, 'en')}: share of the world`,
+      `Ukraine · #${ua.rank}`,
+      'kpi kpi-home',
+      `Ukraine: rank ${ua.rank} of ${producers.length}`,
+      'Why Ukraine’s figures stop in 2022',
+      'Ember, Yearly Electricity Data (CC BY 4.0)',
+    ]);
+    r('producers uk', {}, 'uk', ['Хто виробляє', `Україна · №${ua.rank}`, 'Чому дані України закінчуються 2022 роком', 'ТВт·год']);
+    const pc = r('per person', { metric: 'per-capita' }, 'en', ['Per person', 'Highest per person', 'World, per person a year']);
+    ok(pc.includes('Iceland'), 'ready:electricity per person names Iceland');
+    const table = r('table', { view: 'table' }, 'en', ['<table', 'Low-carbon share', '<tr class="is-home">', '2022*']);
+    ok(inTable(table).indexOf('China') < inTable(table).indexOf('India'), 'ready:electricity table order');
+    ok(!inTable(r('europe', { region: 'europe', view: 'table' }, 'en', ['Germany'])).includes('> India<'), 'ready:electricity europe filter');
+    r('mix', { show: 'mix' }, 'en', ['Gas, oil &amp; other fossil', 'World: fossil fuels', 'Countries where coal gives over half', 'Ukraine · #']);
+    r('mix clean', { show: 'mix', order: 'clean' }, 'en', ['Cleanest first', 'low-carbon']);
+    r('mix table uk', { show: 'mix', view: 'table' }, 'uk', ['<table', 'Вугілля', 'Сонце', 'Низьковуглец.']);
+    r('world', { show: 'world' }, 'en', ['Share of world generation', 'First year renewables generated more than coal', '2025', 'solar generated more than wind']);
+    r('world table', { show: 'world', view: 'table' }, 'en', ['<table', 'gCO2/kWh', '2000']);
+    r('world uk', { show: 'world' }, 'uk', ['Світ, 2025', 'Відновлювані']);
+    r('race', { show: 'race' }, 'en', ['Race controls', '2025 · #1 China', 'Ember’s 2025 figures cover 91 countries']);
+    r('race wind 2010 table', { show: 'race', source: 'wind', year: '2010', view: 'table' }, 'en', ['<table', 'Wind power by country, 2010', 'United States']);
+    r('race uk', { show: 'race', year: '2010' }, 'uk', ['Керування перегонами', `2010 · №1 ${cName('DE', 'uk')}`]);
+    r('carbon', { show: 'carbon' }, 'en', ['Cleanest first', 'World average, 2024', '471\u00a0g/kWh', 'Ukraine · #']);
+    r('carbon dirtiest', { show: 'carbon', order: 'dirtiest' }, 'en', ['Dirtiest first', cName('TM', 'en')]);
+    r('access', { show: 'access' }, 'en', ['Share with access', 'People without electricity, 2024', 'Sub-Saharan Africa', cName('SS', 'en')]);
+    r('access people', { show: 'access', metric: 'people' }, 'en', ['People without', 'Nigeria', 'World Bank']);
+    r('access uk table', { show: 'access', view: 'table' }, 'uk', ['<table', 'З доступом', 'Україна']);
+    r('ukraine', { show: 'ukraine' }, 'en', ['Ukraine, 1990: 300.7\u00a0TWh → 2022: 111.5\u00a0TWh', 'Zaporizhzhia NPP, 2021', '23.1%', 'Why Ukraine’s figures stop in 2022', 'Energoatom, management report 2021']);
+    r('ukraine table', { show: 'ukraine', view: 'table' }, 'en', ['<table', '1990', 'Net imports']);
+    r('ukraine uk', { show: 'ukraine' }, 'uk', ['Запорізька АЕС, 2021', 'Чому дані України закінчуються 2022 роком']);
+    r('hostile', { show: 'x', metric: '<b>', order: 'zz', year: '99999', source: 'coal', page: '-3', focus: 'qq', region: 'mars' }, 'en', ['QQ: not in this list']);
+    r('hostile race year', { show: 'race', year: '1900' }, 'en', ['2025 · #1']);
+  }
+
   // CHANGED (S3-rb): GDP (PPP) per capita — three years, "× world average", table, region filter, EN + UK.
   if (CATALOG.some((m) => m.id === 'gdp-ppp-per-capita')) {
     const { default: Ppp } = await import('../src/viz/gdp-ppp-per-capita/index');
