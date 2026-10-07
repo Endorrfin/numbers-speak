@@ -1,0 +1,198 @@
+from,to,mt,dagger
+Canada,US,194.7,0
+Canada,S. & Cent. America,0.02,1
+Canada,Europe,8.3,0
+Canada,Africa,0.02,1
+Canada,China,16.3,0
+Canada,India,0.1,0
+Canada,Japan,0.1,0
+Canada,Singapore,0.2,0
+Canada,Other Asia Pacific,2.7,0
+Mexico,US,19.1,0
+Mexico,S. & Cent. America,0.1,0
+Mexico,Europe,8.9,0
+Mexico,China,0.8,0
+Mexico,India,1.4,0
+Mexico,Other Asia Pacific,3.7,0
+US,Canada,19.1,0
+US,S. & Cent. America,10.8,0
+US,Europe,91.8,0
+US,Middle East,0.02,1
+US,Africa,6.9,0
+US,Australasia,1.1,0
+US,China,2.3,0
+US,India,17.6,0
+US,Japan,4.3,0
+US,Singapore,4.3,0
+US,Other Asia Pacific,44.5,0
+S. & Cent. America,Canada,0.5,0
+S. & Cent. America,US,50.3,0
+S. & Cent. America,Europe,38.8,0
+S. & Cent. America,Middle East,0.1,0
+S. & Cent. America,Africa,3.7,0
+S. & Cent. America,Australasia,0.02,1
+S. & Cent. America,China,68,0
+S. & Cent. America,India,9.3,0
+S. & Cent. America,Japan,1.6,0
+S. & Cent. America,Singapore,2.6,0
+S. & Cent. America,Other Asia Pacific,10.2,0
+Europe,Canada,0.2,0
+Europe,US,3,0
+Europe,S. & Cent. America,0.1,0
+Europe,Other CIS,0.02,1
+Europe,Middle East,0.1,0
+Europe,Africa,0.4,0
+Europe,Australasia,0.02,1
+Europe,China,4.2,0
+Europe,India,0.6,0
+Europe,Singapore,0.4,0
+Europe,Other Asia Pacific,1.3,0
+Russian Federation,S. & Cent. America,0.5,0
+Russian Federation,Europe,28.5,0
+Russian Federation,Other CIS,14.3,0
+Russian Federation,Middle East,5.5,0
+Russian Federation,Africa,0.3,0
+Russian Federation,China,100.7,0
+Russian Federation,India,84.9,0
+Russian Federation,Japan,0.1,0
+Russian Federation,Other Asia Pacific,1.8,0
+Other CIS,US,1.5,0
+Other CIS,S. & Cent. America,1.2,0
+Other CIS,Europe,78.8,0
+Other CIS,Russian Federation,0.02,1
+Other CIS,Middle East,5,0
+Other CIS,Africa,0.7,0
+Other CIS,China,4,0
+Other CIS,Singapore,0.2,0
+Other CIS,Other Asia Pacific,3.1,0
+Iraq,US,8.9,0
+Iraq,S. & Cent. America,0.2,0
+Iraq,Europe,31.8,0
+Iraq,Other CIS,0.02,1
+Iraq,Middle East,1.7,0
+Iraq,Africa,0.6,0
+Iraq,China,64.6,0
+Iraq,India,49.7,0
+Iraq,Singapore,3.9,0
+Iraq,Other Asia Pacific,17.7,0
+Kuwait,US,0.7,0
+Kuwait,Europe,0.1,0
+Kuwait,Middle East,6.7,0
+Kuwait,Africa,0.1,0
+Kuwait,China,19,0
+Kuwait,India,8.8,0
+Kuwait,Japan,7.4,0
+Kuwait,Singapore,0.2,0
+Kuwait,Other Asia Pacific,33.8,0
+Saudi Arabia,Canada,2.8,0
+Saudi Arabia,US,13.4,0
+Saudi Arabia,S. & Cent. America,3.5,0
+Saudi Arabia,Europe,32.4,0
+Saudi Arabia,Middle East,15.1,0
+Saudi Arabia,Africa,3.4,0
+Saudi Arabia,China,80.8,0
+Saudi Arabia,India,36.5,0
+Saudi Arabia,Japan,45.8,0
+Saudi Arabia,Singapore,3.2,0
+Saudi Arabia,Other Asia Pacific,89.3,0
+UAE,Canada,0.02,1
+UAE,US,1.4,0
+UAE,Europe,0.6,0
+UAE,Middle East,0.3,0
+UAE,Africa,0.2,0
+UAE,Australasia,0.02,1
+UAE,China,37.5,0
+UAE,India,26.7,0
+UAE,Japan,49.1,0
+UAE,Singapore,19.9,0
+UAE,Other Asia Pacific,58.5,0
+Other Middle East,Canada,0.02,1
+Other Middle East,S. & Cent. America,0.7,0
+Other Middle East,Europe,0.8,0
+Other Middle East,Other CIS,0.02,1
+Other Middle East,Middle East,7.9,0
+Other Middle East,Australasia,0.1,0
+Other Middle East,China,127.1,0
+Other Middle East,India,4.7,0
+Other Middle East,Japan,6,0
+Other Middle East,Singapore,7.5,0
+Other Middle East,Other Asia Pacific,17.7,0
+North Africa,Canada,0.7,0
+North Africa,US,3.9,0
+North Africa,S. & Cent. America,1.3,0
+North Africa,Europe,69.7,0
+North Africa,Other CIS,0.02,1
+North Africa,Middle East,0.1,0
+North Africa,Africa,0.3,0
+North Africa,Australasia,0.3,0
+North Africa,China,1.6,0
+North Africa,India,4.6,0
+North Africa,Singapore,0.1,0
+North Africa,Other Asia Pacific,4,0
+West Africa,Canada,3.5,0
+West Africa,US,10.4,0
+West Africa,S. & Cent. America,4,0
+West Africa,Europe,51,0
+West Africa,Middle East,2.9,0
+West Africa,Africa,4.2,0
+West Africa,Australasia,0.6,0
+West Africa,China,51.8,0
+West Africa,India,15.5,0
+West Africa,Singapore,0.6,0
+West Africa,Other Asia Pacific,16.8,0
+East & S. Africa,S. & Cent. America,0.02,1
+East & S. Africa,Europe,0.8,0
+East & S. Africa,Middle East,0.02,1
+East & S. Africa,Africa,0.02,1
+East & S. Africa,China,0.7,0
+East & S. Africa,India,0.1,0
+East & S. Africa,Japan,0.3,0
+East & S. Africa,Singapore,0.3,0
+East & S. Africa,Other Asia Pacific,2.1,0
+Australasia,Middle East,0.7,0
+Australasia,China,0.7,0
+Australasia,Japan,0.3,0
+Australasia,Singapore,1.7,0
+Australasia,Other Asia Pacific,5.7,0
+China,S. & Cent. America,0.3,0
+China,Africa,0.1,0
+China,Singapore,0.02,1
+China,Other Asia Pacific,0.7,0
+India,Canada,0.02,1
+India,S. & Cent. America,0.02,1
+India,Europe,0.02,1
+India,Middle East,0.1,0
+India,Africa,0.02,1
+India,Australasia,0.02,1
+India,Other Asia Pacific,0.02,1
+Japan,Africa,0.02,1
+Japan,Singapore,0.02,1
+Japan,Other Asia Pacific,0.1,0
+Singapore,Europe,0.1,0
+Singapore,India,0.2,0
+Singapore,Other Asia Pacific,0.02,1
+Other Asia Pacific,Canada,0.02,1
+Other Asia Pacific,Europe,0.02,1
+Other Asia Pacific,Other CIS,0.02,1
+Other Asia Pacific,Middle East,0.7,0
+Other Asia Pacific,Australasia,6.3,0
+Other Asia Pacific,China,1.3,0
+Other Asia Pacific,India,1.6,0
+Other Asia Pacific,Japan,0.4,0
+Other Asia Pacific,Singapore,1.8,0
+Total imports,Canada,26.8,0
+Total imports,Mexico,0,0
+Total imports,US,307.2,0
+Total imports,S. & Cent. America,22.6,0
+Total imports,Europe,442.5,0
+Total imports,Russian Federation,0.02,1
+Total imports,Other CIS,14.3,0
+Total imports,Middle East,46.9,0
+Total imports,Africa,20.8,0
+Total imports,Australasia,8.4,0
+Total imports,China,581.2,0
+Total imports,India,262.2,0
+Total imports,Japan,115.3,0
+Total imports,Singapore,47,0
+Total imports,Other Asia Pacific,313.8,0
+Total imports,Total,2209,0

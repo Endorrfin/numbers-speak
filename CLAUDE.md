@@ -97,8 +97,9 @@ _examples/     legacy D3 pages being ported (gitignored — never committed)
   recorded. One parser per dataset (`data.ts`) runs in prep, `check:data` and the browser.
 
 ## 5. Catalog
-31 entries in 5 tabs — see `CATALOG.md` (authoritative). Waves: P2 golden → P3 MVP (16) → P4 full (30);
-`births-deaths-ua` (#31, S3‑bd) and `births-deaths-per-day` (#5, S3‑bdd) shipped out of wave as priorities.
+32 entries in 5 tabs — see `CATALOG.md` (authoritative). Waves: P2 golden → P3 MVP (16) → P4 full (30);
+`births-deaths-ua` (#31, S3‑bd) and `births-deaths-per-day` (#5, S3‑bdd) shipped out of wave as priorities;
+`oil` (#32, S3‑oil) added on the owner's request.
 
 ## 6. Charts & interactivity
 Chart kit: `RankedBar` (S2) · `YearChart` (S3‑bd: lines, gap fills, areas, bars, mirrored bars, period bands,
@@ -223,6 +224,8 @@ the existing entries (owner).
 **S3‑uf (2026‑10‑01):** improvement plan item 1 — Ukraine in focus on the six country rankings (shared `Finder`,
 `FocusPicker`, `CountryFocus`, `?focus=`). Next items: S3‑ps (primary sources) → S3‑fr (fresh data) → S3‑lz (lazy
 "About the data") → births‑deaths‑per‑day UK 360 px heading → S3‑ux.
+**S3‑oil (2026‑10‑07):** new entry #32 `oil` (owner request, out of the improvement plan) — five angles on EI 2026,
+EIA and China customs. S3‑ps (births‑deaths‑per‑day → UN WPP) stays the next item.
 
 ## 14. Status / progress log
 - **S0** (2026‑09‑17) — repo named `numbers-speak`; decisions D1–D10 accepted; `PROJECT-BRIEF.md`,
@@ -801,3 +804,42 @@ the existing entries (owner).
   missing in WB (TW, EH, RE…). births‑deaths‑ua: no consolidated official set on data.gov.ua — needs the owner's source.
   Owner decision: S3‑ps = births‑deaths‑per‑day → UN WPP only (gdp, land, births‑deaths‑ua deferred); implementation in
   the next session.
+- **S3‑oil** (2026‑10‑07) — new entry #32 `oil` **published** (owner request): “Oil: who uses it and who sells it,
+  1965–2025 / Нафта: хто споживає і хто продає, 1965–2025”, rubrics `economy` + `world`. Step 0 = verification of the
+  owner's `docs/data/Oil/Oil.xlsx` (three Visual Capitalist charts, Sep 2025): all three cite EI Statistical Review 2025
+  (data 2024) — consumption top 25 = 25/25 rows of the EI 2025 table; U.S. (11/11) and China (17/17) imports = the EI
+  inter-area matrix × one factor (≈ 20.05 kb/d per Mt); EIA agrees with the U.S. rows ≤ 0.3 %, China customs with the
+  named Chinese suppliers to 0.1 Mt. Misleading in VC: regions mixed with countries (“S. & Central America” > Mexico;
+  China's largest bar “Other Middle East” ≈ Oman + Qatar + oil relabelled as Malaysian).
+  Owner decisions: build on EI 2026 fully with attribution and write to EI (its terms: quoting with attribution OK,
+  “extensive reproduction of tables” needs permission); China = customs as recorded + note; Jan–Jul 2026 for the U.S.
+  as a partial year; Ukraine = focus in the ranking, no own tab; five angles incl. trade flows now.
+  Data (`data-raw/oil/`, README with sha256): EI 2026 narrow-format xlsx → consumption 1965–2025 (79 countries + USSR
+  1965–1984, world 103,039 kb/d); EI 2026 PDF p. 45 → crude trade 2025 (21 × 15 areas, row/column totals checked);
+  EIA .xls (curl, release 2026‑09‑30) → U.S. imports 1973–2025 + Jan–Jul 2026 (before 1993 up to 335 kb/d not
+  itemised — shown as such); UN Comtrade preview API → China HS 2709 by partner 2024–2025 (579.0 Mt in 2025, GACC
+  578). The owner's `EI-Stats-Review-ALL-data.xlsx` is the **2025** edition (not used: one vintage). prep cross-checks:
+  EIA monthly 2025 = annual; customs = EI for six suppliers; EIA Canada ≈ EI Canada → US (< 1 %).
+  Page: `src/viz/oil/` — `data.ts` (four parsers + derivations), `state.ts` (`?show=consumption|race|us|china|flows`,
+  `metric`, `region`, `page`, `year` per angle, `side`, `focus`; parameters of other angles dropped from the link),
+  `index.tsx` (angle tabs A–E + view), `consumption.tsx` (RankedBar + Pager + CountryFocus, per person via the
+  population-by-country file, KPIs, ten-year change), `race.tsx` (BarRace player 1965–2025), `imports.tsx` (U.S.:
+  period select incl. partial year + YearChart of the five largest suppliers ever; China: 2024/2025, ≈ kb/d, US$ per
+  barrel, relabelling note computed from the data + EI's “Other Middle East”), `flows.tsx` (StackedRows buyers /
+  sellers in six groups, sector palette), `text.ts`, `common.tsx`, `meta.ts`, `preview.ts` (top five consumers;
+  key = top two's share, 36 %). Shared: `formatKbd` / `formatKbdTick` / `formatBarrels` / `formatChangePct` in
+  `format.ts`; `countries.ts` names SU (USSR) and AN (Netherlands Antilles), no flag for either.
+  Facts on the page: US + China 35.7 % of world use; Ukraine 285 kb/d, 47th of 79 (1.27 M b/d in 1985, −77.6 %);
+  Singapore first per person (bunkers); Canada 63.4 % of U.S. crude imports in 2025, Venezuela 2nd in Jan–Jul 2026;
+  China: Russia 17.4 %, “Malaysia” 3rd (64.7 Mt), no Iran in customs; Middle East 43 % of inter-area exports, China
+  26.3 % of imports.
+  Tests: `test-oil.ts` (10: contracts + rejections, rankings, race frames, US/China/trade derivations, state, shipped
+  files vs raw CSV, sources agree); `test-previews` 16 → 17 entries + oil card; `test-focus` guard + `oil`; smoke
+  1,343 → 1,479 (every angle EN + UK, tables, partial year, 1980 remainder, China 2024 without the EI note, hostile
+  params, no NaN/undefined/unfilled placeholder). `verify` green in a scratch copy (31 test files · 1,479 smoke
+  checks · build; oil chunk 18.8 kB gzip; initial `index` 42.76 → 45.01 kB gzip, measured against the same build without `oil`: the eager manifest text
+  (long bilingual description) + the card preview — S3‑lz, lazy “About the data”, would take most of it back). Chrome on the
+  built site (1920 px): all five angles draw, 0 console errors; the phone-width check could not run (Chrome
+  throttled the background tab) — owner step.
+  Branch (proposed) `viz/2026-10-oil`. Owner steps: letters to EI (statisticalreview@energyinst.org) and UNSD
+  (comtrade@un.org); confirm the Comtrade stance (applied by analogy with EI); phone + Safari check of the five angles.

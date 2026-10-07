@@ -146,6 +146,7 @@ test('guard: every page with a Pager and a RankedBar whose data has Ukraine show
     'gdp-ppp-per-capita',
     'global-peace-index',
     'land-area',
+    'oil', // CHANGED (S3-oil)
     'population-by-country',
     'real-estate-world',
   ]);

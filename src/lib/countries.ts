@@ -13,6 +13,9 @@ const SHORT_NAMES: Readonly<Record<string, Localized>> = {
   MO: { en: 'Macao', uk: 'Макао' },
   MM: { en: 'Myanmar', uk: 'Мʼянма' },
   PS: { en: 'Palestine', uk: 'Палестина' },
+  // CHANGED (S3-oil): reserved codes of areas that no longer exist, kept by historical series (EI, EIA). No flag file.
+  SU: { en: 'USSR', uk: 'СРСР' },
+  AN: { en: 'Netherlands Antilles', uk: 'Нідерландські Антильські острови' },
 };
 
 const displayNames = new Map<Lang, Intl.DisplayNames | null>();
@@ -40,5 +43,6 @@ export function countryName(code: string, lang: Lang): string {
  * Relative, so it works under any Pages sub-path; the code is validated, so it is safe in a URL.
  */
 export function flagUrl(code: string): string | undefined {
+  if (code === 'SU' || code === 'AN') return undefined; // CHANGED (S3-oil): historical areas have no flag
   return ISO2.test(code) ? `./flags/4x3/${code.toLowerCase()}.svg` : undefined;
 }
