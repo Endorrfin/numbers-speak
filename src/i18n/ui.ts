@@ -133,6 +133,11 @@ export const ui = {
     uk: 'Не вдалося завантажити дані. Перевірте з’єднання й спробуйте ще раз.',
   },
   retry: { en: 'Try again', uk: 'Спробувати ще раз' },
+  // CHANGED (S3-lz): the description and sources load with the page (src/catalog/details.ts).
+  detailsLoadError: {
+    en: 'The description and sources could not be loaded. Check your connection and try again.',
+    uk: 'Не вдалося завантажити опис і джерела. Перевірте з’єднання й спробуйте ще раз.',
+  },
 
   notFoundTitle: { en: 'Page not found', uk: 'Сторінку не знайдено' },
   notFoundBody: {

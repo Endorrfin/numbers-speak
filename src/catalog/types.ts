@@ -72,6 +72,39 @@ export type VizMeta = {
   d3Modules?: readonly string[];
 };
 
+// CHANGED (S3-lz): the shell (gallery, filters, page head, profile, page counter) needs only these fields; they
+// are written into catalog.generated.ts as literals. The full manifest (description, sources, licence details, data
+// files, d3 modules) is a lazy chunk per entry — the descriptions alone were 18 of the 47 kB gzip initial chunk.
+export const CARD_FIELDS = [
+  'id',
+  'title',
+  'subtitle',
+  'rubrics',
+  'chart',
+  'geo',
+  'period',
+  'tags',
+  'origin',
+  'status',
+  'added',
+  'updated',
+] as const satisfies readonly (keyof VizMeta)[];
+
+/** What the shell knows about an entry before its page opens. `origin` keeps only its kind (the gallery filter). */
+export type VizCard = Omit<Pick<VizMeta, (typeof CARD_FIELDS)[number]>, 'origin'> & {
+  origin: { kind: Origin['kind'] };
+};
+
+/** The card part of a manifest, keys in CARD_FIELDS order (gen-catalog serializes it). */
+export function toCard(meta: VizMeta): VizCard {
+  const out: Record<string, unknown> = {};
+  for (const key of CARD_FIELDS) {
+    if (meta[key] === undefined) continue;
+    out[key] = key === 'origin' ? { kind: meta.origin.kind } : meta[key];
+  }
+  return out as VizCard;
+}
+
 /** Query-string state of a page (filters, chart settings). */
 export type VizParams = Readonly<Record<string, string>>;
 

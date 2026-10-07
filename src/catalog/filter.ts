@@ -1,7 +1,8 @@
 // src/catalog/filter.ts — pure catalog filtering (unit-tested in scripts/test-filter.ts).
 // No React, no DOM: the same logic runs in the browser, the smoke and the tests.
+// CHANGED (S3-lz): works on cards (VizCard) — the shell no longer holds full manifests; a VizMeta still fits.
 import { CHART_KINDS, GEOS, RUBRIC_IDS } from './types';
-import type { ChartKind, Geo, RubricId, VizMeta, VizParams } from './types';
+import type { ChartKind, Geo, RubricId, VizCard, VizParams } from './types';
 
 export const NEW_WINDOW_DAYS = 30;
 // (S3-nw): at most this many entries wear "New" — with a 30-day window alone, a gallery younger than
@@ -55,12 +56,12 @@ export function hasActiveFilters(query: CatalogQuery): boolean {
   return Boolean(query.chart || query.geo || query.origin || query.q);
 }
 
-export function isVisible(meta: VizMeta, dev: boolean): boolean {
+export function isVisible(meta: VizCard, dev: boolean): boolean {
   return meta.status !== 'draft' || dev;
 }
 
 /** Added 0…30 calendar days ago (UTC dates, so the hour of the visit doesn't matter). */
-export function inNewWindow(meta: VizMeta, now: Date): boolean {
+export function inNewWindow(meta: VizCard, now: Date): boolean {
   const added = Date.parse(`${meta.added}T00:00:00Z`);
   if (Number.isNaN(added)) return false;
   const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
@@ -70,7 +71,7 @@ export function inNewWindow(meta: VizMeta, now: Date): boolean {
 
 // (S3-nw): "New" = the NEW_MAX most recently added visible entries inside the window
 // (equal dates → id order, so the set is deterministic). One set feeds the badges and the New tab.
-export function newIds(items: readonly VizMeta[], opts: FilterOptions): ReadonlySet<string> {
+export function newIds(items: readonly VizCard[], opts: FilterOptions): ReadonlySet<string> {
   const recent = items
     .filter((m) => isVisible(m, opts.dev) && inNewWindow(m, opts.now))
     .sort((a, b) => (a.added !== b.added ? (a.added < b.added ? 1 : -1) : a.id.localeCompare(b.id)))
@@ -78,14 +79,14 @@ export function newIds(items: readonly VizMeta[], opts: FilterOptions): Readonly
   return new Set(recent.map((m) => m.id));
 }
 
-export function inTab(meta: VizMeta, tab: TabId, fresh: ReadonlySet<string>): boolean {
+export function inTab(meta: VizCard, tab: TabId, fresh: ReadonlySet<string>): boolean {
   if (tab === 'all') return true;
   if (tab === 'new') return fresh.has(meta.id);
   return meta.rubrics.includes(tab);
 }
 
 /** Every whitespace-separated word must occur in the id, the EN/UA titles/subtitles or the tags. */
-export function matchesText(meta: VizMeta, text: string): boolean {
+export function matchesText(meta: VizCard, text: string): boolean {
   const words = text.trim().toLowerCase().split(/\s+/).filter(Boolean);
   if (words.length === 0) return true;
   const hay = [meta.id, meta.title.en, meta.title.uk, meta.subtitle.en, meta.subtitle.uk, ...meta.tags]
@@ -94,10 +95,10 @@ export function matchesText(meta: VizMeta, text: string): boolean {
   return words.every((w) => hay.includes(w));
 }
 
-const STATUS_RANK: Readonly<Record<VizMeta['status'], number>> = { published: 0, soon: 1, draft: 2 };
+const STATUS_RANK: Readonly<Record<VizCard['status'], number>> = { published: 0, soon: 1, draft: 2 };
 
 function compareFor(tab: TabId) {
-  return (a: VizMeta, b: VizMeta): number => {
+  return (a: VizCard, b: VizCard): number => {
     if (tab !== 'all' && tab !== 'new') {
       const pa = a.rubrics[0] === tab ? 0 : 1;
       const pb = b.rubrics[0] === tab ? 0 : 1;
@@ -113,12 +114,12 @@ function compareFor(tab: TabId) {
 export type FilterOptions = { now: Date; dev: boolean };
 
 /** Entries visible in a tab, before facet filters (used for tab counts and facet options). */
-export function tabEntries(items: readonly VizMeta[], tab: TabId, opts: FilterOptions): VizMeta[] {
+export function tabEntries(items: readonly VizCard[], tab: TabId, opts: FilterOptions): VizCard[] {
   const fresh = newIds(items, opts);
   return items.filter((m) => isVisible(m, opts.dev) && inTab(m, tab, fresh));
 }
 
-export function filterCatalog(items: readonly VizMeta[], query: CatalogQuery, opts: FilterOptions): VizMeta[] {
+export function filterCatalog(items: readonly VizCard[], query: CatalogQuery, opts: FilterOptions): VizCard[] {
   return tabEntries(items, query.tab, opts)
     .filter((m) => !query.chart || m.chart === query.chart)
     .filter((m) => !query.geo || m.geo === query.geo)
