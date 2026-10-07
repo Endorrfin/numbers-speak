@@ -7,7 +7,8 @@ import type { VizParams } from '../../catalog/types';
 import { useLang } from '../../i18n/lang';
 import { fill, ui } from '../../i18n/ui';
 import { IS_DEV } from '../../lib/env';
-import { replaceParams } from '../../lib/hashRouter';
+import { HOME_CODE } from '../../lib/home';
+import { hrefCountry, replaceParams } from '../../lib/hashRouter';
 import { FilterBar } from './FilterBar';
 import { TabBar } from './TabBar';
 import { VizCard } from './VizCard';
@@ -43,6 +44,22 @@ export function CatalogPage({ tab, params }: { tab: TabId; params: VizParams }) 
       </header>
 
       <TabBar active={tab} counts={counts} params={params} />
+      {/* CHANGED (S3-cp): the Ukraine tab points to the country profile. */}
+      {tab === 'ukraine' && (
+        <a className="country-banner" href={hrefCountry(HOME_CODE)}>
+          <svg className="country-flag" viewBox="0 0 3 2" aria-hidden="true" focusable="false">
+            <rect width="3" height="1" fill="#0057b7" />
+            <rect y="1" width="3" height="1" fill="#ffd700" />
+          </svg>
+          <span className="country-banner-text">
+            <strong>{t(ui.countryNav)}</strong>
+            <span>{t(ui.countryBannerText)}</span>
+          </span>
+          <span className="btn country-banner-open" aria-hidden="true">
+            {t(ui.countryBannerOpen)}
+          </span>
+        </a>
+      )}
       <FilterBar query={query} pool={pool} onChange={onChange} />
 
       <p className="results-count" role="status" aria-live="polite">

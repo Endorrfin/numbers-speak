@@ -7,9 +7,12 @@ import { useLang } from './i18n/lang';
 import { ui } from './i18n/ui';
 import { applyOptOut, trackPageview } from './lib/analytics';
 import { useHashLocation } from './lib/hashRouter';
+import { isProfileCode } from './lib/home';
 
 // The catalog is the landing page, so it stays eager; the other routes load on demand.
 const VizPage = lazy(() => import('./components/viz/VizPage').then((m) => ({ default: m.VizPage })));
+// CHANGED (S3-cp): the country profile (#/c/ua) — its own chunk; it fetches public/data/country-facts.json.
+const CountryPage = lazy(() => import('./components/country/CountryPage').then((m) => ({ default: m.CountryPage })));
 const AboutPage = lazy(() => import('./components/pages/AboutPage').then((m) => ({ default: m.AboutPage })));
 
 export function App() {
@@ -54,6 +57,8 @@ export function App() {
         <Suspense fallback={<p className="page muted">{t(ui.loading)}</p>}>
           {route.name === 'catalog' && <CatalogPage tab={route.tab} params={params} />}
           {route.name === 'viz' && <VizPage id={route.id} params={params} />}
+          {/* CHANGED (S3-cp): a code without a public profile is a 404 at once, without loading the page chunk. */}
+          {route.name === 'country' && (isProfileCode(route.code) ? <CountryPage code={route.code} /> : <NotFound />)}
           {/* CHANGED (S3-an): About reads ?no-count to confirm the owner's opt-out. */}
           {route.name === 'about' && <AboutPage params={params} />}
           {route.name === 'notFound' && <NotFound />}

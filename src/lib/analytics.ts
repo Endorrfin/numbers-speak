@@ -22,6 +22,7 @@ import { getViz } from '../catalog';
 import { isVisible } from '../catalog/filter';
 import { IS_DEV } from './env';
 import { parseHash } from './hashRouter';
+import { HOME_CODE, isProfileCode } from './home';
 import { COUNT_HOSTS, GOATCOUNTER_COUNT_URL } from './links';
 
 export const NO_COUNT_KEY = 'numbers-speak.no-count';
@@ -39,6 +40,8 @@ export function hitFor(path: string, titleOf: (id: string) => string | undefined
     return route.tab === 'all' ? { p: '/#/', t: 'Gallery' } : { p: `/#/t/${route.tab}`, t: `Gallery · ${route.tab}` };
   }
   if (route.name === 'about') return { p: '/#/about', t: 'About' };
+  // CHANGED (S3-cp): a country profile; a code without a public profile is a 404, like an unknown entry.
+  if (route.name === 'country' && isProfileCode(route.code)) return { p: `/#/c/${route.code.toLowerCase()}`, t: route.code === HOME_CODE ? 'Ukraine in numbers' : `Country · ${route.code}` };
   if (route.name === 'viz') {
     const title = titleOf(route.id);
     if (title !== undefined) return { p: `/#/v/${route.id}`, t: title };

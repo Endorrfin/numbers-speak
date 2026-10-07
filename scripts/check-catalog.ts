@@ -14,6 +14,7 @@ import { pathToFileURL } from 'node:url';
 import type { VizMeta } from '../src/catalog/types';
 import { generate, readGenerated } from './gen-catalog';
 import { CHANGELOG_PATH, missingFromChangelog } from './lib/changelog';
+import { FACTS_BUDGET_GZIP, generateFacts, gzipSize as factsGzip } from './lib/facts'; // CHANGED (S3-cp)
 import { PREVIEWS_BUDGET_GZIP, generatePreviews, gzipSize } from './lib/previews'; // CHANGED (S3-th)
 import { listVizFolders } from './lib/viz-folders';
 
@@ -76,6 +77,20 @@ try {
   errors.push(`card previews could not be built — ${(e as Error).message}`);
 }
 
+// CHANGED (S3-cp): country facts — fresh, every FACT_ORDER table produced, within budget.
+try {
+  const facts = await generateFacts();
+  const factsOnDisk = readGenerated(facts.path);
+  if (factsOnDisk !== facts.source) {
+    const where = factsOnDisk === '' ? 'is MISSING' : 'is STALE';
+    errors.push(`public/data/country-facts.json ${where}.\n  Fix: npm run gen:facts`);
+  }
+  const size = factsGzip(facts.source);
+  if (size > FACTS_BUDGET_GZIP) errors.push(`country facts are ${size} B gzip, over the ${FACTS_BUDGET_GZIP} B budget.`);
+} catch (e) {
+  errors.push(`country facts could not be built — ${(e as Error).message}`);
+}
+
 // CHANGED (S3-cl): report every failure, then exit.
 if (errors.length > 0) {
   for (const message of errors) {
@@ -84,6 +99,6 @@ if (errors.length > 0) {
   process.exit(1);
 }
 console.log(
-  '✓ check:catalog — the generated catalog and card previews match src/viz; every published entry has a preview' +
+  '✓ check:catalog — the generated catalog, card previews and country facts match src/viz; every published entry has a preview' +
     ' and a CHANGELOG.md line.',
 ); // CHANGED (S3-th)
