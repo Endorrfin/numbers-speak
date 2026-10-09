@@ -140,16 +140,17 @@ await test('series: births-deaths-ua, donations (record month), volunteers-growt
   assert.equal(formatKeyValue(vol.key, 'en'), '+1,326');
 });
 
-await test('air-attacks-on-ukraine: 127,044 launched; monthly stacks add up; incomplete months marked', () => {
+// CHANGED (S3-aa4): data to 4 Oct 2026 — September 2026 complete, October partial.
+await test('air-attacks-on-ukraine: 130,378 launched; monthly stacks add up; incomplete months marked', () => {
   const p = get('air-attacks-on-ukraine');
-  assert.equal(one(p.key).value, 127_044);
+  assert.equal(one(p.key).value, 130_378);
   assert.equal(p.marks.kind, 'columns');
   if (p.marks.kind !== 'columns') return;
-  assert.equal(p.marks.stacks.length, 49);
+  assert.equal(p.marks.stacks.length, 50);
   assert.deepEqual(p.marks.stacks[0], [9, 3]); // Sep 2022: 12 launched, 9 shot down
-  assert.deepEqual(p.marks.partial, [0, 48]);
+  assert.deepEqual(p.marks.partial, [0, 49]);
   assert.equal(p.marks.from, '2022-09');
-  assert.equal(p.marks.to, '2026-09');
+  assert.equal(p.marks.to, '2026-10');
 });
 
 await test('brands, time of life, volunteers by region', () => {

@@ -78,9 +78,10 @@ const mini = () => ({
 
 test('real dataset: range, reports, notes', () => {
   assert.equal(ds.first, '2022-09-28');
-  assert.equal(ds.last, '2026-09-19');
+  // CHANGED (S3-aa4): Kaggle refresh to 4 Oct 2026 — the tail pins follow the prep report; meta.ts quotes the totals.
+  assert.equal(ds.last, '2026-10-04');
   assert.equal(ds.hiddenFrom, '2026-08-10');
-  assert.equal(ds.reports.length, 1236);
+  assert.equal(ds.reports.length, 1255);
   assert.deepEqual(yearsOf(ds), [2022, 2023, 2024, 2025, 2026]);
   const hidden = ds.reports.flatMap((r) => r.items).filter((i) => i.note === 'launched-hidden');
   assert.ok(hidden.length > 0 && hidden.every((i) => i.class !== 'drones'));
@@ -88,8 +89,8 @@ test('real dataset: range, reports, notes', () => {
 
 test('summaries match the prep report (and the page copy)', () => {
   const all = summarize(ds, 'all');
-  assert.equal(all.drones.launched, 119_405);
-  assert.equal(all.missiles.launched, 7_639);
+  assert.equal(all.drones.launched, 122_712);
+  assert.equal(all.missiles.launched, 7_666);
   assert.equal(all.largest?.report.date, '2025-09-07');
   assert.deepEqual([all.largest?.total, all.largest?.drones, all.largest?.missiles], [823, 810, 13]);
   assert.equal(summarize(ds, 2023).drones.launched, 3_113);
@@ -110,8 +111,13 @@ test('buckets conserve every weapon, for every step and period', () => {
     }
   }
   const months = aggregate(ds, 'month', 'all');
-  assert.equal(months.length, 49);
-  assert.deepEqual([months[0]!.partial, months[1]!.partial, months[48]!.partial], [true, false, true]);
+  // CHANGED (S3-aa4): month count from first/last, not a constant — a monthly refresh no longer breaks it.
+  const monthIndex = (d: string) => Number(d.slice(0, 4)) * 12 + Number(d.slice(5, 7));
+  assert.equal(months.length, monthIndex(ds.last) - monthIndex(ds.first) + 1);
+  assert.deepEqual([months[0]!.partial, months[1]!.partial], [true, false]);
+  const [ly, lm, ld] = ds.last.split('-').map(Number) as [number, number, number];
+  const lastDayOfMonth = new Date(Date.UTC(ly, lm, 0)).getUTCDate();
+  assert.equal(months.at(-1)!.partial, ld < lastDayOfMonth, 'the last month is partial unless the data ends on its last day');
   assert.equal(aggregate(ds, 'month', 2025).length, 12);
   assert.ok(aggregate(ds, 'month', 2025).every((b) => !b.partial));
 });
@@ -123,7 +129,7 @@ test('calendar helpers: Monday weeks, month roll-over, period clamp', () => {
   assert.equal(nextBucket('2025-12-01', 'month'), '2026-01-01');
   assert.equal(nextBucket('2024-02-28', 'day'), '2024-02-29');
   assert.deepEqual(periodRange(ds, 2022), { from: '2022-09-28', to: '2022-12-31' });
-  assert.deepEqual(periodRange(ds, 2026), { from: '2026-01-01', to: '2026-09-19' });
+  assert.deepEqual(periodRange(ds, 2026), { from: '2026-01-01', to: '2026-10-04' });
 });
 
 test('rates: stopped = shot down + lost over rated items; hidden items stay out', () => {

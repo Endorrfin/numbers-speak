@@ -1,5 +1,5 @@
-// air-attacks-on-ukraine — missiles and drones launched at Ukraine, 2022–2026: five angles on the Air Force
-// reports + HRMMU civilian casualties (S3-aa). Layers: data.ts (contract + derivations) → state.ts (URL state)
+// air-attacks-on-ukraine — missiles and drones launched at Ukraine, 2022–2026: six angles on the Air Force
+// reports + HRMMU civilian casualties (S3-aa; CHANGED (S3-aa4): six since the S3-aa3 calendar). Layers: data.ts (contract + derivations) → state.ts (URL state)
 // → specs.ts (chart specs, formatters) → text.ts (page copy) → this page. CHANGED (S3-aa): new.
 import { useCallback, useId, useMemo } from 'react';
 import type { ReactNode } from 'react';

@@ -434,8 +434,8 @@ async function main(): Promise<void> {
     const { SHOWS: AA_SHOWS } = await import('../src/viz/air-attacks-on-ukraine/state');
     check('ready:air chart', h(Aa, { params: {}, setParams: noop }), 'en', 1500, [
       'role="img"',
-      '119,405',
-      '7,639',
+      '122,712', // CHANGED (S3-aa4): data to 4 Oct 2026
+      '7,666',
       '87%',
       '61%',
       '823',

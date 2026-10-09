@@ -42,6 +42,8 @@ const MODEL: Readonly<Record<string, Localized>> = {
   'X-35': { en: 'Kh-35', uk: 'Х-35' },
   'X-35Y': { en: 'Kh-35U', uk: 'Х-35У' },
   Banderol: { en: 'Banderol', uk: '«Бандероль»' },
+  // CHANGED (S3-aa4): new model names in the 4 Oct 2026 data.
+  'Banderol/Dan-T': { en: 'Banderol/Dan-T', uk: '«Бандероль»/«Дань-Т»' },
   'Iskander-M': { en: 'Iskander-M', uk: '«Іскандер-М»' },
   'KN-23': { en: 'KN-23', uk: 'KN-23' },
   'Iskander-M/KN-23': { en: 'Iskander-M/KN-23', uk: '«Іскандер-М»/KN-23' },
@@ -55,6 +57,7 @@ const MODEL: Readonly<Record<string, Localized>> = {
   'X-32': { en: 'Kh-32', uk: 'Х-32' },
   'P-800 Oniks': { en: 'P-800 Oniks', uk: 'П-800 «Онікс»' },
   '3M22 Zircon': { en: '3M22 Zircon', uk: '3М22 «Циркон»' },
+  '3M22 Zircon/P-800 Oniks': { en: '3M22 Zircon/P-800 Oniks', uk: '3М22 «Циркон»/П-800 «Онікс»' },
   'X-31': { en: 'Kh-31', uk: 'Х-31' },
   'X-31P': { en: 'Kh-31P', uk: 'Х-31П' },
   'X-31PD': { en: 'Kh-31PD', uk: 'Х-31ПД' },

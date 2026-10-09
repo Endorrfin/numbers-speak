@@ -14,6 +14,7 @@
 | S3‑cp | «Україна в цифрах» — профіль країни, фаза 1 (`#/c/ua`) | ✅ 2026‑10‑07 · фаза 2 **відкладена** 2026‑10‑07 (§2.6) |
 | S3‑lz | Лінива підвантажка описів і джерел | ✅ 2026‑10‑07 — `index` 47,6 → 25,6 kB gzip (CLAUDE.md §14) |
 | S3‑nav | «Дивіться також» внизу кожної сторінки | ✅ 2026‑10‑07 — лише цей блок; «Updated» і сортування відкладено (§3) |
+| S3‑aa4 | «Повітряні атаки»: свіжі дані Kaggle | ✅ 2026‑10‑08 — звіти до 04.10.2026 (1 255; 122 712 дронів, 7 666 ракет); HRMMU за вересень ще не вийшов; опис — шість кутів (CLAUDE.md §14) |
 
 ## 1. Порядок (ранжований)
 
@@ -165,4 +166,38 @@ Playwright (playwright-core 1.62 + кешований Chromium 1234 у scratchpa
 scratch-копії (rsync без node_modules/.git/dist*/_examples/docs/data); перед змінами — що й чому; маркери
 // CHANGED (S3-lz); комітів не робити — запропонуй гілку (perf/2026-10-lazy-details), commit title
 «📊 Numbers Speak S3-lz: …» і description. Відповідай українською.
+```
+
+## 5. Промпт наступної сесії — S3‑aa4 (оновлення «Повітряних атак»)
+
+```
+Numbers Speak / Цифри говорять — сесія S3‑aa4: оновлення інфографіки air-attacks-on-ukraine
+(«Russian missile and drone attacks on Ukraine, 2022–2026», CATALOG #11).
+
+ПРОЧИТАЙ: CLAUDE.md повністю (особливо §12 і §14 — записи S3‑aa, S3‑aa2, S3‑aa3, «S3‑aa fix», S3‑th, S3‑cp),
+data-raw/air-attacks-on-ukraine/README.md (джерела, правила відбору, розділ «Refresh (monthly)»),
+src/viz/air-attacks-on-ukraine/ (data.ts, state.ts, index.tsx, preview.ts).
+
+ФАКТИ НА СТАРТ (перевір): дані з 28.09.2022 по 19.09.2026 (Kaggle P. Ivaniuk, версія 211, CC BY‑NC‑SA 4.0;
+sha256 у README); HRMMU — цивільні жертви 2023–2026 (2026 = сума місячних оновлень, ревізуються); з 10.08.2026 Повітряні
+сили приховують частину ракет (`hiddenFrom`). Сторінка: шість кутів (timeline · types · interception · largest ·
+civilians · calendar). Від сторінки залежать картка-прев'ю (127 044 запущено) і блок «Лише про Україну» на #/c/ua.
+
+КРОК 0 — спитай мене, що саме оновлюємо (AskUserQuestion, можна кілька): (A) свіжі дані Kaggle до кінця вересня /
+жовтня 2026 + свіжий HRMMU; (B) зміни вигляду чи нові кути (що саме — мої слова); (C) виправлення, які я помітив.
+Для (A): Kaggle потребує логіну — я завантажу missile_attacks_daily.csv і покладу в data-raw/air-attacks-on-ukraine/
+(або в docs/data/); HRMMU — так само, якщо є новий випуск. Агент Kaggle не відкриває.
+КРОК 1 — аудит нового файлу проти старого: діапазон дат, нові моделі (prep зупиняється на новій моделі — додати
+мапінг), зміни у вже наявних рядках (ревізії), нові колонки; таблиця розбіжностей мені до того, як щось писати.
+КРОК 2 — prep → public/data (prep сам перегенерує прев'ю й country-facts), оновити meta (period, updated, retrieved
+у sources), тексти сторінки, що згадують дати/числа (index.tsx, text), CHANGELOG «Updated» з посиланням #/v/air-attacks-on-ukraine;
+тести test-air-attacks.ts (відомі числа — перевір, що вони не залежать від хвоста даних, або онови з обґрунтуванням),
+smoke; verify у scratch; Playwright (playwright-core 1.62 + кешований Chromium 1234 у scratchpad — див. S3‑cp)
+360/1280, усі шість кутів EN + UK.
+КРОК 3 — документи: README (sha256, версія, дата), CLAUDE.md §14, docs/IMPROVEMENTS.md статус.
+
+ПРАВИЛА: як у CLAUDE.md §10–§12 — у живій папці не запускати npm і git (навіть git status); verify лише в
+scratch-копії (rsync без node_modules/.git/dist*/_examples/docs/data); перед змінами — що й чому; маркери
+// CHANGED (S3-aa4); комітів не робити — запропонуй гілку (viz/2026-10-air-attacks-refresh), commit title
+«📊 Numbers Speak S3-aa4: …» і description. Після — запропонуй перейти до S3‑lz (промпт у §4). Відповідай українською.
 ```

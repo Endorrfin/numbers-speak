@@ -57,6 +57,8 @@ const MODEL_CLASS: Record<string, WeaponClass> = {
   'X-35': 'cruise',
   'X-35Y': 'cruise',
   Banderol: 'cruise',
+  // CHANGED (S3-aa4): first seen 22 Sep 2026 — one group in the source (8 launched), class of Banderol (owner).
+  'Banderol/Dan-T': 'cruise',
   'Iskander-M': 'ballistic',
   'KN-23': 'ballistic',
   'Iskander-M/KN-23': 'ballistic',
@@ -70,6 +72,8 @@ const MODEL_CLASS: Record<string, WeaponClass> = {
   'X-32': 'antiship',
   'P-800 Oniks': 'antiship',
   '3M22 Zircon': 'antiship',
+  // CHANGED (S3-aa4): first seen 29 Sep 2026 — both parts are anti-ship missiles.
+  '3M22 Zircon/P-800 Oniks': 'antiship',
   'X-31': 'other',
   'X-31P': 'other',
   'X-31PD': 'other',
