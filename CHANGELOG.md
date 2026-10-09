@@ -2,6 +2,13 @@
 
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
+## 2026‑10‑08
+- **Updated:** [Russian missile and drone attacks on Ukraine / Російські ракетні й дронові атаки на Україну](https://endorrfin.github.io/numbers-speak/#/v/air-attacks-on-ukraine) —
+  Air Force reports to 4 October 2026 (were to 19 September): 1,255 reports, 122,712 drones and 7,666 missiles since
+  28 September 2022; 3,307 drones and 27 missiles in the 15 new days. September 2026 is now a full month. /
+  Звіти Повітряних сил до 4 жовтня 2026 року (було — до 19 вересня): 1 255 звітів, 122 712 дронів і 7 666 ракет з
+  28 вересня 2022 року; 3 307 дронів і 27 ракет за 15 нових днів. Вересень 2026 — тепер повний місяць.
+
 ## 2026‑10‑07
 - **Updated:** every visualization page now ends with “See also” — three related visualizations as gallery cards,
   with their data previews: GDP leads to GDP (PPP) per person, the volunteer registry to donations, oil to

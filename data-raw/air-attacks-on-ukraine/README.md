@@ -2,7 +2,7 @@
 
 | File | What |
 |---|---|
-| `missile_attacks_daily.csv` | Petro Ivaniuk, [“Massive Missile Attacks on Ukraine”](https://www.kaggle.com/datasets/piterfm/massive-missile-attacks-on-ukraine) (Kaggle, version 211 of 19 Sep 2026, **CC BY‑NC‑SA 4.0**), downloaded by the owner on 2026‑09‑21 and copied unchanged. One row per model (or group of models) per Air Force report; compiled from the reports of the Air Force Command and the General Staff of the Armed Forces of Ukraine. sha256 `8278a8d28145b9c1507fd62dba4780d4eee1f3b309493d62404114183f744d28`. |
+| `missile_attacks_daily.csv` | Petro Ivaniuk, [“Massive Missile Attacks on Ukraine”](https://www.kaggle.com/datasets/piterfm/massive-missile-attacks-on-ukraine) (Kaggle, **CC BY‑NC‑SA 4.0**), downloaded by the owner on 2026‑10‑08 (reports to 4 Oct 2026; the version number was not recorded) and copied unchanged. One row per model (or group of models) per Air Force report; compiled from the reports of the Air Force Command and the General Staff of the Armed Forces of Ukraine. sha256 `7e35f28e25dadb4d87d517774fcce7f5231d71c3e949a2af61671732ab2be1c9` (4,202 rows). Previous copy: version 211 of 19 Sep 2026, sha256 `8278a8d28145b9c1507fd62dba4780d4eee1f3b309493d62404114183f744d28` (4,152 rows). |
 | `hrmmu-civilians.csv` | Civilian casualties per year transcribed from the UN Human Rights Monitoring Mission in Ukraine (HRMMU) — one source URL per row. |
 | `prep.ts` | `npm run prep -- air-attacks-on-ukraine` → `public/data/air-attacks-on-ukraine/attacks-2022-2026.json` + `civilians-hrmmu-2023-2026.json` |
 
@@ -13,17 +13,17 @@ stays MIT. HRMMU figures are quoted with their source pages.
 ## Rules (prep prints the counts)
 1. **National reports only.** Rows from the regional air commands (`PvKPivden`, `pvkshid`, `PvkZahid`, `PvkCenter`)
    and oblast administrations are dropped: they overlap the national Air Force reports (e.g. 11,834 “unknown UAVs”
-   from the southern command in 2026 alone). 1,742 rows, 16,242 launched.
+   from the southern command in 2026 alone). 1,764 rows, 16,826 launched.
 2. **Long-range strike weapons only.** Tactical and reconnaissance drones (Orlan, ZALA, Supercam, Merlin-VR, Orion,
    Forpost, Mohajer-6, Lancet, Molniya, …) and guided bombs (GBU, “aerial bomb”) are out of scope — reported
    irregularly and mostly by one regional command. 119 national rows, 278 launched (incl. one 2023 row
    “Shahed-136/131 and Lancet”, 16, that cannot be split).
 3. **Classes** (`MODEL_CLASS` in `prep.ts`): cruise · ballistic & aeroballistic (incl. S‑300/S‑400 against ground
    targets and Kh‑47M2 Kinzhal) · anti-ship (Kh‑22/32, Oniks, Zircon) · other (Kh‑31P, type not given) · drones
-   (Shahed‑136/131 with decoys, type not given). A row that combines several classes becomes `mixed` (14 rows,
-   210 launched). An unknown model aborts prep.
+   (Shahed‑136/131 with decoys, type not given). A row that combines several classes becomes `mixed` (15 rows,
+   215 launched). An unknown model aborts prep.
 4. **Notes.** `status_data = hidden` (from 10 Aug 2026 the Air Force no longer gives the number launched for some
-   missile types) → `launched-hidden` (14 rows); no number destroyed → `destroyed-missing` (6 rows). Both count in
+   missile types) → `launched-hidden` (19 rows); no number destroyed → `destroyed-missing` (6 rows). Both count in
    totals, not in interception rates.
 5. **Fixes.** 2024‑12‑28 Shahed: destroyed 15 + lost 11 > launched 16 → lost capped to 1. Three Feb 2024 rows
    (S‑300, Iskander‑M) give no number launched and add nothing.
@@ -40,6 +40,14 @@ stays MIT. HRMMU figures are quoted with their source pages.
   (Jan 54/305 · 54/207, Feb 60/276 · 52/222, Mar 61/448 · 66/369, Apr 84/628 · 80/481, May 115/803 · 64/539,
   Jun 126/907 · 89/588, Jul 183/967 · 111/710, Aug 194/1,077 · 91/727 — long-range · short-range, killed/injured),
   hence `monthly-sum`: monthly figures are later revised upwards.
+
+## Refresh log
+- **2026‑10‑08 (S3‑aa4)** — 19 Sep → 4 Oct 2026: +50 rows (47 after 19 Sep, 3 regional rows of 19 Sep), 0 rows removed,
+  0 values revised in existing rows, same 22 columns. National reports 1,236 → 1,255; drones 119,405 → 122,712, missiles
+  7,639 → 7,666. Two new model names: `3M22 Zircon/P-800 Oniks` → anti-ship; `Banderol/Dan-T` → cruise (one group in
+  the source, 8 launched on 22 Sep; class of Banderol — owner). Two `hidden` rows of 22 Sep give 0 launched and 0
+  destroyed (type named, no numbers). HRMMU: the September 2026 update was not out yet (page not found on 2026‑10‑08) —
+  the 2026 row stays January–August.
 
 ## Refresh (monthly)
 Download the new `missile_attacks_daily.csv` from Kaggle over this one, run prep (a new model stops it — add it to

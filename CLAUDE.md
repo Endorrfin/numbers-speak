@@ -262,7 +262,8 @@ the existing entries (owner).
 **S3‑oil (2026‑10‑07):** new entry #32 `oil` (owner request, out of the improvement plan) — five angles on EI 2026,
 EIA and China customs. S3‑ps (births‑deaths‑per‑day → UN WPP) stays the next item.
 **S3‑cp (2026‑10‑07):** «Україна в цифрах» (`#/c/ua`) — improvement plan item 1 (`docs/IMPROVEMENTS.md`, the plan
-for every next item). Next: **S3‑lz** (owner, 2026‑10‑07), then S3‑cp phase 2 (any country, search, `?vs=`).
+for every next item). Next: **S3‑aa4** — air-attacks update (owner, 2026‑10‑08; prompt `docs/IMPROVEMENTS.md` §5), then
+S3‑lz (§4), then S3‑cp phase 2 (any country, search, `?vs=`).
 **S3‑lz (2026‑10‑07):** manifests split — cards eager, description/sources lazy; initial `index` 47.6 → 25.6 kB gzip.
 Next: S3‑cp phase 2 (any country, search, `?vs=`) per `docs/IMPROVEMENTS.md`.
 **S3‑el (2026‑10‑07):** new entry #33 `electricity` (owner request) — seven angles on Ember + World Bank + Energoatom.
@@ -271,6 +272,7 @@ Follow‑ups (owner): “hours without power” by city (Svitlobot — ask its a
 return only as `?vs=` on `#/c/ua`, if GoatCounter shows `/#/c/ua` is read (`docs/IMPROVEMENTS.md` §2.6).
 **S3‑nav (2026‑10‑07):** “See also” on every page; the “Updated” badge and gallery sorting deferred (noise today).
 Next per `docs/IMPROVEMENTS.md` §1: S3‑ps (births‑deaths‑per‑day → UN WPP).
+**S3‑aa4 (2026‑10‑08):** air attacks refreshed to 4 Oct 2026 (Kaggle); HRMMU September not out yet. Next: S3‑ps.
 
 ## 14. Status / progress log
 - **S0** (2026‑09‑17) — repo named `numbers-speak`; decisions D1–D10 accepted; `PROJECT-BRIEF.md`,
@@ -1019,3 +1021,25 @@ Next per `docs/IMPROVEMENTS.md` §1: S3‑ps (births‑deaths‑per‑day → UN
   measured mid‑way through the smooth scroll — the check now waits for `scrollY = 0`, 3 clean runs).
   CHANGELOG **Updated** line. Branch (proposed) `feat/2026-10-see-also`. Live dev server regenerated
   `catalog.generated.ts` itself (S3‑lz plugin) — identical to the scratch output.
+- **S3‑aa4** (2026‑10‑08) — `air-attacks-on-ukraine` data refresh (owner: A fresh data + C fixes; B — no new angles).
+  Step 1 audit (new Kaggle CSV in `docs/data/air-attacks/` vs v211, Python in the scratchpad): 4,152 → 4,202 rows, same 22
+  columns, reports to **4 Oct 2026** (were 19 Sep); 0 rows removed, **0 values revised**; 3 new rows dated 19 Sep are
+  regional (dropped by rule 1); two new model names stop prep — `3M22 Zircon/P-800 Oniks` → antiship, `Banderol/Dan-T` →
+  cruise (owner; one group in the source, 8 launched 22 Sep) in `MODEL_CLASS` + `labels.ts` (EN/UK — `test-air-attacks`
+  caught the missing label); two `hidden` rows of 22 Sep carry 0/0 (type named, no numbers) — kept as zero items. Kaggle
+  version number not recorded by the owner (README keeps download date + last report date + sha256 `7e35f28e…`).
+  HRMMU: the September 2026 update was not published on 2026‑10‑08 → 2026 row stays Jan–Aug; casualties per 100 weapons
+  already match HRMMU's months (`launchedInMonths`), so the new tail does not skew it.
+  Now: 1,255 reports, 122,712 drones (+3,307), 7,666 missiles (+27), 130,378 launched (card preview); rounded rates and
+  the largest attack (7 Sep 2025, 823) unchanged; September 2026 now a full month, October partial. `country-facts.json`
+  unchanged. Fix (C): the description said “Five angles” — now six, the calendar named (EN + UK; `index.tsx` header too).
+  `meta.updated` 2026‑10‑08, Kaggle + Air Force `retrieved` 2026‑10‑08 (HRMMU sources not re-read — unchanged).
+  Tests: tail pins in `test-air-attacks` (last, 1,255 reports, totals, 2026 period) and `test-previews` (130,378, 50
+  stacks, partial [0, 49], to 2026‑10) updated — they mirror the prep report and the totals quoted in `meta.ts`; the
+  month count is now derived from `first`/`last` (a refresh no longer breaks it); smoke `122,712` / `7,666`.
+  `verify` green in a scratch copy (Node 22; 35 test files · 2,344 smoke checks · build; page chunk 18.9 kB gzip, `index`
+  25.84 kB gzip unchanged). Playwright (playwright-core 1.62 + Chromium 1234, built site under the production URL): six
+  angles × EN dark / UK light × 360 / 1280 — charts drawn, KPI 122,712 / 122 712, card and `#/c/ua` 130,378, no horizontal
+  scroll, 0 console messages. CHANGELOG **Updated** line (2026‑10‑08). Branch (proposed) `viz/2026-10-air-attacks-refresh`.
+  Open: HRMMU September 2026 (expected mid‑October) — append to the 2026 row on the next refresh. The owner's download in
+  `docs/data/air-attacks/` is gitignored; the committed copy is `data-raw/air-attacks-on-ukraine/missile_attacks_daily.csv`.
