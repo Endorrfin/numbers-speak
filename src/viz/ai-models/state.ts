@@ -1,7 +1,8 @@
 // state.ts — CHANGED (S3-ai1): the AI-models page's URL state (pure; unit-tested). One query string for the angles:
-//   ?show=timeline|scale|origins   (timeline = default; arena, users and lineage arrive in S3-ai2)
+//   ?show=timeline|scale|arena|users|lineage|origins   (timeline = default; CHANGED (S3-ai2): arena, users, lineage)
 //   timeline: ?company=<id> (highlight one of the eight) · ?from=YYYY-MM · ?to=YYYY-MM (the brushed period)
-//   scale:    ?company=<id>
+//   scale · arena · users: ?company=<id>
+//   lineage:  ?company=<id> (also opens that company's tree)
 //   origins:  ?split=access (default: country)
 //   every angle: ?view=table
 // Values are checked for shape here and against the data on the page (an unknown company or a month outside the data
@@ -10,7 +11,8 @@ import type { VizParams } from '../../catalog/types';
 import { MONTH, SPLITS } from './data';
 import type { Month, Split } from './data';
 
-export const SHOWS = ['timeline', 'scale', 'origins'] as const;
+// CHANGED (S3-ai2): in the order of the tab keys A–F.
+export const SHOWS = ['timeline', 'scale', 'arena', 'users', 'lineage', 'origins'] as const;
 export type Show = (typeof SHOWS)[number];
 export type View = 'chart' | 'table';
 
@@ -44,6 +46,9 @@ type Param = 'company' | 'from' | 'to' | 'split';
 const USES: Record<Show, readonly Param[]> = {
   timeline: ['company', 'from', 'to'],
   scale: ['company'],
+  arena: ['company'], // CHANGED (S3-ai2)
+  users: ['company'],
+  lineage: ['company'],
   origins: ['split'],
 };
 

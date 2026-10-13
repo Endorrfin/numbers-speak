@@ -87,7 +87,8 @@ src/
                renderButterfly.ts · Butterfly.tsx (S3‑bdd) · renderWaffle.ts · Waffle.tsx · renderStrip.ts · Strip.tsx ·
                tooltip.ts (S3‑tl) · renderBarRace.ts · BarRace.tsx (S3‑br) · renderTimeSeries.ts · TimeSeries.tsx ·
                renderStackedRows.ts · StackedRows.tsx (S3‑aa) · renderScatter.ts · Scatter.tsx · renderSwarm.ts ·
-               Swarm.tsx · renderDumbbell.ts · Dumbbell.tsx · renderPointMap.ts · PointMap.tsx (S3‑re) · renderLanes.ts · Lanes.tsx ·
+               Swarm.tsx · renderDumbbell.ts · Dumbbell.tsx · renderPointMap.ts · PointMap.tsx (S3‑re) · renderLanes.ts · Lanes.tsx · renderSpans.ts · Spans.tsx · renderMilestones.ts ·
+               Milestones.tsx · renderTree.ts · Tree.tsx (S3‑ai2) ·
                scatterZoom.ts (S3‑ai1) · hooks.ts · palette.ts
   components/  layout/ (TopBar, Footer) · catalog/ (CatalogPage, FilterBar, VizCard, CardPreview + previewFormat — S3‑th)
                viz/ (VizPage, AboutData, Related — S3‑nav, Pager — S3‑fx; Finder · FocusPicker · CountryFocus · focusText — S3‑uf) ·
@@ -128,7 +129,7 @@ _examples/     legacy D3 pages being ported (gitignored — never committed)
 ## 5. Catalog
 34 entries in 5 tabs — see `CATALOG.md` (authoritative). Waves: P2 golden → P3 MVP (16) → P4 full (30);
 `births-deaths-ua` (#31, S3‑bd) and `births-deaths-per-day` (#5, S3‑bdd) shipped out of wave as priorities;
-`oil` (#32, S3‑oil), `electricity` (#33, S3‑el) and `ai-models` (#34, S3‑ai, draft) added on the owner's request.
+`oil` (#32, S3‑oil), `electricity` (#33, S3‑el) and `ai-models` (#34, S3‑ai, published in S3‑ai2) added on the owner's request.
 
 ## 6. Charts & interactivity
 Chart kit: `RankedBar` (S2) · `YearChart` (S3‑bd: lines, gap fills, areas, bars, mirrored bars, period bands,
@@ -143,7 +144,9 @@ ranked horizontal bars split into segments, date + sub‑label column; opt‑in 
 labelled lanes over a UTC axis, same‑day dots dodged, labels merged "first +n", overview strip + d3-brush that reports the span
 on drag end; no selection over the whole span) · `Scatter` opt‑in `segments` + `zoom` (S3‑ai1; gestures in `scatterZoom.ts`:
 Ctrl/⌘ + wheel or pinch, a plain wheel scrolls the page, one finger scrolls until zoomed; without the options the SVG is
-byte‑identical) · `HierarchyTree` + one‑offs. Every chart:
+byte‑identical) · `Spans` (S3‑ai2: Gantt rows of stretches + a thin secondary strip + a total bar per row, one dated
+marker) · `Milestones` (S3‑ai2: dated figures on a log axis, point shape = measure, a line only inside one series) · `Tree`
+(S3‑ai2: d3-hierarchy tidy tree, one column per depth, caller cuts the forest, labels fitted + `<title>`) · one‑offs. Every chart:
 responsive width (ResizeObserver; labels stack above bars < 560 px), `role="img"` + a label that states the
 view, keyboard‑operable controls, a **table view** (the keyboard / screen‑reader path; tooltips are
 pointer‑only, text‑only), `prefers-reduced-motion` → no transitions, all settings in the URL query with
@@ -247,6 +250,9 @@ current. **Agent sessions never push.**
   d3-selection & co. in. What works: import d3-brush / d3-zoom (and d3-hierarchy in S3‑ai2) **from their own packages**
   (declared in package.json), leave them unassigned (`PAGE_ONLY_D3` in vite.config.ts), and mark the umbrella free of side
   effects (`treeshake.moduleSideEffects`). Check after a build: `grep -l __zoom dist/assets/*.js` names the page chunk only.
+- **Lazy angles inside a page (S3‑ai2):** `ai-models` loads C · D · E with `React.lazy` (own chunks, the default angle stays
+  ≤ 30 kB gzip). SSR smoke renders a `Suspense` fallback for a lazy angle on the first pass — smoke renders each once, awaits
+  the module imports and a timer tick, then checks; a new lazy angle needs the same warm‑up.
 - macOS screenshot names contain U+202F before AM/PM — stage them through a copy with a plain name (in `dist-*`).
 - **Keep d3-geo and d3-delaunay out of the site (S3‑re):** `manualChunks` puts every d3 module a page uses into the
   shared `d3-vendor` chunk, so one page importing them grew it by ~37 kB for every chart page. `renderPointMap.ts`
@@ -290,6 +296,8 @@ Next per `docs/IMPROVEMENTS.md` §1: S3‑ps (births‑deaths‑per‑day → UN
 angles A · B · F), prompt in `docs/AI-MODELS-PLAN.md` §7.
 **S3‑ai1 (2026‑10‑13):** `ai-models` draft — prep, Lanes + brush (A), Scatter zoom (B), StackedRows (F). Next: **S3‑ai2** (C · D · E +
 release), prompt in `docs/AI-MODELS-PLAN.md` §7b.
+**S3‑ai2 (2026‑10‑13):** `ai-models` **published** — C (No. 1 on LMArena, Spans), D (users, Milestones), E (built on, Tree +
+d3-hierarchy), card ×4.7 a year. Open: Safari / iPhone checklist (owner).
 
 ## 14. Status / progress log
 - **S0** (2026‑09‑17) — repo named `numbers-speak`; decisions D1–D10 accepted; `PROJECT-BRIEF.md`,
@@ -1125,4 +1133,36 @@ release), prompt in `docs/AI-MODELS-PLAN.md` §7b.
   Branch (proposed) `viz/2026-10-ai-models` (continues S3‑ai0). Owner: `npm ci` after pulling (lock); questions in the report.
   Owner (2026‑10‑13): zoom without a plain wheel — OK; no “written with Claude” line on the page; `claims.json` in S3‑ai2 — OK.
   Open: Safari / iPhone check of the brush and the pinch zoom (S3‑ai2 checklist).
-
+- **S3‑ai2** (2026‑10‑13) — entry #34 `ai-models` **published**: angles C · D · E, card preview, CHANGELOG, `related`.
+  Data: `claims.json` (19 first-party user counts; + ChatGPT 250 M weekly, openai.com 2 Oct 2024, and 500 M, openai.com
+  31 Mar 2025 — read in the owner's Chrome by same-origin fetch; + Gemini app 400 M monthly, blog.google I/O 2025 keynote;
+  ChatGPT 100–400 M exist only in press / on X → not added, said on the page; none found for Mistral) and `lineage.json`
+  (per company the models built on its models with the base each names; counts = the rule: Meta 197 / 157, Google
+  122 / 81, Alibaba 112 / 73…; roots must be the company's own models or prep aborts; 11 kB gzip). README decisions 10–13.
+  Page: `arena.tsx` (C: Gantt row per company that held No. 1 — 5 —, runs solid, top-3 stretches a thin strip, days at
+  No. 1 as bars 501 · 256 · 222 · 38 · 25 = 1,042, style-control marker 16 May 2025; tables: 32 runs + the eight companies'
+  days at No. 1 / share / top 3; notes on removed models and method changes), `users.tsx` (D: log axis, ● weekly ■ monthly
+  in the app ▲ monthly inside other products, lines only within product + measure, names at the last point; table with
+  date, figure as phrased — “more than 800 million” —, measure, the verbatim quote and the link; companies with no count
+  named from the data: Anthropic, Alibaba, Mistral, DeepSeek), `lineage.tsx` (E: bar + organizations + columns a year per
+  company, 2026 marked “*”; the row's Tree button = `?company=` opens its d3-hierarchy tree, cut to 6 families × 5 × 3 with
+  “+n more” leaves; table of every derived model for the picked company), `views.ts` (pure helpers). `state.ts`:
+  `?show=arena|users|lineage` (+ `company`). New cores `renderSpans` · `renderMilestones` · `renderTree` (+ wrappers,
+  `test-spans-tree.ts`); `formatDays` / `formatPeople`; preview format `times1` (×4.7). C · D · E are lazy chunks (§12).
+  Fixes from the screenshots (pre-existing, S3‑ai1): a lane sublabel wider than its column (Mistral's) was cut at the
+  SVG edge → `fitSub` + `<title>`; B's UK y title ran past 360 px → “ · ” split point.
+  Owner decisions: card key ×4.7 a year (of 3 candidates); wording — counts and dates only.
+  Bundle: `ai-models` 23.9 kB gzip (S3‑ai1 20.5; 36.1 before the lazy split), arena 5.0 · users 4.9 · lineage 6.6 kB gzip;
+  `grep` on dist: d3-hierarchy (`nodeSize`) only in the lineage chunk, brush / `__zoom` only in ai-models; `d3-vendor`
+  24.67 kB (unchanged); `index` 26.54 kB gzip. `d3-hierarchy@^3.1.2` in package.json + lock (lock regenerated in the
+  scratch copy with `npm install --package-lock-only` — run `npm ci` once).
+  Tests: `test-ai-models` 10 → 14 groups (runs cover the span; claims = CSV, hosts first-party only, no mixed measures;
+  shipped trees = recomputed, every derived model once; tree cut accounts for every model), `test-spans-tree` (5),
+  `test-lanes` +1 (`fitSub`), `test-previews` 18 → 19 entries + the ai-models card; smoke 2,429 → 2,585 (C · D · E EN + UK,
+  tables, links https only, hostile params, the lazy warm-up; mutation-checked). `verify` green in a scratch copy (38 test
+  files · 2,585 smoke checks · build). Playwright (playwright-core 1.64 + cached Chromium 1243, built site under the
+  production URL): 10 views × 360 / 390 / 768 / 1280 × EN dark / UK light = 80 — no horizontal scroll, nothing outside the
+  column, 0 console messages; hover tooltips on the Gantt and the milestones, a Tree click opens 59 nodes and sets
+  `?company=meta`. Branch (proposed) `viz/2026-10-ai-models-s3ai2`.
+  Open: Safari / iPhone checklist (owner); Mistral's EU DSA “monthly active recipients” figure, if Mistral publishes it,
+  could be a first-party point.

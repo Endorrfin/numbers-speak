@@ -6,8 +6,8 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { csvParse } from 'd3';
-import { ARENA_CONFIGS, accessOf, splitList } from '../../src/viz/ai-models/data';
-import type { ArenaDataset, ArenaSnapshot, EpochModel, HeroDef } from '../../src/viz/ai-models/data';
+import { ARENA_CONFIGS, METRICS, QUALIFIERS, accessOf, splitList } from '../../src/viz/ai-models/data';
+import type { ArenaDataset, ArenaSnapshot, Claim, ClaimsDataset, EpochModel, HeroDef, Metric, Qualifier } from '../../src/viz/ai-models/data';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const read = (file: string) => csvParse(readFileSync(join(here, file), 'utf8'));
@@ -62,4 +62,33 @@ export function readArena(): ArenaDataset {
   const snapshots = [...byDate.values()].sort((a, b) => (a.date < b.date ? -1 : 1));
   for (const s of snapshots) s.top.sort((a, b) => a.rank - b.rank || (a.model < b.model ? -1 : 1));
   return { retrieved: ARENA_END, end: ARENA_END, switchDate: ARENA_SWITCH, snapshots };
+}
+
+/**
+ * CHANGED (S3-ai2): user-claims.csv → claims.json. A claim belongs to one of the eight when its company has the hero's
+ * name (Microsoft does not); rows are sorted by product, then date. Unknown metric / qualifier fail here.
+ */
+export function readClaims(heroes: readonly HeroDef[]): ClaimsDataset {
+  const claims = read('user-claims.csv').map((d): Claim => {
+    const metric = d.metric as Metric;
+    const qualifier = d.qualifier as Qualifier;
+    if (!METRICS.includes(metric)) throw new Error(`user-claims: unknown metric ${d.metric}`);
+    if (!QUALIFIERS.includes(qualifier)) throw new Error(`user-claims: unknown qualifier ${d.qualifier}`);
+    return {
+      asOf: d.as_of!,
+      published: d.published!,
+      product: d.product!,
+      company: d.company!,
+      hero: heroes.find((h) => h.name === d.company)?.id ?? null,
+      value: Number(d.value),
+      qualifier,
+      metric,
+      url: d.source_url!,
+      quote: d.quote!,
+      retrieved: d.retrieved!,
+    };
+  });
+  claims.sort((a, b) => (a.product < b.product ? -1 : a.product > b.product ? 1 : a.asOf < b.asOf ? -1 : a.asOf > b.asOf ? 1 : 0));
+  const retrieved = claims.reduce((m, c) => (c.retrieved > m ? c.retrieved : m), '');
+  return { retrieved, claims };
 }

@@ -37,7 +37,7 @@ export default defineViz({
   },
   data: ['brands-2000-2025.json'],
   // CHANGED (S3-nav): "See also" — the author's picks, in this order.
-  related: ['gdp-by-country', 'robotization', 'oil'],
+  related: ['gdp-by-country', 'ai-models', 'robotization'], // CHANGED (S3-ai2): + ai-models (tech is 63 % of the ranking), oil out
   status: 'published',
   added: '2026-09-21',
   updated: '2026-09-21',

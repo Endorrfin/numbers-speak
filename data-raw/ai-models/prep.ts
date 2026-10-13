@@ -5,11 +5,13 @@
  *   epoch-models.csv          extract-epoch.py ← Epoch AI, all_ai_models.csv (CC BY 4.0): models since 2017
  *   lmarena-text-overall.csv  extract-lmarena.py ← LMArena leaderboard-dataset (CC BY 4.0): the board the site showed
  *   heroes.csv                the eight companies: product-line pattern, Epoch organization names, LMArena key
+ *   user-claims.csv           CHANGED (S3-ai2): user counts published by the companies themselves (first-party URL + quote)
  *
  * Checks that abort the prep: the rule (≥ 30 days in the LMArena top 3, or ≥ 100 models descending from the company's
  * models), recomputed over every organization in both files, names exactly the companies in heroes.csv; days at No. 1
  * add up to the whole span; every company has a lane; F's two splits add up to the same yearly totals; every file
- * passes the page's own parser.
+ * passes the page's own parser. CHANGED (S3-ai2): every lineage root is the company's own model and every tree has as many
+ * derived models as the rule counted; every claim's URL is https and every company of a claim is named.
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -26,16 +28,19 @@ import {
   candidates,
   derivedFrom,
   heroCriterion,
+  lineageTree,
   heroOfModel,
   isLanguageModel,
   originOf,
   parseArena,
+  parseClaims,
   parseCompute,
+  parseLineage,
   parseOrigins,
   parseReleases,
 } from '../../src/viz/ai-models/data';
-import type { ComputeDataset, OriginsDataset, Release, ReleasesDataset } from '../../src/viz/ai-models/data';
-import { ARENA_END, EPOCH_RETRIEVED, EPOCH_UPDATED, readArena, readEpoch, readHeroes } from './raw';
+import type { ComputeDataset, LineageDataset, OriginsDataset, Release, ReleasesDataset } from '../../src/viz/ai-models/data';
+import { ARENA_END, EPOCH_RETRIEVED, EPOCH_UPDATED, readArena, readClaims, readEpoch, readHeroes } from './raw';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const OUT_DIR = join(here, '../../public/data/ai-models');
@@ -137,12 +142,36 @@ for (const m of epoch.filter(isLanguageModel)) {
   origins.access[m.access][i]!++;
 }
 
+// ── CHANGED (S3-ai2): lineage.json (E) — one tree per company, most derived models first ────────────
+const lineageDs: LineageDataset = {
+  ...head,
+  years,
+  heroes: heroRows
+    .map((h) => {
+      const def = heroes.find((d) => d.id === h.id)!;
+      const tree = lineageTree(epoch, def.orgs, years);
+      if (tree.derived !== h.derived) problems.push(`lineage: ${h.name} has ${tree.derived} derived models in its tree, the rule counted ${h.derived}`);
+      if (tree.orgs !== h.derivedOrgs) problems.push(`lineage: ${h.name} ${tree.orgs} organizations, the rule counted ${h.derivedOrgs}`);
+      const byName = new Map(epoch.map((m) => [m.model, m]));
+      for (const n of tree.nodes.filter((x) => x.parent === null)) {
+        if (!(byName.get(n.model)?.orgs ?? []).some((o) => def.orgs.includes(o))) problems.push(`lineage: root ${n.model} of ${h.name} is not the company's model`);
+      }
+      return { id: h.id, ...tree };
+    })
+    .sort((a, b) => b.derived - a.derived || (a.id < b.id ? -1 : 1)),
+};
+
+// ── CHANGED (S3-ai2): claims.json (D) ─────────────────────────────────────────────────────────────────
+const claims = readClaims(heroes);
+
 // ── Validate with the page's own parsers, then write ───────────────────────────────────────────────
 const out: Array<[string, unknown, (json: unknown) => unknown]> = [
   [FILES.releases, releases, (j) => parseReleases(j)],
   [FILES.compute, compute, (j) => parseCompute(j)],
   [FILES.origins, origins, (j) => parseOrigins(j)],
   [FILES.arena, arena, (j) => parseArena(j)],
+  [FILES.claims, claims, (j) => parseClaims(j)],
+  [FILES.lineage, lineageDs, (j) => parseLineage(j)],
 ];
 for (const [file, json, parse] of out) {
   try {
@@ -167,3 +196,4 @@ console.log(
   `releases ${rows.length} · compute ${compute.rows.length} of ${compute.models} · origins ${years[0]}–${lastYear} (through ${through}) · ` +
     `arena ${arena.snapshots.length} snapshots ${arena.snapshots[0]!.date}–${ARENA_END}`,
 );
+console.log(`lineage: ${lineageDs.heroes.map((h) => `${h.id} ${h.derived}/${h.orgs}`).join(' · ')} · claims ${claims.claims.length}`);

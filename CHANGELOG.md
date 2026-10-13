@@ -2,6 +2,25 @@
 
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
+## 2026‑10‑13
+- **New:** [AI models, 2017–2026 / AI-моделі, 2017–2026](https://endorrfin.github.io/numbers-speak/#/v/ai-models) — six
+  angles on eight companies chosen by a rule computed from the data (≥ 30 days in the LMArena top 3, or ≥ 100 models in
+  Epoch AI's database built on theirs), not by hand. 382 language and multimodal models on a timeline; the computing
+  used to train 1,242 models grows ×4.7 a year; five companies held No. 1 on the LMArena text leaderboard in 1,042 days
+  — OpenAI 501, Anthropic 256, Google 222, DeepSeek 38, xAI 25 — in 32 runs
+  ([who was No. 1](https://endorrfin.github.io/numbers-speak/#/v/ai-models?show=arena)); user counts only from the
+  companies' own pages and filings, each with its source (ChatGPT: more than 1.2 billion a week, Gemini app 950 million
+  a month); 197 models by 157 other organizations were built on Meta's models, 112 on Alibaba's
+  ([family trees](https://endorrfin.github.io/numbers-speak/#/v/ai-models?show=lineage)); China 188 vs the U.S. 186
+  language models in 2024. /
+  Шість поглядів на вісім компаній, обраних за правилом із даних (≥ 30 днів у першій трійці LMArena або ≥ 100 моделей у
+  базі Epoch AI на їхніх моделях), а не вручну. 382 мовні й мультимодальні моделі на часовій шкалі; обчислення на
+  навчання 1 242 моделей зростають ×4,7 на рік; п'ять компаній були №1 у текстовому рейтингу LMArena за 1 042 дні —
+  OpenAI 501, Anthropic 256, Google 222, DeepSeek 38, xAI 25 — у 32 серіях; кількість користувачів — лише зі сторінок і
+  документів самих компаній, кожна з джерелом (ChatGPT — понад 1,2 млрд на тиждень, застосунок Gemini — 950 млн на
+  місяць); на моделях Meta побудовано 197 моделей від 157 інших організацій, на моделях Alibaba — 112; Китай 188 проти
+  США 186 мовних моделей у 2024 році.
+
 ## 2026‑10‑07
 - **Updated:** every visualization page now ends with “See also” — three related visualizations as gallery cards,
   with their data previews: GDP leads to GDP (PPP) per person, the volunteer registry to donations, oil to

@@ -1,6 +1,8 @@
 // test-ai-models.ts — CHANGED (S3-ai1): the AI-models entry — the rule that picks the eight companies (recomputed from the
 // raw extracts over every organization), the four dataset contracts and their rejections, the shipped files against the
 // raw rows, the derivations the angles draw (periods, lanes, trend, origins), the axis ticks and the URL state.
+// CHANGED (S3-ai2): + angles C · D · E — No. 1 runs, claims (raw = shipped, one line per product + measure), lineage trees
+// (= the rule's counts), the tree cut, the user axis; six data files.
 // Run: npm test.
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -11,6 +13,15 @@ import {
   ancestorOrgs,
   accessOf,
   arenaDays,
+  arenaLeaders,
+  arenaRuns,
+  claimSeries,
+  familyTrees,
+  lineageTree,
+  parseClaims,
+  parseLineage,
+  silentCompanies,
+  top3Spans,
   candidates,
   computeTrend,
   decimalYear,
@@ -41,7 +52,8 @@ import meta from '../src/viz/ai-models/meta';
 import { SHOWS, parseAiState, switchShow, toAiParams } from '../src/viz/ai-models/state';
 import { flopTicks, formatFlopTick, formatYearTick, yearTicks } from '../src/viz/ai-models/ticks';
 import { formatFlop, formatMonth, formatPowerOfTen } from '../src/lib/format';
-import { readArena, readEpoch, readHeroes } from '../data-raw/ai-models/raw';
+import { readArena, readClaims, readEpoch, readHeroes } from '../data-raw/ai-models/raw';
+import { TREE_CAPS, claimText, familyView, lastDay, userAxis } from '../src/viz/ai-models/views';
 
 let passed = 0;
 function test(name: string, fn: () => void): void {
@@ -61,6 +73,8 @@ const releases = parseReleases(shipped(FILES.releases));
 const compute = parseCompute(shipped(FILES.compute));
 const origins = parseOrigins(shipped(FILES.origins));
 const arena = parseArena(shipped(FILES.arena));
+const claimsDs = parseClaims(shipped(FILES.claims)); // CHANGED (S3-ai2)
+const lineageDs = parseLineage(shipped(FILES.lineage));
 const heroes = readHeroes();
 const epoch = readEpoch();
 const lineage = ancestorOrgs(epoch);
@@ -234,7 +248,120 @@ test('URL state: defaults omitted, shapes checked, angle-only parameters dropped
   assert.deepEqual(toAiParams(parseAiState({ show: 'origins', split: 'access' })), { show: 'origins', split: 'access' });
   const bad = parseAiState({ show: 'x', company: '<script>', from: '2024-13', to: '24-01', split: 'y', view: 'z' });
   assert.deepEqual(bad, s);
-  assert.deepEqual([...SHOWS], ['timeline', 'scale', 'origins']);
+  assert.deepEqual([...SHOWS], ['timeline', 'scale', 'arena', 'users', 'lineage', 'origins']);
+  // CHANGED (S3-ai2): C · D · E keep the highlighted company and nothing else.
+  for (const show of ['arena', 'users', 'lineage'] as const) {
+    assert.deepEqual(toAiParams(switchShow(a, show)), { show, company: 'openai', view: 'table' });
+    assert.deepEqual(toAiParams(parseAiState({ show, split: 'access', from: '2024-01' })), { show });
+  }
 });
 
-console.log(`✓ ai-models — ${passed} test groups passed (releases ${releases.rows.length} · compute ${compute.rows.length} · arena ${arena.snapshots.length}).`);
+// ── CHANGED (S3-ai2) ──────────────────────────────────────────────────────────────────────────────
+
+test('C: 32 runs at No. 1 cover the span; days per company 501 · 256 · 222 · 38 · 25; top-3 stretches add up to the rule', () => {
+  const runs = arenaRuns(arena);
+  assert.equal(runs.length, 32);
+  assert.equal(runs[0]!.from, arena.snapshots[0]!.date);
+  assert.equal(runs.at(-1)!.to, arena.end);
+  runs.forEach((r, i) => {
+    if (i > 0) assert.equal(r.from, runs[i - 1]!.to, `run ${i} starts where ${i - 1} ends`);
+    if (i > 0) assert.ok(r.model !== runs[i - 1]!.model, `run ${i} changes the model`);
+  });
+  assert.equal(runs.reduce((s, r) => s + r.days, 0), 1042);
+  const leaders = arenaLeaders(arena);
+  assert.deepEqual(leaders.map((l) => [l.org, l.first]), [['openai', 501], ['anthropic', 256], ['google', 222], ['deepseek', 38], ['xai', 25]]);
+  for (const l of leaders) {
+    assert.equal(l.runs.reduce((s, r) => s + r.days, 0), l.first, l.org);
+    const top3 = top3Spans(arena, l.org).reduce((s, x) => s + Math.round((Date.parse(x.to) - Date.parse(x.from)) / 86_400_000), 0);
+    assert.equal(top3, l.top3, l.org);
+    assert.equal(top3, releases.heroes.find((h) => h.id === l.org)!.top3Days, `${l.org} = releases.json`);
+  }
+  // Every company that held No. 1 is one of the eight (names on the page come from releases.json).
+  assert.ok(leaders.every((l) => releases.heroes.some((h) => h.id === l.org)));
+  assert.equal(lastDay('2024-03-01'), '2024-02-29');
+});
+
+test('D: claims.json = user-claims.csv; first-party https only; lines never join two measures', () => {
+  assert.deepEqual(claimsDs, readClaims(heroes));
+  assert.equal(claimsDs.claims.length, 19);
+  assert.ok(claimsDs.claims.every((c) => c.url.startsWith('https://') && c.quote.length > 10));
+  // Only company domains (no press, no trackers).
+  const hosts = new Set(claimsDs.claims.map((c) => new URL(c.url).hostname));
+  assert.deepEqual([...hosts].sort(), ['blog.google', 'openai.com', 's21.q4cdn.com', 'www.microsoft.com', 'www.sec.gov']);
+  const series = claimSeries(claimsDs);
+  assert.deepEqual(series.map((s) => s.key), ['chatgpt:weekly_active', 'copilot:monthly_family', 'gemini:monthly_active', 'grok:monthly_incl_x', 'metaai:monthly_in_apps']);
+  for (const s of series) assert.ok(s.claims.every((c) => c.product === s.product && c.metric === s.metric));
+  assert.equal(claimsDs.claims.find((c) => c.company === 'Microsoft')!.hero, null);
+  assert.equal(claimsDs.claims.find((c) => c.product === 'chatgpt')!.hero, 'openai');
+  assert.deepEqual(silentCompanies(releases.heroes, claimsDs), ['Anthropic', 'Alibaba', 'Mistral', 'DeepSeek']);
+  // The S3-ai2 additions: two openai.com posts and Google I/O 2025.
+  assert.deepEqual(series[0]!.claims.slice(0, 2).map((c) => [c.asOf, c.value]), [['2024-10-02', 250e6], ['2025-03-31', 500e6]]);
+  assert.deepEqual(series[2]!.claims[0]!.value, 400e6);
+  assert.equal(claimText({ value: 8e8, qualifier: 'more_than' }, 'en'), 'more than 800 million');
+  assert.equal(claimText({ value: 1e9, qualifier: 'almost' }, 'uk'), `майже 1${NB}млрд`);
+  assert.deepEqual(userAxis([1.17e8, 1.2e9]), { domain: [1e8, 2e9], ticks: [1e8, 2e8, 5e8, 1e9, 2e9] });
+  const c = clone(shipped(FILES.claims)) as { claims: Array<Record<string, unknown>> };
+  c.claims[0]!.url = 'http://example.com';
+  rejects(() => parseClaims(c), /url/);
+  const c2 = clone(shipped(FILES.claims)) as { claims: Array<Record<string, unknown>> };
+  c2.claims[0]!.metric = 'daily';
+  rejects(() => parseClaims(c2), /metric/);
+  const c3 = clone(shipped(FILES.claims)) as { claims: Array<Record<string, unknown>> };
+  c3.claims.reverse();
+  rejects(() => parseClaims(c3), /sorted/);
+});
+
+test('E: one tree per company with exactly the rule’s counts; per-year counts; roots are the company’s own models', () => {
+  assert.deepEqual(lineageDs.heroes.map((h) => `${h.id} ${h.derived}/${h.orgs}`), ['meta 197/157', 'google 122/81', 'alibaba 112/73', 'openai 59/47', 'mistral 32/25', 'deepseek 22/10', 'anthropic 1/0', 'xai 0/0']);
+  const byName = new Map(epoch.map((m) => [m.model, m]));
+  for (const h of lineageDs.heroes) {
+    const rel = releases.heroes.find((x) => x.id === h.id)!;
+    const def = heroes.find((x) => x.id === h.id)!;
+    assert.equal(h.derived, rel.derived, h.id);
+    assert.equal(h.orgs, rel.derivedOrgs, h.id);
+    assert.deepEqual({ id: h.id, ...lineageTree(epoch, def.orgs, lineageDs.years) }, h, `${h.id}: shipped = recomputed`);
+    for (const n of h.nodes.filter((x) => x.parent === null)) assert.ok(byName.get(n.model)!.orgs.some((o) => def.orgs.includes(o)), `${h.id} root ${n.model}`);
+    const trees = familyTrees(h);
+    assert.equal(trees.reduce((s, t) => s + t.size, 0), h.derived, `${h.id}: every derived model hangs in a tree once`);
+  }
+  assert.equal(lineageDs.years.at(-1), 2026);
+  const meta = lineageDs.heroes[0]!;
+  assert.deepEqual(meta.byYear.slice(5), [2, 82, 94, 19, 0]);
+  const big = familyTrees(meta)[0]!;
+  assert.equal(big.model, 'LLaMA-7B');
+  assert.equal(big.size, 29);
+  const l = clone(shipped(FILES.lineage)) as { heroes: Array<{ derived: number; nodes: Array<{ parent: string | null }> }> };
+  l.heroes[0]!.derived += 1;
+  rejects(() => parseLineage(l), /have a parent/);
+  const l2 = clone(shipped(FILES.lineage)) as { heroes: Array<{ nodes: Array<{ parent: string | null }> }> };
+  l2.heroes[0]!.nodes.at(-1)!.parent = 'Not a model';
+  rejects(() => parseLineage(l2), /not in the tree/);
+});
+
+test('E: the tree cut — at most 6 families, 5 children, 3 grandchildren; the rest named as “+n more”', () => {
+  const more = (n: number, m: number): string => `+${n} (${m})`;
+  for (const h of lineageDs.heroes.filter((x) => x.derived > 0)) {
+    const trees = familyTrees(h);
+    const { roots, shown } = familyView(trees, TREE_CAPS, more);
+    const real = roots.filter((r) => !r.more);
+    assert.ok(real.length <= TREE_CAPS.roots);
+    assert.equal(roots.some((r) => r.more), trees.length > TREE_CAPS.roots, h.id);
+    for (const r of real) {
+      assert.ok((r.children ?? []).filter((c) => !c.more).length <= TREE_CAPS.children);
+      for (const c of r.children ?? []) {
+        assert.ok((c.children ?? []).filter((g) => !g.more).length <= TREE_CAPS.grandchildren);
+        for (const g of c.children ?? []) assert.equal(g.children, undefined, 'nothing drawn below the grandchildren');
+      }
+    }
+    // Shown + everything the "+n" leaves and "+k" subtitles stand for = all derived models.
+    const count = (list: typeof roots): number =>
+      list.reduce((s, d) => {
+        if (d.more) return s + Number(/\((\d+)\)/.exec(d.label)![1]);
+        const hidden = /\+(\d+)$/.exec(d.sub ?? '');
+        return s + (hidden ? Number(hidden[1]) : 0) + count(d.children ?? []);
+      }, 0);
+    assert.equal(shown + count(roots), h.derived, h.id);
+  }
+});
+
+console.log(`✓ ai-models — ${passed} test groups passed (releases ${releases.rows.length} · compute ${compute.rows.length} · arena ${arena.snapshots.length} · claims ${claimsDs.claims.length} · lineage ${lineageDs.heroes.length}).`);

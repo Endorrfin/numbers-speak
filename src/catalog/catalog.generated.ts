@@ -15,8 +15,8 @@ export const VIZ_CARDS: readonly VizCard[] = [
       "uk": "AI-моделі, 2017–2026"
     },
     "subtitle": {
-      "en": "Who released what and when, how much computing went into training, and where the models come from — eight companies chosen by a rule, not by taste",
-      "uk": "Хто що випустив і коли, скільки обчислень пішло на навчання і звідки моделі — вісім компаній за правилом, а не на смак"
+      "en": "Who released what and when, how much computing went into training, who led the leaderboard, how many people use them and who builds on whose models — eight companies chosen by a rule, not by taste",
+      "uk": "Хто що випустив і коли, скільки обчислень пішло на навчання, хто очолював рейтинг, скільки людей ними користується і хто будує на чиїх моделях — вісім компаній за правилом, а не на смак"
     },
     "rubrics": [
       "knowledge",
@@ -46,6 +46,9 @@ export const VIZ_CARDS: readonly VizCard[] = [
       "alibaba",
       "mistral",
       "xai",
+      "lmarena",
+      "chatgpt",
+      "gemini",
       "ші",
       "штучний інтелект",
       "мовні моделі"
@@ -53,7 +56,7 @@ export const VIZ_CARDS: readonly VizCard[] = [
     "origin": {
       "kind": "original"
     },
-    "status": "draft",
+    "status": "published",
     "added": "2026-10-13",
     "updated": "2026-10-13",
     "related": [
@@ -456,8 +459,8 @@ export const VIZ_CARDS: readonly VizCard[] = [
     "updated": "2026-09-21",
     "related": [
       "gdp-by-country",
-      "robotization",
-      "oil"
+      "ai-models",
+      "robotization"
     ]
   },
   {
@@ -730,9 +733,9 @@ export const VIZ_CARDS: readonly VizCard[] = [
     "added": "2026-09-24",
     "updated": "2026-09-24",
     "related": [
+      "ai-models",
       "global-brands-race",
-      "gdp-ppp-per-capita",
-      "electricity"
+      "gdp-ppp-per-capita"
     ]
   },
   {

@@ -45,7 +45,7 @@ const get = (id: string): CardPreview => {
 
 await test('every published entry has a preview; every preview passes the contract', async () => {
   const { ids } = await generatePreviews();
-  assert.equal(ids.length, 18); // CHANGED (S3-re): + real-estate-world; CHANGED (S3-oil): + oil; CHANGED (S3-el): + electricity
+  assert.equal(ids.length, 19); // CHANGED (S3-re): + real-estate-world; CHANGED (S3-oil): + oil; CHANGED (S3-el): + electricity; CHANGED (S3-ai2): + ai-models
   for (const [id, p] of built) assert.deepEqual(parseCardPreview(p, id), p);
 });
 
@@ -102,6 +102,21 @@ await test('electricity: coal and renewables lines, renewables’ share in the l
   assert.ok(m.lines[1]!.values.at(-2)! < m.lines[0]!.values.at(-2)!, 'below in 2024');
   assert.equal(formatKeyValue(p.key, 'en'), '33.8%');
   assert.equal(formatKeyLabel(p.key, 'en'), 'renewables, 2025 — coal 33.1%');
+});
+
+// CHANGED (S3-ai2): the ai-models card — the training-compute trend as the key, the largest run of each year as the line.
+await test('ai-models: ×4.7 a year on every model with a figure; the line rises from 0 in 2017 to 2026', () => {
+  const p = get('ai-models');
+  assert.equal(p.marks.kind, 'series');
+  const m = p.marks as Extract<typeof p.marks, { kind: 'series' }>;
+  assert.equal(m.from, '2017');
+  assert.equal(m.to, '2026');
+  assert.equal(m.lines.length, 1);
+  assert.equal(m.lines[0]!.values[0], 0);
+  assert.ok(m.max > 5, `${m.max} orders of magnitude`);
+  assert.equal(formatKeyValue(p.key, 'en'), '×4.7');
+  assert.equal(formatKeyValue(p.key, 'uk'), '×4,7');
+  assert.equal(formatKeyLabel(p.key, 'en'), 'a year: training compute, trend of 1,242 models');
 });
 
 await test('rankings: gdp, gdp-ppp, land-area, crime-index, robotization', () => {

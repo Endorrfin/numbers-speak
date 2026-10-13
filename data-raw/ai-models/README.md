@@ -9,7 +9,7 @@ Plan, angles and decisions: `docs/AI-MODELS-PLAN.md`.
 | `epoch-models.csv` | Epoch AI, *Data on AI models*, `all_ai_models.csv`: models published since 2017-01-01 (3,131 of 3,626), 11 columns — model, organization, date, domain, country, access, parameters, training FLOP, confidence, base model, link. Values verbatim. By `extract-epoch.py` (standard library). |
 | `lmarena-text-overall.csv` | LMArena `lmarena-ai/leaderboard-dataset`, text arena, category `overall`, the board the site showed: `text` for snapshots 2023-12-06 … 2025-05-15, `text_style_control` from 2025-05-16 (column `config`). Per snapshot: ranks 1–20 + the best row of each hero organization. 239 snapshots, 5,307 rows; ratings to 0.01. By `extract-lmarena.py` (needs `pandas` + `pyarrow`), which fails unless every snapshot has exactly one rank 1. |
 | `heroes.csv` | The eight companies: id, name, product lines, LMArena `organization` key, regex for the product lines at the start of an Epoch `Model` (case-insensitive), and `epoch_orgs` — the Epoch organization names that are the company. Used by `extract-lmarena.py` and `prep.ts`. |
-| `user-claims.csv` | 16 user counts published by the companies themselves: date the figure refers to (`as_of`), publication date, product, company, value, `qualifier` (`exact` · `more_than` · `almost` · `about`), `metric`, first-party URL, verbatim quote, retrieval date. |
+| `user-claims.csv` | 19 user counts (16 from S3-ai0 + 3 in S3-ai2) published by the companies themselves: date the figure refers to (`as_of`), publication date, product, company, value, `qualifier` (`exact` · `more_than` · `almost` · `about`), `metric`, first-party URL, verbatim quote, retrieval date. |
 
 ## Sources (not committed; sha256)
 
@@ -86,3 +86,23 @@ d845f68989881cb922ee6fd131d2bce6fb9c88dce5978eb0719a4c053476eff9  all_ai_models.
 9. **F**: language + multimodal models by first-listed developer country (U.S. / China / other; none recorded → other)
    and by access (open weights / closed / not recorded) — 2024 China 188 · U.S. 186; open weights 273 of 485 (2024),
    60 of 144 (2026, to 30 Sep). `claims.json` (angle D) is left for S3-ai2 with the early first-party milestones.
+
+## S3-ai2 changes (2026-10-13)
+
+10. **Three first-party points added to `user-claims.csv`** (read 2026-10-13): ChatGPT “over 250 million” weekly —
+    openai.com/index/scale-the-benefits-of-ai/ (2 Oct 2024); “500 million people who use ChatGPT every week” —
+    openai.com/index/march-funding-updates/ (31 Mar 2025), both read in the owner's Chrome (same-origin fetch); Gemini app
+    “over 400 million monthly active users” — blog.google/technology/ai/io-2025-keynote/ (Sundar Pichai, 20 May 2025).
+    ChatGPT 100 M (Nov 2023), 200 M (Aug 2024), 300 M (Dec 2024) and 400 M (Feb 2025) were found only in press reports
+    and posts on X that the agent cannot open — **not added** (rule: no first-party link, no point); the page says so.
+    No first-party count was found for Mistral either (press: downloads only).
+11. **`claims.json`** (`readClaims` in raw.ts): the CSV in the page's types, sorted by product then date; a claim
+    belongs to one of the eight when its company has the hero's name (Microsoft → none). Lines join one product AND one
+    measure only (`claimSeries`).
+12. **`lineage.json`** (`lineageTree` in data.ts): per company, every model whose base-model chain leads to its models,
+    hung under the first base that leads there; roots are the company's own models (prep aborts otherwise). Counts equal
+    the rule exactly: Meta 197 / 157 · Google 122 / 81 · Alibaba 112 / 73 · OpenAI 59 / 47 · Mistral 32 / 25 ·
+    DeepSeek 22 / 10 · Anthropic 1 / 0 · xAI 0. Largest family: LLaMA-7B (29 descendants). 63 kB, 11 kB gzip, loaded by
+    angle E only. The page draws at most 6 families × 5 children × 3 grandchildren; the table lists every model.
+13. **Arena runs** (angle C) are computed on the page from `arena.json` (`arenaRuns`): 32 runs, 31 changes of the No. 1
+    model; the longest is claude-fable-5, 107 days from 10 Jun 2026.

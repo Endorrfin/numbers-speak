@@ -6,8 +6,10 @@
 //   compute.json   Epoch AI: every model since 2017 with a training-compute figure (angle B), + how many models of each
 //                  company have one
 //   origins.json   Epoch AI: language and multimodal models a year by developer country and access to weights (angle F)
-//   arena.json     LMArena text leaderboard, overall: ranks 1–3 of every snapshot the site showed (angle C, S3-ai2; the
-//                  rule's "days in the top 3")
+//   arena.json     LMArena text leaderboard, overall: ranks 1–3 of every snapshot the site showed (angle C; the rule's
+//                  "days in the top 3")
+//   claims.json    CHANGED (S3-ai2): user counts the companies published themselves (angle D), one row per claim
+//   lineage.json   CHANGED (S3-ai2): models built on each company's models, with the base each one names (angle E)
 //
 // The eight companies are not chosen by hand (docs/AI-MODELS-PLAN.md §2): a company is on the page if one of its models
 // spent ≥ 30 days in the LMArena top 3, or if ≥ 100 Epoch models descend from its models. `heroCriterion` recomputes it.
@@ -18,6 +20,9 @@ export const FILES = {
   compute: 'compute.json',
   origins: 'origins.json',
   arena: 'arena.json',
+  // CHANGED (S3-ai2): angles D and E.
+  claims: 'claims.json',
+  lineage: 'lineage.json',
 } as const;
 export const DATA_FILES: readonly string[] = Object.values(FILES);
 
@@ -579,6 +584,257 @@ export const yearTotal = (ds: OriginsDataset, i: number): number => ORIGINS.redu
 /** The last year is partial when the data stop before 31 December. */
 export const partialYear = (ds: Pick<OriginsDataset, 'through'>): boolean => !ds.through.endsWith('-12-31');
 
+// ── CHANGED (S3-ai2): LMArena No. 1 runs (angle C) ──────────────────────────────────────────────────
+
+/** A stretch of consecutive snapshots with the same model at No. 1 (to = the next leader's first day). */
+export type ArenaRun = { from: string; to: string; model: string; org: string; days: number };
+
+export function arenaRuns(ds: ArenaDataset): ArenaRun[] {
+  const out: ArenaRun[] = [];
+  ds.snapshots.forEach((s, i) => {
+    const leader = s.top.find((e) => e.rank === 1)!;
+    const to = ds.snapshots[i + 1]?.date ?? ds.end;
+    const last = out.at(-1);
+    if (last && last.model === leader.model && last.org === leader.org) {
+      last.to = to;
+      last.days = daysBetween(last.from, to);
+    } else out.push({ from: s.date, to, model: leader.model, org: leader.org, days: daysBetween(s.date, to) });
+  });
+  return out;
+}
+
+/** Stretches in which an organization had at least one model in the top 3 (merged across snapshots). */
+export function top3Spans(ds: ArenaDataset, org: string): Array<{ from: string; to: string }> {
+  const out: Array<{ from: string; to: string }> = [];
+  ds.snapshots.forEach((s, i) => {
+    if (!s.top.some((e) => e.org === org)) return;
+    const to = ds.snapshots[i + 1]?.date ?? ds.end;
+    const last = out.at(-1);
+    if (last && last.to === s.date) last.to = to;
+    else out.push({ from: s.date, to });
+  });
+  return out;
+}
+
+export type ArenaLeader = { org: string; first: number; top3: number; runs: ArenaRun[] };
+
+/** Every organization that held No. 1: its days at No. 1, days in the top 3 and its runs — most days first. */
+export function arenaLeaders(ds: ArenaDataset): ArenaLeader[] {
+  const days = arenaDays(ds);
+  const runs = arenaRuns(ds);
+  return [...days.first]
+    .map(([org, first]) => ({ org, first, top3: days.top3.get(org) ?? 0, runs: runs.filter((r) => r.org === org) }))
+    .sort((a, b) => b.first - a.first || (a.org < b.org ? -1 : 1));
+}
+
+// ── CHANGED (S3-ai2): claims.json (angle D) ──────────────────────────────────────────────────────────
+
+/** What a company counts. Never joined across metrics: a weekly user is not a monthly user. */
+export const METRICS = ['weekly_active', 'monthly_active', 'monthly_in_apps', 'monthly_family', 'monthly_incl_x'] as const;
+export type Metric = (typeof METRICS)[number];
+/** The chart's mark for a metric: ● weekly, ■ monthly in the product's own app, ▲ monthly inside other products. */
+export type MetricShape = 'circle' | 'square' | 'triangle';
+export const METRIC_SHAPE: Record<Metric, MetricShape> = {
+  weekly_active: 'circle',
+  monthly_active: 'square',
+  monthly_in_apps: 'triangle',
+  monthly_family: 'triangle',
+  monthly_incl_x: 'triangle',
+};
+/** How the company phrased the number: "700 million" · "more than 800 million" · "almost a billion" · "approximately". */
+export const QUALIFIERS = ['exact', 'more_than', 'almost', 'about'] as const;
+export type Qualifier = (typeof QUALIFIERS)[number];
+
+export type Claim = {
+  /** The day the figure refers to. */
+  asOf: string;
+  /** Publication date (YYYY-MM-DD, or YYYY-MM when the filing gives a month only). */
+  published: string;
+  product: string;
+  /** The company as it names itself (Microsoft is not one of the eight). */
+  company: string;
+  /** One of the eight, or null. */
+  hero: string | null;
+  value: number;
+  qualifier: Qualifier;
+  metric: Metric;
+  /** First-party page (https). */
+  url: string;
+  /** The company's own sentence, verbatim. */
+  quote: string;
+  retrieved: string;
+};
+
+export type ClaimsDataset = {
+  retrieved: string;
+  /** Sorted by product, then by the day the figure refers to. */
+  claims: Claim[];
+};
+
+const PUBLISHED = /^\d{4}-\d{2}(-\d{2})?$/;
+const PRODUCT = /^[a-z][a-z0-9-]{0,23}$/;
+
+export function parseClaims(json: unknown, where: string = FILES.claims): ClaimsDataset {
+  const o = record(json, where);
+  const retrieved = date(o.retrieved, `${where}.retrieved`);
+  let prev = '';
+  const claims = array(o.claims, `${where}.claims`, 1).map((raw, i): Claim => {
+    const at = `${where}.claims[${i}]`;
+    const c = record(raw, at);
+    const asOf = date(c.asOf, `${at}.asOf`);
+    const product = string(c.product, `${at}.product`, PRODUCT);
+    const key = `${product} ${asOf}`;
+    if (key < prev) fail(at, 'claims must be sorted by product, then date');
+    prev = key;
+    const published = string(c.published, `${at}.published`, PUBLISHED);
+    if (published.slice(0, 7) < asOf.slice(0, 7)) fail(`${at}.published`, `${published} is before the figure's date ${asOf}`);
+    const url = string(c.url, `${at}.url`, /^https:\/\/[^\s]+$/);
+    const value = finite(c.value, `${at}.value`, 1e6, 1e10);
+    return {
+      asOf,
+      published,
+      product,
+      company: string(c.company, `${at}.company`),
+      hero: c.hero === null ? null : string(c.hero, `${at}.hero`, ID),
+      value,
+      qualifier: oneOf(c.qualifier, QUALIFIERS, `${at}.qualifier`),
+      metric: oneOf(c.metric, METRICS, `${at}.metric`),
+      url,
+      quote: string(c.quote, `${at}.quote`),
+      retrieved: date(c.retrieved, `${at}.retrieved`),
+    };
+  });
+  return { retrieved, claims };
+}
+
+export type ClaimSeries = { key: string; product: string; metric: Metric; hero: string | null; company: string; claims: Claim[] };
+
+/** One line per product AND metric — the only points a line may join. */
+export function claimSeries(ds: ClaimsDataset): ClaimSeries[] {
+  const out = new Map<string, ClaimSeries>();
+  for (const c of ds.claims) {
+    const key = `${c.product}:${c.metric}`;
+    const s = out.get(key) ?? { key, product: c.product, metric: c.metric, hero: c.hero, company: c.company, claims: [] };
+    s.claims.push(c);
+    out.set(key, s);
+  }
+  return [...out.values()];
+}
+
+/** Companies of the eight with no first-party user count in the file (in the lanes' order). */
+export const silentCompanies = (heroes: readonly Pick<Hero, 'id' | 'name'>[], ds: ClaimsDataset): string[] =>
+  heroes.filter((h) => !ds.claims.some((c) => c.hero === h.id)).map((h) => h.name);
+
+// ── CHANGED (S3-ai2): lineage.json (angle E) ─────────────────────────────────────────────────────────
+
+/**
+ * A model in a company's family tree: `parent` = the base model it names that leads to the company (null = the
+ * company's own model at the root). Derived models are the nodes with a parent — the rule's count.
+ */
+export type LineageNode = { model: string; org: string | null; date: string; parent: string | null };
+
+export type LineageHero = {
+  id: string;
+  /** Models descending from the company's models (as releases.json's `derived`). */
+  derived: number;
+  /** Other organizations among their makers. */
+  orgs: number;
+  /** Derived models by publication year (the dataset's `years`). */
+  byYear: number[];
+  /** Roots first (by name), then the derived models by date, then name. */
+  nodes: LineageNode[];
+};
+
+export type LineageDataset = { epochUpdated: string; retrieved: string; through: string; years: number[]; heroes: LineageHero[] };
+
+/**
+ * A company's tree from the Epoch rows: every model whose base-model chain leads to one of `names` (ancestorOrgs),
+ * hung under the first base that leads there; roots are the company's own models those chains start from.
+ */
+export function lineageTree(models: readonly EpochModel[], names: readonly string[], years: readonly number[]): Omit<LineageHero, 'id'> {
+  const lineage = ancestorOrgs(models);
+  const byName = new Map<string, EpochModel>();
+  for (const m of models) if (!byName.has(m.model)) byName.set(m.model, m);
+  const derived = lineage.filter(({ orgs }) => [...orgs].some((o) => names.includes(o))).map(({ model }) => model);
+  const derivedNames = new Set(derived.map((m) => m.model));
+  const own = (n: string): boolean => (byName.get(n)?.orgs ?? []).some((o) => names.includes(o));
+  const roots = new Set<string>();
+  const nodes: LineageNode[] = derived.map((m) => {
+    const parent = m.bases.find((b) => derivedNames.has(b) || own(b)) ?? m.bases[0]!;
+    if (!derivedNames.has(parent)) roots.add(parent);
+    return { model: m.model, org: m.orgs[0] ?? null, date: m.date, parent };
+  });
+  const makers = new Set<string>();
+  for (const m of derived) for (const o of m.orgs) if (!names.includes(o)) makers.add(o);
+  const byYear = years.map((y) => derived.filter((m) => Number(m.date.slice(0, 4)) === y).length);
+  const rootNodes: LineageNode[] = [...roots].sort().map((r) => {
+    const m = byName.get(r);
+    return { model: r, org: m?.orgs[0] ?? null, date: m?.date ?? '', parent: null };
+  });
+  const sorted = nodes.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : a.model < b.model ? -1 : a.model > b.model ? 1 : 0));
+  return { derived: derived.length, orgs: makers.size, byYear, nodes: [...rootNodes, ...sorted] };
+}
+
+export function parseLineage(json: unknown, where: string = FILES.lineage): LineageDataset {
+  const o = record(json, where);
+  const head = header(o, where);
+  const years = array(o.years, `${where}.years`, 2).map((v, i) => finite(v, `${where}.years[${i}]`, FIRST_YEAR, 2100));
+  if (years[0] !== FIRST_YEAR || years.some((y, i) => i > 0 && y !== years[i - 1]! + 1)) fail(`${where}.years`, `must run year by year from ${FIRST_YEAR}`);
+  if (years.at(-1) !== Number(head.through.slice(0, 4))) fail(`${where}.years`, `must end in the year of ${head.through}`);
+  const seen = new Set<string>();
+  const list = array(o.heroes, `${where}.heroes`, 1).map((raw, i): LineageHero => {
+    const at = `${where}.heroes[${i}]`;
+    const h = record(raw, at);
+    const id = string(h.id, `${at}.id`, ID);
+    if (seen.has(id)) fail(`${at}.id`, `duplicate ${id}`);
+    seen.add(id);
+    const derived = count(h.derived, `${at}.derived`);
+    const byYear = array(h.byYear, `${at}.byYear`, years.length).map((v, k) => count(v, `${at}.byYear[${k}]`));
+    if (byYear.length !== years.length) fail(`${at}.byYear`, `${byYear.length} values, expected ${years.length}`);
+    const nodes = array(h.nodes, `${at}.nodes`).map((n, k): LineageNode => {
+      const a = `${at}.nodes[${k}]`;
+      const r = record(n, a);
+      const parent = r.parent === null ? null : string(r.parent, `${a}.parent`);
+      return {
+        model: string(r.model, `${a}.model`),
+        org: r.org === null ? null : string(r.org, `${a}.org`),
+        // A root Epoch does not list has no date.
+        date: parent === null && r.date === '' ? '' : date(r.date, `${a}.date`),
+        parent,
+      };
+    });
+    const names = new Set(nodes.map((n) => n.model));
+    nodes.forEach((n, k) => {
+      if (n.parent !== null && !names.has(n.parent)) fail(`${at}.nodes[${k}].parent`, `${n.parent} is not in the tree`);
+    });
+    const withParent = nodes.filter((n) => n.parent !== null).length;
+    if (withParent !== derived) fail(`${at}.derived`, `${derived}, but ${withParent} models have a parent`);
+    if (byYear.reduce((s, v) => s + v, 0) !== derived) fail(`${at}.byYear`, `adds up to ${byYear.reduce((s, v) => s + v, 0)}, not ${derived}`);
+    return { id, derived, orgs: count(h.orgs, `${at}.orgs`), byYear, nodes };
+  });
+  return { ...head, years, heroes: list };
+}
+
+/** A tree node for the page: the model, its maker, its date, and every model built on it. */
+export type FamilyNode = { model: string; org: string | null; date: string; children: FamilyNode[]; /** Descendants at any depth. */ size: number };
+
+/** The company's models that others built on, each with its descendants (biggest families first). Cycles are cut. */
+export function familyTrees(h: LineageHero): FamilyNode[] {
+  const kids = new Map<string, LineageNode[]>();
+  for (const n of h.nodes) if (n.parent !== null) kids.set(n.parent, [...(kids.get(n.parent) ?? []), n]);
+  const seen = new Set<string>();
+  const build = (n: LineageNode): FamilyNode => {
+    seen.add(n.model);
+    const children = (kids.get(n.model) ?? []).filter((c) => !seen.has(c.model)).map(build);
+    children.sort((a, b) => b.size - a.size || (a.model < b.model ? -1 : 1));
+    return { model: n.model, org: n.org, date: n.date, children, size: children.reduce((s, c) => s + 1 + c.size, 0) };
+  };
+  return h.nodes
+    .filter((n) => n.parent === null)
+    .map(build)
+    .sort((a, b) => b.size - a.size || (a.model < b.model ? -1 : 1));
+}
+
 // ── check:data ────────────────────────────────────────────────────────────────────────────────────
 
 /** Validates one shipped file with the parser the page uses (scripts/check-data.ts). */
@@ -587,5 +843,7 @@ export function validateDataFile(file: string, json: unknown): void {
   else if (file === FILES.compute) parseCompute(json, file);
   else if (file === FILES.origins) parseOrigins(json, file);
   else if (file === FILES.arena) parseArena(json, file);
+  else if (file === FILES.claims) parseClaims(json, file); // CHANGED (S3-ai2)
+  else if (file === FILES.lineage) parseLineage(json, file);
   else fail(file, `no parser for this file (expected one of ${DATA_FILES.join(', ')})`);
 }

@@ -628,8 +628,8 @@ async function main(): Promise<void> {
     r('hostile race year', { show: 'race', year: '1900' }, 'en', ['2025 · #1']);
   }
 
-  // CHANGED (S3-ai1): AI models (draft) — angles A · B · F, tables, EN + UK, the rule, hostile params. Expected numbers come
-  // from the shipped files through the entry's own derivations.
+  // CHANGED (S3-ai1): AI models — angles A · B · F, tables, EN + UK, the rule, hostile params. Expected numbers come
+  // from the shipped files through the entry's own derivations. CHANGED (S3-ai2): published; + angles C · D · E.
   if (CATALOG.some((m) => m.id === 'ai-models')) {
     const { default: Ai } = await import('../src/viz/ai-models/index');
     const aD = await import('../src/viz/ai-models/data');
@@ -656,6 +656,50 @@ async function main(): Promise<void> {
     r('origins', { show: 'origins' }, 'en', ['Who and where', '148 : 160', 'China vs the U.S., 2025', '* 2026: to 30 Sep']); // Sep / Sept by ICU version
     r('origins access table', { show: 'origins', split: 'access', view: 'table' }, 'en', ['<table', 'Open weights', 'Not recorded', '2026*']);
     r('origins uk', { show: 'origins' }, 'uk', ['Хто й звідки', 'Китай проти США, 2025']);
+    // CHANGED (S3-ai2): C · D · E are lazy chunks — a first render starts their imports, then they render at once.
+    for (const show of ['arena', 'users', 'lineage']) check(`ready:ai ${show} first render`, h(Ai, { params: { show }, setParams: noop }), 'en', 100);
+    await Promise.all([import('../src/viz/ai-models/arena'), import('../src/viz/ai-models/users'), import('../src/viz/ai-models/lineage')]);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    check('ready:ai lazy angle C renders after its chunk loads', h(Ai, { params: { show: 'arena' }, setParams: noop }), 'en', 100, ['LMArena leaderboard-dataset']);
+    // CHANGED (S3-ai2): C — No. 1 on LMArena.
+    const ar = aD.parseArena(A(aD.FILES.arena));
+    const runs = aD.arenaRuns(ar);
+    const longest = runs.reduce((a, b) => (b.days > a.days ? b : a));
+    r('arena', { show: 'arena' }, 'en', [
+      'role="img"',
+      'No. 1 on LMArena',
+      '1,042 days',
+      `${runs.length} runs at No. 1, 5 companies`,
+      String(runs.length - 1),
+      `longest run: ${longest.model}`,
+      runs.at(-1)!.model,
+      'style control from',
+      'Claude 1, 2.0 and 2.1',
+      'LMArena leaderboard-dataset (CC BY 4.0)',
+    ]);
+    r('arena table', { show: 'arena', view: 'table' }, 'en', ['<table', `Every run at No. 1`, runs[0]!.model, 'No. 1 when read', 'Days in the top 3', 'Mistral', '>501<', '>44<']);
+    r('arena uk google', { show: 'arena', company: 'google' }, 'uk', ['№1 на LMArena', 'kpi kpi-home', 'Google: частка днів на №1', 'днів']);
+    // D — users.
+    const cl = aD.parseClaims(A(aD.FILES.claims));
+    r('users', { show: 'users' }, 'en', ['role="img"', 'Users', 'more than 1.2 billion', 'ChatGPT, weekly active users', 'Gemini app', 'Anthropic, Alibaba, Mistral, DeepSeek', 'weekly users', 'never joined', 'not drawn']);
+    const ut = r('users table', { show: 'users', view: 'table' }, 'en', ['<table', `Every figure`, `(${cl.claims.length})`, 'href="https://openai.com/index/scale-the-benefits-of-ai/"', 'blog.google', 'www.sec.gov', 'rel="noopener noreferrer"', '400 million']);
+    ok(!/href="http:/.test(ut), 'ready:ai users table links https only');
+    r('users uk', { show: 'users' }, 'uk', ['Користувачі', 'понад 1,2', 'Сімейство Copilot', 'не знайдено']);
+    r('users anthropic', { show: 'users', company: 'anthropic' }, 'en', ['Anthropic: no user count published by the company was found.']);
+    r('users openai', { show: 'users', company: 'openai' }, 'en', ['kpi kpi-home']);
+    // E — built on.
+    const ln = aD.parseLineage(A(aD.FILES.lineage));
+    const mostBuilt = ln.heroes[0]!;
+    const fam = aD.familyTrees(mostBuilt)[0]!;
+    const le = r('lineage', { show: 'lineage' }, 'en', ['Built on', `${formatNumber(mostBuilt.derived, 'en')} models`, `by ${mostBuilt.orgs} other organizations`, `largest family: ${fam.model}`, '* 2026', 'aria-expanded="false"', 'Epoch AI']);
+    ok(!le.includes('aria-expanded="true"'), 'ready:ai lineage: no tree open without a company');
+    r('lineage meta', { show: 'lineage', company: mostBuilt.id }, 'en', ['aria-expanded="true"', 'role="img"', `of ${mostBuilt.derived} shown`, 'the largest families first', 'fam-row is-home']);
+    r('lineage table meta', { show: 'lineage', company: mostBuilt.id, view: 'table' }, 'en', ['<table', `every model built on its models (${mostBuilt.derived})`, fam.children[0]!.model, '2026*']);
+    r('lineage table', { show: 'lineage', view: 'table' }, 'en', ['<table', 'Pick a company']);
+    r('lineage uk', { show: 'lineage' }, 'uk', ['Родовід', `моделей — ${mostBuilt.derived}`, 'Дерево']);
+    const hl = r('hostile lineage', { show: 'lineage', company: '<x>', view: 'zz' }, 'en', ['Built on']);
+    ok(!hl.includes('aria-expanded="true"') && !hl.includes('<x>'), 'ready:ai hostile lineage: no tree, nothing echoed');
+    r('hostile users', { show: 'users', company: 'nobody', split: 'access', from: '2024-01' }, 'en', ['Users']);
     const hostile = r('hostile', { show: '<x>', company: '<script>', from: '9999-99', to: '2010-01', split: 'zz' }, 'en', ['Timeline']);
     ok(!hostile.includes('<script>'), 'ready:ai hostile params never echoed');
   }
