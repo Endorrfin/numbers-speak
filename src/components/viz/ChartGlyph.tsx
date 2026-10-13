@@ -120,6 +120,28 @@ const GLYPHS: Readonly<Record<ChartKind, ReactElement>> = {
       ))}
     </g>
   ),
+  // CHANGED (S3-ai1): timeline — dots on lanes, some filled, some rings.
+  timeline: (
+    <g>
+      {[18, 34, 50, 66].map((y) => (
+        <path key={y} className="g-stroke g-soft" style={{ strokeWidth: 1.5 }} d={`M10 ${y}h80`} />
+      ))}
+      {[
+        [20, 18, 1],
+        [44, 18, 0],
+        [70, 18, 0],
+        [52, 34, 1],
+        [78, 34, 1],
+        [30, 50, 0],
+        [60, 50, 1],
+        [84, 50, 0],
+        [66, 66, 1],
+        [80, 66, 1],
+      ].map(([x, y, filled], i) => (
+        <circle key={i} className={filled ? 'g-fill' : 'g-stroke'} cx={x} cy={y} r="3.6" />
+      ))}
+    </g>
+  ),
 };
 
 export function ChartGlyph({ kind }: { kind: ChartKind }) {

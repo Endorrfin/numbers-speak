@@ -87,7 +87,8 @@ src/
                renderButterfly.ts · Butterfly.tsx (S3‑bdd) · renderWaffle.ts · Waffle.tsx · renderStrip.ts · Strip.tsx ·
                tooltip.ts (S3‑tl) · renderBarRace.ts · BarRace.tsx (S3‑br) · renderTimeSeries.ts · TimeSeries.tsx ·
                renderStackedRows.ts · StackedRows.tsx (S3‑aa) · renderScatter.ts · Scatter.tsx · renderSwarm.ts ·
-               Swarm.tsx · renderDumbbell.ts · Dumbbell.tsx · renderPointMap.ts · PointMap.tsx (S3‑re) · hooks.ts · palette.ts
+               Swarm.tsx · renderDumbbell.ts · Dumbbell.tsx · renderPointMap.ts · PointMap.tsx (S3‑re) · renderLanes.ts · Lanes.tsx ·
+               scatterZoom.ts (S3‑ai1) · hooks.ts · palette.ts
   components/  layout/ (TopBar, Footer) · catalog/ (CatalogPage, FilterBar, VizCard, CardPreview + previewFormat — S3‑th)
                viz/ (VizPage, AboutData, Related — S3‑nav, Pager — S3‑fx; Finder · FocusPicker · CountryFocus · focusText — S3‑uf) ·
                pages/ (AboutPage, NotFound) · country/ (CountryPage, text, factFormat — S3‑cp) · AppStateProvider.tsx
@@ -125,9 +126,9 @@ _examples/     legacy D3 pages being ported (gitignored — never committed)
   recorded. One parser per dataset (`data.ts`) runs in prep, `check:data` and the browser.
 
 ## 5. Catalog
-33 entries in 5 tabs — see `CATALOG.md` (authoritative). Waves: P2 golden → P3 MVP (16) → P4 full (30);
+34 entries in 5 tabs — see `CATALOG.md` (authoritative). Waves: P2 golden → P3 MVP (16) → P4 full (30);
 `births-deaths-ua` (#31, S3‑bd) and `births-deaths-per-day` (#5, S3‑bdd) shipped out of wave as priorities;
-`oil` (#32, S3‑oil) and `electricity` (#33, S3‑el) added on the owner's request.
+`oil` (#32, S3‑oil), `electricity` (#33, S3‑el) and `ai-models` (#34, S3‑ai, draft) added on the owner's request.
 
 ## 6. Charts & interactivity
 Chart kit: `RankedBar` (S2) · `YearChart` (S3‑bd: lines, gap fills, areas, bars, mirrored bars, period bands,
@@ -138,7 +139,11 @@ last slot, fixed layout for the whole race, big year ticker; the page owns the c
 ‹ › year steps) · `TimeSeries` (S3‑aa: calendar buckets — day · week · month · year — on a UTC time scale, stacked
 panels sharing the time axis instead of a second y‑axis, stacked segments with an optional hatch texture, partial
 buckets drawn lighter, bands per panel, lines with null gaps, one hover layer across panels) · `StackedRows` (S3‑aa:
-ranked horizontal bars split into segments, date + sub‑label column; opt‑in `emphasis` since S3‑el) · `HierarchyTree` + one‑offs. Every chart:
+ranked horizontal bars split into segments, date + sub‑label column; opt‑in `emphasis` since S3‑el) · `Lanes` (S3‑ai1: events on
+labelled lanes over a UTC axis, same‑day dots dodged, labels merged "first +n", overview strip + d3-brush that reports the span
+on drag end; no selection over the whole span) · `Scatter` opt‑in `segments` + `zoom` (S3‑ai1; gestures in `scatterZoom.ts`:
+Ctrl/⌘ + wheel or pinch, a plain wheel scrolls the page, one finger scrolls until zoomed; without the options the SVG is
+byte‑identical) · `HierarchyTree` + one‑offs. Every chart:
 responsive width (ResizeObserver; labels stack above bars < 560 px), `role="img"` + a label that states the
 view, keyboard‑operable controls, a **table view** (the keyboard / screen‑reader path; tooltips are
 pointer‑only, text‑only), `prefers-reduced-motion` → no transitions, all settings in the URL query with
@@ -236,6 +241,12 @@ current. **Agent sessions never push.**
   from the in-app browser on the owner's computer count too. Never open Numbeo from the agent — the owner copies once.
 - **The device bridge decodes `\uXXXX` inside commands (S3‑re):** a `\uFEFF` typed in a heredoc landed as a literal BOM
   (ESLint `no-irregular-whitespace`). Write such characters as `charCodeAt(0) === 0xfeff` / `String.fromCharCode(…)`.
+- **Page‑only d3 modules (S3‑ai1):** Vite 8 bundles with Rolldown, which places a module by *reachability*: the `d3`
+  umbrella is imported by every page, so `brushX` imported *through* it landed in a shared chunk (or, with the umbrella in
+  the manual `d3-vendor` group, inside d3-vendor: +6.4 kB gzip for every page); a manual `d3-interact` group pulled
+  d3-selection & co. in. What works: import d3-brush / d3-zoom (and d3-hierarchy in S3‑ai2) **from their own packages**
+  (declared in package.json), leave them unassigned (`PAGE_ONLY_D3` in vite.config.ts), and mark the umbrella free of side
+  effects (`treeshake.moduleSideEffects`). Check after a build: `grep -l __zoom dist/assets/*.js` names the page chunk only.
 - macOS screenshot names contain U+202F before AM/PM — stage them through a copy with a plain name (in `dist-*`).
 - **Keep d3-geo and d3-delaunay out of the site (S3‑re):** `manualChunks` puts every d3 module a page uses into the
   shared `d3-vendor` chunk, so one page importing them grew it by ~37 kB for every chart page. `renderPointMap.ts`
@@ -277,6 +288,8 @@ Next per `docs/IMPROVEMENTS.md` §1: S3‑ps (births‑deaths‑per‑day → UN
 **S3‑ai plan (2026‑10‑13):** new entry #34 “AI models 2017–2026” — plan approved by the owner (`docs/AI-MODELS-PLAN.md`; rubric `knowledge` + `world`, no AI tab until 4 entries). Next: S3‑ai0 (data audit + mockup), prompt in the plan §7.
 **S3‑ai0 (2026‑10‑13):** data audit + mockup approved — heroes by rule (8), `data-raw/ai-models/`. Next: **S3‑ai1** (prep +
 angles A · B · F), prompt in `docs/AI-MODELS-PLAN.md` §7.
+**S3‑ai1 (2026‑10‑13):** `ai-models` draft — prep, Lanes + brush (A), Scatter zoom (B), StackedRows (F). Next: **S3‑ai2** (C · D · E +
+release), prompt in `docs/AI-MODELS-PLAN.md` §7b.
 
 ## 14. Status / progress log
 - **S0** (2026‑09‑17) — repo named `numbers-speak`; decisions D1–D10 accepted; `PROJECT-BRIEF.md`,
@@ -1075,3 +1088,41 @@ angles A · B · F), prompt in `docs/AI-MODELS-PLAN.md` §7.
   No npm, no git, no tests (no code). Branch (proposed) `viz/2026-10-ai-models`.
   Open: early ChatGPT milestones (100–500 M weekly, keynotes / X posts) and Gemini 400 M (I/O 2025, press only) — add in
   S3‑ai1/2 with first‑party links; Epoch's 2026 derived models are still being recorded (12).
+  Owner (2026‑10‑13): both OK — the milestones go in only with a first‑party link; angle E marks 2026 as incomplete (“*” +
+  a note on the page). Plan §3a rows D and E updated.
+- **S3‑ai1** (2026‑10‑13) — entry #34 `ai-models` as a **draft** (dev only): data, page shell and angles A · B · F.
+  Data: `data-raw/ai-models/prep.ts` + `raw.ts` (shared with the test) → `public/data/ai-models/` releases (382 lane models,
+  the eight companies with their rule evidence, 32 kB / 1.9 kB gzip) · compute (1,242 models with a FLOP figure + disclosure
+  per company, 25.5 kB gzip) · origins (counts a year) · arena (239 snapshots, ranks 1–3; drawn in S3‑ai2). Parsers in
+  `src/viz/ai-models/data.ts` with `validateDataFile`. The rule is recomputed over every organization in both files and
+  names exactly the eight (prep aborts otherwise; test).
+  Findings that changed the S3‑ai0 numbers (README decisions 6–9): the mockup put other organizations' models on the lanes
+  (GPT‑Neo/J by EleutherAI on OpenAI's, Llama Nemotron by Nvidia on Meta's) → lane = line name **and** the company's own
+  organization (`heroes.csv` `epoch_orgs`), case-insensitive (+ `gpt-oss`, `Code Llama`): 416 → 382; derived models counted
+  by organization: Meta 197 / 157 orgs, Alibaba 112 / 73 (were 158 / 104), the eight unchanged; OpenAI compute disclosure
+  21 of 86 (was 35 of 109). Trend ×4.7 a year, 2024 China 188 vs U.S. 186 — unchanged.
+  Page `src/viz/ai-models/`: `state.ts` (`?show=timeline|scale|origins`, `?company=`, `?from/to=YYYY-MM`, `?split=access`,
+  `?view=table`), `text.ts` (no judgements, counts and dates only), `common.tsx` (company select, credit, “Why these eight
+  companies” with the rule, every company's evidence and the closest outside), `timeline.tsx` (A: Lanes + brush, From/To
+  month selects + “Whole period” as the keyboard path, names on the highlighted company's dots for periods ≤ 24 months, two
+  tables), `scale.tsx` + `ticks.ts` (B: Scatter, others faint / the eight one dark tone / highlighted accent, top 3 or the
+  company's 8 largest labelled, trend segment, zoom buttons + hint; table = 50 largest or the company's), `origins.tsx` (F:
+  StackedRows by year, country or weights, 2026 marked “*”). New chart kind `timeline` (label + glyph); tokens `--c-ai-*` =
+  aliases of validated ones (no new validation); `formatFlop` / `formatPowerOfTen` / `formatMonth`. A plain wheel never zooms
+  (scroll trap) — Ctrl/⌘ + wheel or pinch does: a deviation from the plan's “wheel zoom”, stated to the owner.
+  Bundle: `d3-brush` + `d3-zoom` in the `ai-models` chunk only (20.5 kB gzip ≤ 30); `d3-vendor` 24.66 → 24.67 kB gzip; initial
+  `index` 25.84 → 26.68 kB gzip (the card + the `timeline` kind and glyph); `Scatter` became a shared chunk (2.8 kB gzip;
+  real‑estate‑world 20.2 → 19.0 + 2.8). Rolldown lesson in §12. Deps `d3-brush` / `d3-zoom` declared in package.json (both
+  already in the lock as d3's; lock regenerated in the scratch copy — run `npm ci` once).
+  Tests: `test-ai-models.ts` (10 groups: rule over all organizations, arena days 1,042 = Σ No. 1, lane rule incl. the
+  mockup's errors, shipped files vs raw rows, rejections, trend, origins, periods, ticks/formats, URL state),
+  `test-lanes.ts` (9: Lanes in jsdom incl. a real brush drag and click, dodge, label merge; Scatter segments + zoom; zoom
+  gesture filter; chunk rule + “no interaction module through the `d3` umbrella”); `test-analytics` and smoke take the
+  first *published* entry; smoke: a draft page = 404 outside dev, + 41 ai-models checks (2,429 total). Old vs new
+  `renderScatter` without options: 28 fixtures byte‑identical. `verify` green in a scratch copy (37 test files · build).
+  Playwright (playwright-core 1.64 + cached Chromium 1243, scratch dev server): A/B/F × 1280 dark EN · 390/360 light UK +
+  table — no horizontal scroll, 0 console messages; the merged labels fix came from these screenshots.
+  Branch (proposed) `viz/2026-10-ai-models` (continues S3‑ai0). Owner: `npm ci` after pulling (lock); questions in the report.
+  Owner (2026‑10‑13): zoom without a plain wheel — OK; no “written with Claude” line on the page; `claims.json` in S3‑ai2 — OK.
+  Open: Safari / iPhone check of the brush and the pinch zoom (S3‑ai2 checklist).
+

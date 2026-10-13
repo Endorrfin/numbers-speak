@@ -93,3 +93,14 @@ export const POWER_COLOR = {
   wind: 'var(--c-power-wind)',
   solar: 'var(--c-power-solar)',
 } as const;
+
+// CHANGED (S3-ai1): AI models — developer country and access to the weights, as aliases of validated tokens (values and
+// reasoning in theme/tokens.css). The eight companies get no colours of their own: lanes and labels name them.
+export const AI_COLOR = {
+  us: 'var(--c-ai-us)',
+  cn: 'var(--c-ai-cn)',
+  other: 'var(--c-ai-other)',
+  open: 'var(--c-ai-open)',
+  closed: 'var(--c-ai-closed)',
+  unknown: 'var(--c-ai-unknown)',
+} as const;

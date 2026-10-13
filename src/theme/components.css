@@ -2526,3 +2526,166 @@
 .related h2 {
   margin: 0 0 0.9rem;
 }
+
+/* ── AI models (S3-ai1) ───────────────────────────────────────────────────
+   Lanes: open weights = a filled dot (--c-ai-open), closed = a ring, not recorded = a dashed ring; the highlighted
+   company wears the accent (as RankedBar's emphasis). Text stays in text tokens. */
+.ln-grid line {
+  stroke: var(--chart-grid);
+  stroke-width: 1;
+}
+.ln-tick {
+  fill: var(--chart-axis);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.ln-line {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+.ln-name {
+  fill: var(--tx);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.ln-sub {
+  fill: var(--tx3);
+  font-size: 10.5px;
+}
+.ln-lane.is-emphasis .ln-name {
+  fill: var(--accent);
+}
+.ln-lane.is-emphasis .ln-line {
+  stroke: var(--accent);
+  stroke-opacity: 0.5;
+}
+.ln-dot {
+  stroke-width: 1.4;
+}
+.ln-dot.is-open {
+  fill: var(--c-ai-open);
+  stroke: var(--surface);
+}
+.ln-dot.is-closed,
+.ln-dot.is-unknown {
+  fill: var(--surface);
+  stroke: var(--tx3);
+}
+.ln-dot.is-unknown {
+  stroke-dasharray: 2 1.6;
+}
+.ln-dot.is-emphasis {
+  stroke: var(--accent);
+}
+.ln-dot.is-open.is-emphasis {
+  fill: var(--accent);
+  stroke: var(--surface);
+}
+.ln-label {
+  fill: var(--tx);
+  font-size: 10.5px;
+  font-weight: 600;
+  paint-order: stroke;
+  stroke: var(--surface);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+.ln-ring {
+  fill: none;
+  stroke: var(--tx);
+  stroke-width: 2;
+  pointer-events: none;
+}
+.ln-hit {
+  fill: transparent;
+}
+.ln-ov-bg {
+  fill: var(--s2);
+}
+.ln-ov-tick {
+  stroke: var(--tx3);
+  stroke-width: 1;
+}
+.ln-ov-tick.is-emphasis {
+  stroke: var(--accent);
+}
+.ln-brush .selection {
+  fill: var(--accent);
+  fill-opacity: 0.16;
+  stroke: var(--accent);
+}
+.key-dot {
+  display: inline-block;
+  flex: none;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+.key-dot.is-open {
+  background: var(--c-ai-open);
+}
+.key-dot.is-closed {
+  border: 1.5px solid var(--tx3);
+}
+.key-dot.is-unknown {
+  border: 1.5px dashed var(--tx3);
+}
+.key-dot.is-emphasis {
+  background: var(--accent);
+}
+.key-dot.is-faint {
+  background: color-mix(in srgb, var(--tx3) 45%, transparent);
+}
+.key-dot.is-dark {
+  background: var(--tx2);
+}
+.key-dash {
+  display: inline-block;
+  width: 1.1rem;
+  border-top: 2px dashed var(--tx2);
+}
+.sc-segment {
+  stroke: var(--tx2);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+  pointer-events: none;
+}
+.sc-zoom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.25rem 0 0.4rem;
+}
+.sc-zoom .btn-icon {
+  min-width: 2.25rem;
+  height: 2.25rem;
+  font-size: 1.1rem;
+}
+.sc-zoom-hint {
+  margin-left: 0.35rem;
+  font-size: 0.8rem;
+}
+.chart-scatter svg {
+  cursor: default;
+}
+.rule-note {
+  margin: 0.6rem 0 0;
+  color: var(--tx2);
+  font-size: 0.88rem;
+}
+.rule-note summary {
+  cursor: pointer;
+  color: var(--tx);
+  font-weight: 600;
+}
+.rule-note p,
+.rule-note ul {
+  max-width: 80ch;
+  margin: 0.5rem 0 0;
+}
+.rule-note ul {
+  padding-left: 1.1rem;
+}

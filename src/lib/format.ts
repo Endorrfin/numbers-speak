@@ -221,3 +221,32 @@ export function formatMwh(value: number, lang: Lang): string {
 export function formatGramsPerKwh(value: number, lang: Lang): string {
   return nf(lang, 'whole', { maximumFractionDigits: 0 }).format(value) + (lang === 'uk' ? '\u00a0г/кВт·год' : '\u00a0g/kWh');
 }
+
+// CHANGED (S3-ai1): AI models. Powers of ten with superscript digits (plain text, no markup).
+const SUPERSCRIPT = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+// Written as a char code: the agent's shell bridge turns a typed escape into the raw character (CLAUDE.md §12).
+const NBSP = String.fromCharCode(0xa0);
+const superscript = (n: number): string => (n < 0 ? '⁻' : '') + String(Math.abs(n)).replace(/\d/g, (d) => SUPERSCRIPT[Number(d)]!);
+
+/** A power of ten: 26 → '10²⁶'. */
+export function formatPowerOfTen(exponent: number): string {
+  return `10${superscript(exponent)}`;
+}
+
+/** Floating-point operations: 3.8e26 → '3.8 × 10²⁶' / '3,8 × 10²⁶' (two significant digits; 1e27 → '1.0 × 10²⁷'). */
+export function formatFlop(value: number, lang: Lang): string {
+  let exp = Math.floor(Math.log10(value));
+  let mantissa = Math.round((value / 10 ** exp) * 10) / 10;
+  if (mantissa >= 10) {
+    mantissa /= 10;
+    exp += 1;
+  }
+  return `${nf(lang, 'mantissa', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(mantissa)}${NBSP}×${NBSP}${formatPowerOfTen(exp)}`;
+}
+
+/** A month: '2024-07' → 'Jul 2024' / 'лип. 2024 р.' (UTC). */
+export function formatMonth(month: string, lang: Lang): string {
+  const ms = Date.parse(`${month}-01T00:00:00Z`);
+  if (Number.isNaN(ms)) return month;
+  return new Intl.DateTimeFormat(localeOf(lang), { month: 'short', year: 'numeric', timeZone: 'UTC' }).format(ms);
+}
