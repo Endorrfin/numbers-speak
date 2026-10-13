@@ -9,6 +9,60 @@ export type VizMetaLoader = () => Promise<{ default: VizMeta }>;
 
 export const VIZ_CARDS: readonly VizCard[] = [
   {
+    "id": "ai-models",
+    "title": {
+      "en": "AI models, 2017–2026",
+      "uk": "AI-моделі, 2017–2026"
+    },
+    "subtitle": {
+      "en": "Who released what and when, how much computing went into training, and where the models come from — eight companies chosen by a rule, not by taste",
+      "uk": "Хто що випустив і коли, скільки обчислень пішло на навчання і звідки моделі — вісім компаній за правилом, а не на смак"
+    },
+    "rubrics": [
+      "knowledge",
+      "world"
+    ],
+    "chart": "timeline",
+    "geo": "world",
+    "period": {
+      "from": 2017,
+      "to": 2026
+    },
+    "tags": [
+      "ai",
+      "artificial intelligence",
+      "llm",
+      "language models",
+      "chatbots",
+      "machine learning",
+      "compute",
+      "flop",
+      "open weights",
+      "openai",
+      "google",
+      "anthropic",
+      "meta",
+      "deepseek",
+      "alibaba",
+      "mistral",
+      "xai",
+      "ші",
+      "штучний інтелект",
+      "мовні моделі"
+    ],
+    "origin": {
+      "kind": "original"
+    },
+    "status": "draft",
+    "added": "2026-10-13",
+    "updated": "2026-10-13",
+    "related": [
+      "robotization",
+      "global-brands-race",
+      "electricity"
+    ]
+  },
+  {
     "id": "air-attacks-on-ukraine",
     "title": {
       "en": "Russian missile and drone attacks on Ukraine, 2022–2026",
@@ -806,6 +860,7 @@ export const VIZ_CARDS: readonly VizCard[] = [
 ];
 
 export const VIZ_LOADERS: Readonly<Record<string, VizLoader>> = {
+  'ai-models': () => import('../viz/ai-models/index'),
   'air-attacks-on-ukraine': () => import('../viz/air-attacks-on-ukraine/index'),
   'births-deaths-per-day': () => import('../viz/births-deaths-per-day/index'),
   'births-deaths-ua': () => import('../viz/births-deaths-ua/index'),
@@ -827,6 +882,7 @@ export const VIZ_LOADERS: Readonly<Record<string, VizLoader>> = {
 };
 
 export const VIZ_META_LOADERS: Readonly<Record<string, VizMetaLoader>> = {
+  'ai-models': () => import('../viz/ai-models/meta'),
   'air-attacks-on-ukraine': () => import('../viz/air-attacks-on-ukraine/meta'),
   'births-deaths-per-day': () => import('../viz/births-deaths-per-day/meta'),
   'births-deaths-ua': () => import('../viz/births-deaths-ua/meta'),

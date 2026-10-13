@@ -43,7 +43,8 @@ const PROD: Probe = {
 };
 const titles = new Map(CATALOG.map((m) => [m.id, m.title.en]));
 const titleOf = (id: string): string | undefined => titles.get(id);
-const first = CATALOG[0]!;
+// CHANGED (S3-ai1): the first *published* entry — a draft is a 404 outside dev (tested below).
+const first = CATALOG.find((m) => m.status === 'published')!;
 
 // ── Route → path ─────────────────────────────────────────────────────────────────────────────────
 await test('hitFor: gallery, tabs, about', () => {

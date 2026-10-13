@@ -1,9 +1,9 @@
-id,name,lines,arena_org,epoch_model_regex
-openai,OpenAI,GPT · o-series,openai,^(GPT|ChatGPT|o1|o3|o4)\b
-google,Google,PaLM · Gemini · Gemma,google,^(Gemini|PaLM|Gemma)
-anthropic,Anthropic,Claude,anthropic,^Claude
-meta,Meta,Llama → Muse Spark,meta,^(Llama|LLaMA|Muse Spark)
-xai,xAI,Grok,xai,^Grok
-deepseek,DeepSeek,DeepSeek,deepseek,^DeepSeek
-alibaba,Alibaba,Qwen,alibaba,^(Qwen|QwQ)
-mistral,Mistral,Mistral · Mixtral · Magistral,mistral,^(Mistral|Mixtral|Magistral|Ministral|Codestral|Pixtral|Devstral)
+id,name,lines,arena_org,epoch_model_regex,epoch_orgs
+openai,OpenAI,GPT · o-series,openai,^(GPT|ChatGPT|o1|o3|o4)\b,OpenAI
+google,Google,PaLM · Gemini · Gemma,google,^(Gemini|PaLM|Gemma),Google DeepMind|Google|Google Research|Google Brain|Google AI|Google Cloud
+anthropic,Anthropic,Claude,anthropic,^Claude,Anthropic
+meta,Meta,Llama → Muse Spark,meta,^(Code )?(Llama|Muse Spark),Meta AI
+xai,xAI,Grok,xai,^Grok,xAI
+deepseek,DeepSeek,DeepSeek,deepseek,^DeepSeek,DeepSeek
+alibaba,Alibaba,Qwen,alibaba,^(Qwen|QwQ),Alibaba|Alibaba DAMO Academy
+mistral,Mistral,Mistral · Mixtral · Magistral,mistral,^(Mistral|Mixtral|Magistral|Ministral|Codestral|Pixtral|Devstral),Mistral AI

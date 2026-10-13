@@ -206,4 +206,13 @@
   --c-power-hydro: var(--c-sector-consumer);
   --c-power-wind: var(--c-sector-finance);
   --c-power-solar: var(--c-sector-auto);
+  /* CHANGED (S3-ai1): AI models — aliases of validated tokens, so no new validation pass. Developer country: the U.S.
+     and China on two region hues (S2 all-pairs: americas green, asia blue), others on the S3-aa neutral; weights: open
+     on the birth blue (S3-bd), closed and unknown on the two S3-aa neutrals (a lightness step, named in the legend). */
+  --c-ai-us: var(--c-region-americas);
+  --c-ai-cn: var(--c-region-asia);
+  --c-ai-other: var(--c-harm-short);
+  --c-ai-open: var(--c-birth);
+  --c-ai-closed: var(--c-harm-short);
+  --c-ai-unknown: var(--c-harm-other);
 }

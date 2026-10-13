@@ -23,6 +23,7 @@ export const CHART_KINDS = [
   'lollipop',
   'map',
   'waffle', // CHANGED (S3-tl)
+  'timeline', // CHANGED (S3-ai1)
 ] as const;
 export type ChartKind = (typeof CHART_KINDS)[number];
 

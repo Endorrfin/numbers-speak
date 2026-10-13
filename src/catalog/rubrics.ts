@@ -67,6 +67,7 @@ export const CHART_LABELS: Readonly<Record<ChartKind, Localized>> = {
   lollipop: { en: 'Lollipop chart', uk: 'Lollipop‑діаграма' },
   map: { en: 'Animated map', uk: 'Анімована мапа' },
   waffle: { en: 'Unit grid', uk: 'Сітка одиниць' }, // CHANGED (S3-tl)
+  timeline: { en: 'Timeline', uk: 'Хронологія' }, // CHANGED (S3-ai1)
 };
 
 export const GEO_LABELS: Readonly<Record<Geo, Localized>> = {

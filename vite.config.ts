@@ -42,6 +42,27 @@ function regenerateCatalogOnMetaChange(): Plugin {
 // (https://endorrfin.github.io/numbers-speak/).
 // manualChunks: React and D3 each get one stable vendor chunk, so content-only releases
 // (a new visualization every month) never invalidate the cached libraries.
+// CHANGED (S3-ai1): d3 modules only one page needs (brush, zoom and the drag they share; hierarchy from S3-ai2) stay out of
+// the shared d3-vendor chunk, which every chart page loads. They are imported from their own packages (not the `d3`
+// umbrella) and left unassigned, so Rolldown puts them in the chunk of the page that imports them. Tried and dropped:
+// unassigned but imported through the umbrella → they joined a chunk every page loads; a manual 'd3-interact' chunk →
+// Rolldown pulled d3-selection & co. into it, and every chart page loaded it. scripts/test-lanes.ts checks the rule and
+// the imports; the built chunks are checked by hand (CLAUDE.md §14, S3-ai1).
+export const PAGE_ONLY_D3 = ['d3-brush', 'd3-zoom', 'd3-drag', 'd3-hierarchy'];
+const D3_UMBRELLA = /node_modules[\\/]d3[\\/]/;
+
+/** The vendor chunk a module belongs to, or undefined (Rolldown places it with its importers). Exported for tests. */
+export function vendorChunk(id: string): string | undefined {
+  if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
+    return 'react-vendor';
+  }
+  const d3 = /node_modules\/(d3|d3-[a-z-]+|internmap|delaunator|robust-predicates)\//.exec(id);
+  if (d3 && !PAGE_ONLY_D3.includes(d3[1]!)) {
+    return 'd3-vendor';
+  }
+  return undefined;
+}
+
 export default defineConfig({
   base: './',
   plugins: [react(), regenerateCatalogOnMetaChange()], // CHANGED (S3-lz)
@@ -61,15 +82,11 @@ export default defineConfig({
     sourcemap: false,
     chunkSizeWarningLimit: 900,
     rollupOptions: {
+      // CHANGED (S3-ai1): the `d3` umbrella only re-exports; without side effects its import of a module nobody uses
+      // through it is pruned, so d3-brush / d3-zoom are placed by their real importers (see PAGE_ONLY_D3 above).
+      treeshake: { moduleSideEffects: (id: string) => !D3_UMBRELLA.test(id) },
       output: {
-        manualChunks(id: string) {
-          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
-            return 'react-vendor';
-          }
-          if (/node_modules\/(d3|d3-[a-z-]+|internmap|delaunator|robust-predicates)\//.test(id)) {
-            return 'd3-vendor';
-          }
-        },
+        manualChunks: vendorChunk, // CHANGED (S3-ai1)
       },
     },
   },

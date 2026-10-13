@@ -1,13 +1,14 @@
 data-raw / ai-models
 
-CHANGED (S3-ai0, 2026-10-13). Entry #34 `ai-models` (planned) — data audit only; `prep.ts` comes in S3-ai1.
+CHANGED (S3-ai0, 2026-10-13). Entry #34 `ai-models` — data audit in S3-ai0; `prep.ts` + `raw.ts` in S3-ai1
+(`npm run prep -- ai-models` → `public/data/ai-models/`: releases, compute, origins, arena).
 Plan, angles and decisions: `docs/AI-MODELS-PLAN.md`.
 
 | File | What |
 |---|---|
 | `epoch-models.csv` | Epoch AI, *Data on AI models*, `all_ai_models.csv`: models published since 2017-01-01 (3,131 of 3,626), 11 columns — model, organization, date, domain, country, access, parameters, training FLOP, confidence, base model, link. Values verbatim. By `extract-epoch.py` (standard library). |
 | `lmarena-text-overall.csv` | LMArena `lmarena-ai/leaderboard-dataset`, text arena, category `overall`, the board the site showed: `text` for snapshots 2023-12-06 … 2025-05-15, `text_style_control` from 2025-05-16 (column `config`). Per snapshot: ranks 1–20 + the best row of each hero organization. 239 snapshots, 5,307 rows; ratings to 0.01. By `extract-lmarena.py` (needs `pandas` + `pyarrow`), which fails unless every snapshot has exactly one rank 1. |
-| `heroes.csv` | The eight companies: id, name, product lines, LMArena `organization` key, regex that assigns an Epoch `Model` to the company. Used by `extract-lmarena.py` and (S3-ai1) `prep.ts`. |
+| `heroes.csv` | The eight companies: id, name, product lines, LMArena `organization` key, regex for the product lines at the start of an Epoch `Model` (case-insensitive), and `epoch_orgs` — the Epoch organization names that are the company. Used by `extract-lmarena.py` and `prep.ts`. |
 | `user-claims.csv` | 16 user counts published by the companies themselves: date the figure refers to (`as_of`), publication date, product, company, value, `qualifier` (`exact` · `more_than` · `almost` · `about`), `metric`, first-party URL, verbatim quote, retrieval date. |
 
 ## Sources (not committed; sha256)
@@ -61,3 +62,27 @@ d845f68989881cb922ee6fd131d2bce6fb9c88dce5978eb0719a4c053476eff9  all_ai_models.
 - Language + multimodal models by developer country (first listed): 2024 China 188, U.S. 186; 2025 U.S. 160,
   China 148. Open weights: 2024 273 of 485, 2026 (to 30 Sep) 60 of 144.
 - LMArena now (2026-10-08, style control): 1 `gemini-4-argon-high`, 2 `claude-opus-5.5-high`, 3 `claude-opus-4-6-high`.
+
+## S3-ai1 changes (2026-10-13)
+
+6. **A lane model = line name AND the company's own organization** (`heroes.csv` `epoch_orgs`, `heroOfModel` in
+   `src/viz/ai-models/data.ts`). The S3-ai0 mockup matched the name only and put other organizations' models on the
+   lanes: GPT-Neo / GPT-J / GPT-NeoX (EleutherAI), GPT-2 variants of universities and Microsoft on OpenAI's; Llama
+   Nemotron (Nvidia), SEA-LION, Typhoon on Meta's; SEA-LION Gemma on Google's. The pattern is also case-insensitive
+   (OpenAI's `gpt-oss-120b` / `-20b`, DeepSeek's `Deepseek OCR`) and Meta's includes `Code Llama`. Lanes: 416 → **382**
+   models (OpenAI 74 · Google 62 · Meta 33 · Anthropic 30 · Alibaba 86 · Mistral 40 · DeepSeek 37 · xAI 20); the first
+   model of each lane is unchanged. Two rows with no organization (`Qwen 3.6-27B`, a duplicate of Alibaba's
+   `Qwen3.6 27B`; `Llama-3-70B-Synthia-v3.5`) stay off the lanes.
+7. **"Derived models" are counted by organization**: a model counts for a company if any ancestor in its base-model chain
+   was made by one of the company's organizations; other organizations stand for themselves. Recomputed over every
+   organization in the file, only Meta AI (197 models, by 157 other organizations) and Alibaba (112 / 73) reach 100; next
+   OpenAI 59, Google 122 (passes on the Arena anyway), outside the eight Tsinghua University 25. S3-ai0's 158 / 104 came
+   from a name-based count; the eight companies are the same. Top-3 days are unchanged (669 · 499 · 462 · 209 · 86 · 44;
+   outside: AllenAI/UW 9). `prep.ts` aborts if the rule names anything but the eight.
+8. **Compute disclosure** (models with a FLOP figure, all domains, same company rule): OpenAI 21 of 86 · Google 15 of 71
+   · Meta 25 of 33 · Anthropic 3 of 30 · Alibaba 46 of 90 · Mistral 3 of 40 · DeepSeek 25 of 38 · xAI 5 of 23 (S3-ai0
+   said 35 of 109 for OpenAI and 16 of 73 for Google — third-party GPT-named models included). Trend: ×4.7 a year on
+   all 1,242 figures (doubling ≈ 5.4 months).
+9. **F**: language + multimodal models by first-listed developer country (U.S. / China / other; none recorded → other)
+   and by access (open weights / closed / not recorded) — 2024 China 188 · U.S. 186; open weights 273 of 485 (2024),
+   60 of 144 (2026, to 30 Sep). `claims.json` (angle D) is left for S3-ai2 with the early first-party milestones.

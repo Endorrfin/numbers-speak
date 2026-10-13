@@ -146,7 +146,8 @@ async function main(): Promise<void> {
   }
 
   // ── B: catalog tabs, About, 404 ────────────────────────────────────────────────────────────────
-  const first = CATALOG[0];
+  // CHANGED (S3-ai1): the first *published* card — a draft (dev only) is not in the production gallery.
+  const first = CATALOG.find((m) => m.status === 'published') ?? CATALOG[0];
   for (const tab of TAB_IDS) {
     for (const lang of langs) check(`catalog:${tab}`, h(CatalogPage, { tab, params: {} }), lang, 800);
   }
@@ -198,6 +199,11 @@ async function main(): Promise<void> {
   // "Loading…" line in each panel; once loaded (primed here, as the browser's cache would hold it), the
   // description, every source, the licence and the d3 modules.
   for (const meta of CATALOG) {
+    // CHANGED (S3-ai1): a draft is a 404 outside dev (its body is checked in its ready state, section E).
+    if (meta.status === 'draft') {
+      for (const lang of langs) check(`viz:${meta.id}:draft`, h(VizPage, { id: meta.id, params: {} }), lang, 150, [lang === 'en' ? 'There is no visualization' : 'Візуалізації']);
+      continue;
+    }
     for (const lang of langs) {
       const html = check(`viz:${meta.id}:loading`, h(VizPage, { id: meta.id, params: {} }), lang, 1000, [
         lang === 'en' ? meta.title.en : meta.title.uk,
@@ -222,6 +228,7 @@ async function main(): Promise<void> {
   const escapeText = (v: string) =>
     v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
   for (const full of MANIFESTS) {
+    if (full.status === 'draft') continue; // CHANGED (S3-ai1): a 404 outside dev (above)
     for (const lang of langs) {
       const firstParagraph = full.description[lang].split(/\n\s*\n/)[0]!.trim();
       const html = check(`viz:${full.id}`, h(VizPage, { id: full.id, params: {} }), lang, 1200, [
@@ -619,6 +626,38 @@ async function main(): Promise<void> {
     r('ukraine uk', { show: 'ukraine' }, 'uk', ['Запорізька АЕС, 2021', 'Чому дані України закінчуються 2022 роком']);
     r('hostile', { show: 'x', metric: '<b>', order: 'zz', year: '99999', source: 'coal', page: '-3', focus: 'qq', region: 'mars' }, 'en', ['QQ: not in this list']);
     r('hostile race year', { show: 'race', year: '1900' }, 'en', ['2025 · #1']);
+  }
+
+  // CHANGED (S3-ai1): AI models (draft) — angles A · B · F, tables, EN + UK, the rule, hostile params. Expected numbers come
+  // from the shipped files through the entry's own derivations.
+  if (CATALOG.some((m) => m.id === 'ai-models')) {
+    const { default: Ai } = await import('../src/viz/ai-models/index');
+    const aD = await import('../src/viz/ai-models/data');
+    const { formatNumber } = await import('../src/lib/format');
+    const A = (f: string): unknown => JSON.parse(readFileSync(`public/data/ai-models/${f}`, 'utf8'));
+    const rel = aD.parseReleases(A(aD.FILES.releases));
+    const cmp = aD.parseCompute(A(aD.FILES.compute));
+    const top = aD.largest(cmp.rows);
+    const newest = rel.rows.at(-1)!;
+    const r = (label: string, params: Record<string, string>, lang: 'en' | 'uk', inc: string[]): string => {
+      const html = check(`ready:ai ${label}`, h(Ai, { params, setParams: noop }), lang, 1500, inc);
+      ok(!/NaN|undefined|\{[a-z0-9]+\}/.test(html.replace(/<[^>]+>/g, ' ')), `ready:ai ${label} [${lang}] no NaN / undefined / unfilled {placeholder}`);
+      return html;
+    };
+    r('timeline', {}, 'en', ['role="img"', 'Timeline', `${rel.rows.length} models`, 'Why these eight companies', 'AllenAI/UW', newest.model]);
+    const whole = r('timeline whole', {}, 'en', []);
+    ok(!whole.includes('>Whole period<'), 'ready:ai timeline: no reset button over the whole period');
+    r('timeline 2024', { from: '2024-01', to: '2024-12' }, 'en', ['Jan 2024 – Dec 2024', 'Whole period']);
+    r('timeline table openai', { company: 'openai', view: 'table' }, 'en', ['<table', 'OpenAI: every model', 'GPT-1']);
+    r('timeline uk', {}, 'uk', ['Хронологія', 'Чому саме ці вісім компаній']);
+    r('scale', { show: 'scale' }, 'en', ['Scale', formatNumber(cmp.rows.length, 'en'), '×4.7', top.model, 'Zoom in', 'Anthropic 3 of 30']);
+    r('scale table', { show: 'scale', view: 'table' }, 'en', ['<table', 'The 50 largest training runs since 2017', top.model]);
+    r('scale uk company', { show: 'scale', company: 'meta', view: 'table' }, 'uk', ['<table', 'Meta: усі моделі з числом']);
+    r('origins', { show: 'origins' }, 'en', ['Who and where', '148 : 160', 'China vs the U.S., 2025', '* 2026: to 30 Sep']); // Sep / Sept by ICU version
+    r('origins access table', { show: 'origins', split: 'access', view: 'table' }, 'en', ['<table', 'Open weights', 'Not recorded', '2026*']);
+    r('origins uk', { show: 'origins' }, 'uk', ['Хто й звідки', 'Китай проти США, 2025']);
+    const hostile = r('hostile', { show: '<x>', company: '<script>', from: '9999-99', to: '2010-01', split: 'zz' }, 'en', ['Timeline']);
+    ok(!hostile.includes('<script>'), 'ready:ai hostile params never echoed');
   }
 
   // CHANGED (S3-rb): GDP (PPP) per capita — three years, "× world average", table, region filter, EN + UK.
