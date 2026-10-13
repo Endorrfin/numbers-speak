@@ -2689,3 +2689,267 @@
 .rule-note ul {
   padding-left: 1.1rem;
 }
+
+/* ── AI models, angles C · D · E (S3-ai2) ─────────────────────────────────
+   No company colours (as in A and B): a row or a name tells companies apart; the highlighted one wears the accent.
+   Spans (C): No. 1 runs solid, top-3 stretches a thin faint strip, the style-control switch a dashed line.
+   Milestones (D): the shape is the measure, all series one ink. Tree (E): links in the grid tone, own models bold. */
+.gs-grid line,
+.ms-gy {
+  stroke: var(--chart-grid);
+  stroke-width: 1;
+}
+.gs-tick,
+.ms-tick {
+  fill: var(--chart-axis);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.gs-line {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+.gs-name {
+  fill: var(--tx);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.gs-span,
+.gs-total-bar {
+  fill: var(--tx2);
+}
+.gs-minor {
+  fill: color-mix(in srgb, var(--tx3) 55%, transparent);
+}
+.gs-total {
+  fill: var(--tx);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.gs-row.is-emphasis .gs-name,
+.gs-row.is-emphasis .gs-total {
+  fill: var(--accent);
+}
+.gs-row.is-emphasis .gs-span,
+.gs-row.is-emphasis .gs-total-bar {
+  fill: var(--accent);
+}
+.gs-row.is-emphasis .gs-minor {
+  fill: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.gs-marker line {
+  stroke: var(--tx3);
+  stroke-dasharray: 4 3;
+}
+.gs-marker text {
+  fill: var(--tx3);
+  font-size: 10.5px;
+}
+.gs-hover {
+  fill: none;
+  stroke: var(--tx);
+  stroke-width: 1.5;
+  pointer-events: none;
+}
+.gs-hit,
+.ms-hit {
+  fill: transparent;
+}
+.key-bar {
+  display: inline-block;
+  flex: none;
+  width: 1.1rem;
+  height: 0.6rem;
+  background: var(--tx2);
+}
+.key-bar.is-top3 {
+  height: 0.22rem;
+  background: color-mix(in srgb, var(--tx3) 55%, transparent);
+}
+.ms-title {
+  fill: var(--tx2);
+  font-size: 11.5px;
+}
+.ms-line {
+  fill: none;
+  stroke: var(--tx3);
+  stroke-width: 1.5;
+}
+.ms-point {
+  fill: var(--tx2);
+  stroke: var(--surface);
+  stroke-width: 1.2;
+}
+.ms-line.is-emphasis {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+.ms-point.is-emphasis {
+  fill: var(--accent);
+}
+.ms-label {
+  fill: var(--tx);
+  font-size: 11.5px;
+  font-weight: 600;
+  paint-order: stroke;
+  stroke: var(--surface);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+.ms-label.is-emphasis {
+  fill: var(--accent);
+}
+.ms-ring {
+  fill: none;
+  stroke: var(--tx);
+  stroke-width: 2;
+  pointer-events: none;
+}
+.key-shape {
+  display: inline-block;
+  flex: none;
+  width: 0.7rem;
+  height: 0.7rem;
+  background: var(--tx2);
+}
+.key-shape.is-circle {
+  border-radius: 50%;
+}
+.key-shape.is-square {
+  width: 0.62rem;
+  height: 0.62rem;
+}
+.key-shape.is-triangle {
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+.data-table td.quote {
+  min-width: 16rem;
+  color: var(--tx2);
+  font-size: 0.85rem;
+}
+.fam-head {
+  margin: 0.3rem 0 0.5rem;
+  font-size: 0.82rem;
+}
+.fam-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fam-row {
+  border-top: 1px solid var(--line);
+}
+.fam-row:last-child {
+  border-bottom: 1px solid var(--line);
+}
+.fam-line {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr) minmax(0, 15rem) 6rem auto;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.6rem;
+}
+.fam-name {
+  font-weight: 600;
+}
+.fam-row.is-home .fam-name {
+  color: var(--accent);
+}
+.fam-bar {
+  position: relative;
+  height: 0.75rem;
+  min-width: 0;
+}
+.fam-bar span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--tx2);
+}
+.fam-row.is-home .fam-bar span {
+  background: var(--accent);
+}
+.fam-value {
+  font-size: 0.85rem;
+  color: var(--tx2);
+  font-variant-numeric: tabular-nums;
+}
+.fam-value strong {
+  color: var(--tx);
+}
+/* WebKit (CLAUDE.md §12): the spark SVG sits absolutely inside a sized box, so it never widens the grid track. */
+.fam-spark {
+  position: relative;
+  width: 6rem;
+  height: 1.5rem;
+}
+.fam-spark svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.fam-spark rect {
+  fill: var(--tx3);
+}
+.fam-spark rect.is-partial {
+  fill: color-mix(in srgb, var(--tx3) 40%, transparent);
+}
+.fam-toggle {
+  white-space: nowrap;
+}
+.fam-tree {
+  padding: 0.4rem 0 0.6rem;
+}
+@media (max-width: 559px) {
+  .fam-line {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: 'name toggle' 'bar bar' 'value spark';
+    gap: 0.3rem 0.6rem;
+    padding: 0.45rem 0;
+  }
+  .fam-name {
+    grid-area: name;
+  }
+  .fam-toggle {
+    grid-area: toggle;
+  }
+  .fam-bar {
+    grid-area: bar;
+  }
+  .fam-value {
+    grid-area: value;
+  }
+  .fam-spark {
+    grid-area: spark;
+  }
+}
+.tr-link {
+  fill: none;
+  stroke: color-mix(in srgb, var(--tx3) 55%, transparent);
+  stroke-width: 1.4;
+}
+.tr-link.is-more {
+  stroke-dasharray: 3 3;
+}
+.tr-dot {
+  fill: var(--tx2);
+}
+.tr-node.is-root .tr-dot {
+  fill: var(--accent);
+}
+.tr-label {
+  fill: var(--tx);
+  font-size: 12px;
+}
+.tr-node.is-root .tr-label {
+  font-weight: 600;
+}
+.tr-node.is-more .tr-label {
+  fill: var(--tx3);
+  font-style: italic;
+}
+.tr-sub {
+  fill: var(--tx3);
+  font-size: 10.5px;
+}

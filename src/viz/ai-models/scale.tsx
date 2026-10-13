@@ -29,7 +29,8 @@ export const TABLE_TOP = 50;
 
 const txt = {
   xLabel: { en: 'Publication date', uk: 'Дата публікації' },
-  yLabel: { en: 'Training compute, FLOP (logarithmic scale)', uk: 'Обчислення на навчання, FLOP (логарифмічна шкала)' },
+  // CHANGED (S3-ai2): " · " lets splitTitle break the title on a phone (the UK one ran past 360 px).
+  yLabel: { en: 'Training compute, FLOP · logarithmic scale', uk: 'Обчислення на навчання, FLOP · логарифмічна шкала' },
   chartLabel: {
     en: 'Scatter plot: training compute of {n} AI models, {from}–{to}, on a logarithmic scale; the trend grows ×{k} a year. Largest: {model}, {flop} FLOP. The table view lists the models.',
     uk: 'Точкова діаграма: обчислення на навчання {n} AI-моделей, {from}–{to}, на логарифмічній шкалі; тренд — ×{k} на рік. Найбільше: {model}, {flop} FLOP. Таблиця містить моделі.',

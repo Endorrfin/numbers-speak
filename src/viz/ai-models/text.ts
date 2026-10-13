@@ -17,6 +17,15 @@ export const txt = {
   colCompany: { en: 'Company', uk: 'Компанія' },
   colDate: { en: 'Published', uk: 'Опубліковано' },
   colWeights: { en: 'Weights', uk: 'Ваги' },
+  // CHANGED (S3-ai2)
+  colFrom: { en: 'From', uk: 'Від' },
+  colTo: { en: 'To', uk: 'До' },
+  colDays: { en: 'Days', uk: 'Днів' },
+  colSource: { en: 'Source', uk: 'Джерело' },
+  creditArena: {
+    en: 'Data: LMArena leaderboard-dataset (CC BY 4.0), text leaderboard, overall; read {retrieved}.',
+    uk: 'Дані: LMArena leaderboard-dataset (CC BY 4.0), текстовий рейтинг, overall; прочитано {retrieved}.',
+  },
   creditEpoch: {
     en: 'Data: Epoch AI, “Data on AI models” (CC BY 4.0), updated {updated}, downloaded {retrieved}.',
     uk: 'Дані: Epoch AI, «Data on AI models» (CC BY 4.0), оновлено {updated}, завантажено {retrieved}.',
@@ -59,6 +68,31 @@ export const SHOW_TEXT: Record<Show, { key: string; tab: Localized; intro: Local
     intro: {
       en: 'How much computing went into training each model, in floating-point operations (FLOP) on a logarithmic scale — every model since 2017 for which Epoch AI has a figure.',
       uk: 'Скільки обчислень пішло на навчання кожної моделі, в операціях з рухомою комою (FLOP) на логарифмічній шкалі, — кожна модель з 2017 року, для якої Epoch AI має число.',
+    },
+  },
+  // CHANGED (S3-ai2): angles C · D · E.
+  arena: {
+    key: 'C',
+    tab: { en: 'No. 1 on LMArena', uk: '№1 на LMArena' },
+    intro: {
+      en: 'Which company had the top model on the LMArena text leaderboard, day by day since December 2023 — the board where people compare two anonymous answers and vote for the better one.',
+      uk: 'Чия модель була першою в текстовому рейтингу LMArena, день за днем з грудня 2023 року, — на дошці, де люди порівнюють дві анонімні відповіді й голосують за кращу.',
+    },
+  },
+  users: {
+    key: 'D',
+    tab: { en: 'Users', uk: 'Користувачі' },
+    intro: {
+      en: 'User counts the companies published themselves — on their own pages, in earnings calls and in filings. Each company counts differently, so the shape of a point says what was counted, and lines join only the same product and the same measure.',
+      uk: 'Кількість користувачів, яку компанії опублікували самі, — на своїх сторінках, у звітах інвесторам і в документах для регулятора. Кожна компанія рахує по-своєму, тож форма точки каже, що саме пораховано, а лінія з’єднує лише той самий продукт і ту саму міру.',
+    },
+  },
+  lineage: {
+    key: 'E',
+    tab: { en: 'Built on', uk: 'Родовід' },
+    intro: {
+      en: 'How many models in Epoch AI’s database were built on each company’s models — fine-tuned, distilled or extended — and by how many other organizations. Open a row to see the family tree.',
+      uk: 'Скільки моделей у базі Epoch AI побудовано на моделях кожної компанії — донавчених, дистильованих чи розширених, — і скільки інших організацій їх створили. Розгорніть рядок, щоб побачити родовід.',
     },
   },
   origins: {

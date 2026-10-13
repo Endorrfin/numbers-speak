@@ -114,6 +114,12 @@ export function dodge(xs: readonly number[], r: number, maxOffset: number): numb
   return out;
 }
 
+/** CHANGED (S3-ai2): a sublabel cut to `max` px at 10.5 px (exported for tests). */
+export function fitSub(text: string, max: number): string {
+  const n = Math.floor(max / (10.5 * 0.56));
+  return text.length <= n ? text : `${text.slice(0, Math.max(1, n - 1)).trimEnd()}…`;
+}
+
 /** Labels whose dots are closer than this (px) share one label. */
 export const LABEL_GAP = 9;
 
@@ -202,6 +208,11 @@ export function renderLanes(
       .attr('y', (d) => L.laneY[laneIndex.get(d.key)!]! + 9)
       .attr('dy', '0.35em')
       .attr('text-anchor', 'end')
+      // CHANGED (S3-ai2): a sublabel wider than the label column ("Mistral · Mixtral · Magistral") was cut off at the SVG's
+      // left edge — it is shortened with an ellipsis and keeps its full text in a <title>; shorter ones are unchanged.
+      .text((d) => fitSub(d.sublabel ?? '', L.left - 14))
+      .filter((d) => fitSub(d.sublabel ?? '', L.left - 14) !== d.sublabel)
+      .append('title')
       .text((d) => d.sublabel ?? '');
   }
 

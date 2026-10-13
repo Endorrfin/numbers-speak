@@ -250,3 +250,14 @@ export function formatMonth(month: string, lang: Lang): string {
   if (Number.isNaN(ms)) return month;
   return new Intl.DateTimeFormat(localeOf(lang), { month: 'short', year: 'numeric', timeZone: 'UTC' }).format(ms);
 }
+
+// CHANGED (S3-ai2): ai-models — days at No. 1 and user counts.
+/** Whole days with the locale's plural: 501 → '501 days' / '501 день', 222 → '222 дні', 38 → '38 днів'. */
+export function formatDays(value: number, lang: Lang): string {
+  return nf(lang, 'days', { style: 'unit', unit: 'day', unitDisplay: 'long', maximumFractionDigits: 0 }).format(value);
+}
+
+/** People: 1.2e9 → '1.2 billion' / '1,2 млрд'; 450e6 → '450 million' / '450 млн' (up to two significant digits). */
+export function formatPeople(value: number, lang: Lang): string {
+  return nf(lang, 'people', { notation: 'compact', compactDisplay: lang === 'uk' ? 'short' : 'long', maximumSignificantDigits: 3 }).format(value);
+}

@@ -13,7 +13,7 @@ g.window = dom.window;
 g.document = dom.window.document;
 for (const k of ['MouseEvent', 'TouchEvent', 'WheelEvent', 'Event', 'SVGElement', 'Element', 'Node']) g[k] = (dom.window as unknown as Record<string, unknown>)[k];
 
-const { dodge, layoutLanes, mergeLabels, renderLanes, LABEL_ROOM } = await import('../src/charts/renderLanes');
+const { dodge, fitSub, layoutLanes, mergeLabels, renderLanes, LABEL_ROOM } = await import('../src/charts/renderLanes');
 const { renderScatter } = await import('../src/charts/renderScatter');
 const { attachScatterZoom, zoomFilter } = await import('../src/charts/scatterZoom');
 const { zoomIdentity } = await import('d3');
@@ -215,6 +215,19 @@ await test('build: d3-brush, d3-zoom, d3-drag and d3-hierarchy stay out of d3-ve
   }
   const scatter = readFileSync('src/charts/renderScatter.ts', 'utf8');
   assert.ok(!/from 'd3-zoom'/.test(scatter.replace(/^import type .*$/gm, '')), 'renderScatter must not load d3-zoom (scatterZoom.ts does)');
+});
+
+// CHANGED (S3-ai2)
+await test('lanes: a sublabel wider than the label column is cut with an ellipsis and keeps a <title>', () => {
+  assert.equal(fitSub('GPT · o-series', 118), 'GPT · o-series');
+  const cut = fitSub('Mistral · Mixtral · Magistral', 118);
+  assert.ok(cut.endsWith('…') && cut.length * 10.5 * 0.56 <= 118, cut);
+  const svg = freshSvg();
+  renderLanes(svg, [{ key: 'm', label: 'Mistral', sublabel: 'Mistral · Mixtral · Magistral' }, { key: 'o', label: 'OpenAI', sublabel: 'GPT · o-series' }], [], { width: 900, tooltip: tip, domain, view: domain, formatTick: fmt });
+  const subs = [...svg.querySelectorAll('text.ln-sub')];
+  assert.equal(subs[0]!.querySelector('title')!.textContent, 'Mistral · Mixtral · Magistral');
+  assert.equal(subs[1]!.querySelector('title'), null);
+  assert.equal(subs[1]!.textContent, 'GPT · o-series');
 });
 
 console.log(`✓ lanes/zoom — ${passed} tests passed.`);

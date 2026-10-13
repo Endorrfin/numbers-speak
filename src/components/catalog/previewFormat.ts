@@ -42,6 +42,8 @@ export function formatPreviewNum(value: number, format: PreviewFormat, lang: Lan
       return nf(lang, 'dec2', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
     case 'times':
       return `${nf(lang, 'times', { maximumFractionDigits: 0 }).format(value)}×`;
+    case 'times1': // CHANGED (S3-ai2)
+      return `×${nf(lang, 'times1', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(value)}`;
     case 'count-compact':
       return formatCountCompact(value, lang);
     case 'usd-compact':

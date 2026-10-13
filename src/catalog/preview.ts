@@ -16,6 +16,7 @@ export const PREVIEW_FORMATS = [
   'score',
   'dec2',
   'times',
+  'times1', // CHANGED (S3-ai2): ×4.7 — a growth factor to one decimal
   'count-compact',
   'usd-compact',
   'usd-m-compact',

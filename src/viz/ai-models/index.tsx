@@ -1,18 +1,25 @@
 // ai-models — CHANGED (S3-ai1): AI models 2017–2026 — who released what and when, how much computing went into them, and
 // where they come from. Layers: data.ts (contract, the rule, derivations) → state.ts (URL state) → this shell (angle tabs,
-// view switch) → one component per angle (timeline, scale, origins; arena, users and lineage arrive in S3-ai2). Each angle
-// loads only the files it draws.
-import { useCallback, useId, useMemo } from 'react';
+// view switch) → one component per angle (timeline, scale, origins; CHANGED (S3-ai2): arena, users, lineage). Each angle
+// loads only the files it draws. CHANGED (S3-ai2): C · D · E are lazy chunks of their own (with the Spans, Milestones and
+// Tree cores and d3-hierarchy), so the default angle loads ≈ 21 kB gzip, not 36 (docs/AI-MODELS-PLAN.md §4: ≤ 30).
+import { Suspense, lazy, useCallback, useId, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import type { VizBodyProps } from '../../catalog/types';
 import { useLang } from '../../i18n/lang';
 import { ui } from '../../i18n/ui';
+import { DataState } from './common';
 import { OriginsAngle } from './origins';
 import { ScaleAngle } from './scale';
 import { SHOWS, parseAiState, switchShow, toAiParams } from './state';
 import type { AiState, Show } from './state';
 import { SHOW_TEXT, txt } from './text';
 import { TimelineAngle } from './timeline';
+
+// CHANGED (S3-ai2): one chunk per new angle; a chunk that fails to load goes through the site's chunkReload like a page.
+const ArenaAngle = lazy(() => import('./arena').then((m) => ({ default: m.ArenaAngle })));
+const UsersAngle = lazy(() => import('./users').then((m) => ({ default: m.UsersAngle })));
+const LineageAngle = lazy(() => import('./lineage').then((m) => ({ default: m.LineageAngle })));
 
 export default function AiModels({ params, setParams }: VizBodyProps) {
   const { t } = useLang();
@@ -24,6 +31,9 @@ export default function AiModels({ params, setParams }: VizBodyProps) {
   const angles: Record<Show, ReactNode> = {
     timeline: <TimelineAngle settings={settings} update={update} />,
     scale: <ScaleAngle settings={settings} update={update} />,
+    arena: <ArenaAngle settings={settings} update={update} />,
+    users: <UsersAngle settings={settings} update={update} />,
+    lineage: <LineageAngle settings={settings} update={update} />,
     origins: <OriginsAngle settings={settings} update={update} />,
   };
 
@@ -61,7 +71,7 @@ export default function AiModels({ params, setParams }: VizBodyProps) {
         </div>
       </div>
       <p className="show-intro">{t(SHOW_TEXT[settings.show].intro)}</p>
-      {angles[settings.show]}
+      <Suspense fallback={<DataState status="loading" />}>{angles[settings.show]}</Suspense>
     </div>
   );
 }
