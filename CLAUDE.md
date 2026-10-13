@@ -262,7 +262,8 @@ the existing entries (owner).
 **S3‑oil (2026‑10‑07):** new entry #32 `oil` (owner request, out of the improvement plan) — five angles on EI 2026,
 EIA and China customs. S3‑ps (births‑deaths‑per‑day → UN WPP) stays the next item.
 **S3‑cp (2026‑10‑07):** «Україна в цифрах» (`#/c/ua`) — improvement plan item 1 (`docs/IMPROVEMENTS.md`, the plan
-for every next item). Next: **S3‑lz** (owner, 2026‑10‑07), then S3‑cp phase 2 (any country, search, `?vs=`).
+for every next item). Next: **S3‑aa4** — air-attacks update (owner, 2026‑10‑08; prompt `docs/IMPROVEMENTS.md` §5), then
+S3‑lz (§4), then S3‑cp phase 2 (any country, search, `?vs=`).
 **S3‑lz (2026‑10‑07):** manifests split — cards eager, description/sources lazy; initial `index` 47.6 → 25.6 kB gzip.
 Next: S3‑cp phase 2 (any country, search, `?vs=`) per `docs/IMPROVEMENTS.md`.
 **S3‑el (2026‑10‑07):** new entry #33 `electricity` (owner request) — seven angles on Ember + World Bank + Energoatom.
@@ -271,6 +272,11 @@ Follow‑ups (owner): “hours without power” by city (Svitlobot — ask its a
 return only as `?vs=` on `#/c/ua`, if GoatCounter shows `/#/c/ua` is read (`docs/IMPROVEMENTS.md` §2.6).
 **S3‑nav (2026‑10‑07):** “See also” on every page; the “Updated” badge and gallery sorting deferred (noise today).
 Next per `docs/IMPROVEMENTS.md` §1: S3‑ps (births‑deaths‑per‑day → UN WPP).
+**S3‑aa4 (2026‑10‑08):** air attacks refreshed to 4 Oct 2026 (Kaggle); HRMMU September not out yet.
+**S3‑ps → deferred (2026‑10‑13, owner):** wait for UN WPP 2026 — on WPP 2024 the numbers would not change (licence gain only).
+**S3‑ai plan (2026‑10‑13):** new entry #34 “AI models 2017–2026” — plan approved by the owner (`docs/AI-MODELS-PLAN.md`; rubric `knowledge` + `world`, no AI tab until 4 entries). Next: S3‑ai0 (data audit + mockup), prompt in the plan §7.
+**S3‑ai0 (2026‑10‑13):** data audit + mockup approved — heroes by rule (8), `data-raw/ai-models/`. Next: **S3‑ai1** (prep +
+angles A · B · F), prompt in `docs/AI-MODELS-PLAN.md` §7.
 
 ## 14. Status / progress log
 - **S0** (2026‑09‑17) — repo named `numbers-speak`; decisions D1–D10 accepted; `PROJECT-BRIEF.md`,
@@ -1019,3 +1025,53 @@ Next per `docs/IMPROVEMENTS.md` §1: S3‑ps (births‑deaths‑per‑day → UN
   measured mid‑way through the smooth scroll — the check now waits for `scrollY = 0`, 3 clean runs).
   CHANGELOG **Updated** line. Branch (proposed) `feat/2026-10-see-also`. Live dev server regenerated
   `catalog.generated.ts` itself (S3‑lz plugin) — identical to the scratch output.
+- **S3‑aa4** (2026‑10‑08) — `air-attacks-on-ukraine` data refresh (owner: A fresh data + C fixes; B — no new angles).
+  Step 1 audit (new Kaggle CSV in `docs/data/air-attacks/` vs v211, Python in the scratchpad): 4,152 → 4,202 rows, same 22
+  columns, reports to **4 Oct 2026** (were 19 Sep); 0 rows removed, **0 values revised**; 3 new rows dated 19 Sep are
+  regional (dropped by rule 1); two new model names stop prep — `3M22 Zircon/P-800 Oniks` → antiship, `Banderol/Dan-T` →
+  cruise (owner; one group in the source, 8 launched 22 Sep) in `MODEL_CLASS` + `labels.ts` (EN/UK — `test-air-attacks`
+  caught the missing label); two `hidden` rows of 22 Sep carry 0/0 (type named, no numbers) — kept as zero items. Kaggle
+  version number not recorded by the owner (README keeps download date + last report date + sha256 `7e35f28e…`).
+  HRMMU: the September 2026 update was not published on 2026‑10‑08 → 2026 row stays Jan–Aug; casualties per 100 weapons
+  already match HRMMU's months (`launchedInMonths`), so the new tail does not skew it.
+  Now: 1,255 reports, 122,712 drones (+3,307), 7,666 missiles (+27), 130,378 launched (card preview); rounded rates and
+  the largest attack (7 Sep 2025, 823) unchanged; September 2026 now a full month, October partial. `country-facts.json`
+  unchanged. Fix (C): the description said “Five angles” — now six, the calendar named (EN + UK; `index.tsx` header too).
+  `meta.updated` 2026‑10‑08, Kaggle + Air Force `retrieved` 2026‑10‑08 (HRMMU sources not re-read — unchanged).
+  Tests: tail pins in `test-air-attacks` (last, 1,255 reports, totals, 2026 period) and `test-previews` (130,378, 50
+  stacks, partial [0, 49], to 2026‑10) updated — they mirror the prep report and the totals quoted in `meta.ts`; the
+  month count is now derived from `first`/`last` (a refresh no longer breaks it); smoke `122,712` / `7,666`.
+  `verify` green in a scratch copy (Node 22; 35 test files · 2,344 smoke checks · build; page chunk 18.9 kB gzip, `index`
+  25.84 kB gzip unchanged). Playwright (playwright-core 1.62 + Chromium 1234, built site under the production URL): six
+  angles × EN dark / UK light × 360 / 1280 — charts drawn, KPI 122,712 / 122 712, card and `#/c/ua` 130,378, no horizontal
+  scroll, 0 console messages. CHANGELOG **Updated** line (2026‑10‑08). Branch (proposed) `viz/2026-10-air-attacks-refresh`.
+  Open: HRMMU September 2026 (expected mid‑October) — append to the 2026 row on the next refresh. The owner's download in
+  `docs/data/air-attacks/` is gitignored; the committed copy is `data-raw/air-attacks-on-ukraine/missile_attacks_daily.csv`.
+- **S3‑ai0** (2026‑10‑13) — entry #34 `ai-models` (planned, no page code): data audit + mockup. Sources fetched by curl:
+  Epoch AI `all_ai_models.csv` (3,626 models, updated 2026‑10‑08; `notable` 1,078 and `frontier` 138 audited, not used)
+  and LMArena `leaderboard-dataset` parquet (`text` + `text_style_control`, split `full`; pandas + pyarrow are
+  installed system‑wide). Findings that changed the plan: `notable` misses whole lines (Mistral 5, Llama to 04.2025, no
+  Muse Spark) → `all` (Mistral 36, Llama to 10.2025), so `releases-extra.csv` is dropped; Epoch `frontier` since 2017 =
+  68 models of ≈ 30 organizations → out of the hero rule; LMArena snapshots before 2023‑12‑06 lack GPT‑4 and models
+  later removed from the board are missing everywhere (Claude 1/2.x, Bard Gemini Pro, Gemini 1.5 Pro 0409, Yi‑Large);
+  style control is the site default from 2025‑05‑16; lineage is shallow (569 one step, 21 three or more) but wide by
+  family (Llama 158 derived from 94 organizations, Qwen 104 / 48); closed models rarely disclose FLOP (Claude 3 of 30).
+  Owner decisions (AskUserQuestion, all as recommended): heroes = ≥ 30 days in the LMArena top 3 **or** ≥ 100 derived
+  models → OpenAI · Anthropic · Google · xAI · DeepSeek · Mistral · Meta · Alibaba; lanes = companies (Meta = Llama →
+  Muse Spark); LMArena splice “what readers saw” (raw `text` to 2025‑05‑15, then style control) from 2023‑12‑06 — days at
+  No. 1: OpenAI 501 · Anthropic 256 · Google 222 · DeepSeek 38 · xAI 25; user counts first‑party only — 16 claims
+  (ChatGPT weekly 700 M → 1.2 B, Gemini app monthly 450 → 950 M, Meta AI 500 M → 1 B+, Copilot family 150 M, Grok
+  117 M from the SpaceX S‑1); Anthropic, DeepSeek, Alibaba publish none. openai.com answers 403 to the agent — read
+  through the owner's Chrome (same‑origin fetch); sec.gov needs a declared User‑Agent.
+  Mockup (artifact, d3 7.9, EN/UA × dark/light × 1280/360, real numbers): https://claude.ai/artifact/7JEW7eJ7DKes1M4qJ9CrE4
+  — approved by the owner with all recommendations (`docs/AI-MODELS-PLAN.md` §3a). v1's brush did nothing: with the full
+  period the selection covered the whole strip, so a drag only tried to move it — v2 draws no selection for the full
+  period (rule for `renderLanes.ts`). The agent's Chrome window is hidden, so the charts were not seen by the agent —
+  the owner's review was the visual check.
+  Live folder: `data-raw/ai-models/` only — `extract-epoch.py` → `epoch-models.csv` (3,131 rows since 2017, 0.62 MB),
+  `extract-lmarena.py` → `lmarena-text-overall.csv` (239 snapshots, ranks 1–20 + each hero's best, 5,307 rows, 0.50 MB;
+  recomputes the days at No. 1 exactly), `heroes.csv`, `user-claims.csv`, README (sources + sha256 + decisions + facts);
+  docs: `docs/AI-MODELS-PLAN.md` (findings, §2 final, §3a, §4, §7 → S3‑ai1 prompt), IMPROVEMENTS §0, this file §13/§14.
+  No npm, no git, no tests (no code). Branch (proposed) `viz/2026-10-ai-models`.
+  Open: early ChatGPT milestones (100–500 M weekly, keynotes / X posts) and Gemini 400 M (I/O 2025, press only) — add in
+  S3‑ai1/2 with first‑party links; Epoch's 2026 derived models are still being recorded (12).
