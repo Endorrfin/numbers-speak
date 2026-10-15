@@ -1,6 +1,7 @@
 // origins.tsx — CHANGED (S3-ai1): angle F, language and multimodal models a year by the developer's country (first listed)
 // or by access to the weights (StackedRows, one row a year; ?split=access). Counts of models, not shares of compute:
-// the question is who releases. The last year is partial and marked "*".
+// the question is who releases. The last year is partial and marked "*". CHANGED (S3-ai3): a headline sentence and
+// "Did you know" facts (insights.ts).
 import { useId, useMemo } from 'react';
 import { StackedRows } from '../../charts/StackedRows';
 import type { SrRow, SrSpec } from '../../charts/renderStackedRows';
@@ -9,10 +10,11 @@ import { useLang } from '../../i18n/lang';
 import { fill, ui } from '../../i18n/ui';
 import { formatDate, formatNumber, formatShare } from '../../lib/format';
 import { dataUrl, useDataset } from '../../lib/useDataset';
-import { DataState, EpochCredit } from './common';
+import { DataState, EpochCredit, Facts, Lead } from './common';
 import type { AngleProps } from './common';
-import { FILES, SEGMENTS, SPLITS, parseOrigins, partialYear, yearTotal } from './data';
-import type { OriginsDataset, Split } from './data';
+import { FILES, ORIGINS, SEGMENTS, SPLITS, parseOrigins, partialYear, yearTotal } from './data';
+import type { Origin, OriginsDataset, Split } from './data';
+import { biggestJump, firstOpenMajority } from './insights';
 import { ACCESS_TEXT, ORIGIN_TEXT, txt as shared } from './text';
 
 const parse = (json: unknown): OriginsDataset => parseOrigins(json, FILES.origins);
@@ -39,6 +41,17 @@ const txt = {
   },
   colYear: { en: 'Year', uk: 'Рік' },
   colTotal: { en: 'Models', uk: 'Моделей' },
+  // CHANGED (S3-ai3)
+  leadCountry: { en: '{year}: {leader} — the most models recorded, {n} of {total} ({share}).', uk: '{year}: найбільше записаних моделей — {leader}: {n} з {total} ({share}).' },
+  leadAccess: { en: '{year}: {share} of the models recorded had open weights; {y0}: {share0}.', uk: '{year}: з відкритими вагами — {share} записаних моделей; {y0} — {share0}.' },
+  factJump: {
+    en: 'The biggest jump: {year}, {after} models recorded against {before} the year before (×{x}).',
+    uk: 'Найбільший стрибок — {year}: {after} записаних моделей проти {before} роком раніше (×{x}).',
+  },
+  factOpen: {
+    en: '{year} was the first year in which more than half of the models recorded had open weights ({share}).',
+    uk: '{year} — перший рік, коли понад половина записаних моделей мала відкриті ваги ({share}).',
+  },
   tableCaption: { en: 'Language and multimodal models a year, {from}–{to}, by {split}', uk: 'Мовні й мультимодальні моделі за роками, {from}–{to}, за {split}' },
 } as const;
 
@@ -86,10 +99,24 @@ function OriginsView({ ds, settings, update }: AngleProps & { ds: OriginsDataset
   const fy = ds.years[full]!;
   const openShare = (i: number): string => formatShare(ds.access.open[i]! / Math.max(1, yearTotal(ds, i)), lang);
   const lastParts = keys.map((k) => `${t(segmentText(split, k))} ${formatNumber(counts(k)[last]!, lang)}`).join(', ');
+  // CHANGED (S3-ai3): headline on the last complete year, by the current split; facts on all years.
+  const fyTotal = yearTotal(ds, full);
+  const leader = ORIGINS.reduce((a: Origin, b: Origin) => (ds.country[b][full]! > ds.country[a][full]! ? b : a));
+  const lead =
+    split === 'country'
+      ? fill(t(txt.leadCountry), { year: fy, leader: t(ORIGIN_TEXT[leader]), n: formatNumber(ds.country[leader][full]!, lang), total: formatNumber(fyTotal, lang), share: formatShare(ds.country[leader][full]! / Math.max(1, fyTotal), lang) })
+      : fill(t(txt.leadAccess), { year: fy, share: openShare(full), y0: from, share0: openShare(0) });
+  const jump = biggestJump(ds);
+  const majority = firstOpenMajority(ds);
+  const facts = [
+    ...(jump ? [fill(t(txt.factJump), { year: jump.year, after: formatNumber(jump.after, lang), before: formatNumber(jump.before, lang), x: formatNumber(Math.round(jump.ratio * 10) / 10, lang) })] : []),
+    ...(majority ? [fill(t(txt.factOpen), { year: majority.year, share: formatShare(majority.share, lang) })] : []),
+  ];
   const label = fill(t(txt.chartLabel), { from, to, split: t(split === 'country' ? txt.byCountry : txt.byAccess), last: yearLabel(last), parts: lastParts });
 
   return (
     <>
+      <Lead text={lead} />
       <div className="controls" role="group" aria-label={t(ui.chartSettings)}>
         <div className="field field-auto">
           <span className="field-label" id={`${base}-split`}>
@@ -175,6 +202,7 @@ function OriginsView({ ds, settings, update }: AngleProps & { ds: OriginsDataset
           <span className="kpi-label">{fill(t(txt.kpiTotal), { from, to })}</span>
         </li>
       </ul>
+      <Facts items={facts} />
       {partial && <p className="chart-note">{fill(t(txt.partial), { year: to, date: formatDate(ds.through, lang) })}</p>}
       <p className="chart-note muted">{t(txt.note)}</p>
       <EpochCredit ds={ds} />

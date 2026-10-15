@@ -298,6 +298,10 @@ angles A · B · F), prompt in `docs/AI-MODELS-PLAN.md` §7.
 release), prompt in `docs/AI-MODELS-PLAN.md` §7b.
 **S3‑ai2 (2026‑10‑13):** `ai-models` **published** — C (No. 1 on LMArena, Spans), D (users, Milestones), E (built on, Tree +
 d3-hierarchy), card ×4.7 a year. Open: Safari / iPhone checklist (owner).
+**S3‑ai3 / S3‑ai4 plan (2026‑10‑15, owner: “make it livelier”):** headline sentence per angle, “Did you know” facts
++ comparisons, events on the axes (S3‑ai3); “time machine” date slider (S3‑ai4, mockup first) — prompts in `docs/AI-MODELS-PLAN.md` §7c.
+**S3‑ai3 (2026‑10‑15):** done — headline + “Did you know” on all six angles, events on A only (owner). Next: **S3‑ai4** (mockup
+first); page chunk headroom 2.65 kB gzip.
 
 ## 14. Status / progress log
 - **S0** (2026‑09‑17) — repo named `numbers-speak`; decisions D1–D10 accepted; `PROJECT-BRIEF.md`,
@@ -1166,3 +1170,32 @@ d3-hierarchy), card ×4.7 a year. Open: Safari / iPhone checklist (owner).
   `?company=meta`. Branch (proposed) `viz/2026-10-ai-models-s3ai2`.
   Open: Safari / iPhone checklist (owner); Mistral's EU DSA “monthly active recipients” figure, if Mistral publishes it,
   could be a first-party point.
+- **S3‑ai3** (2026‑10‑15) — `ai-models` “livelier” (owner, 2026‑10‑15): one headline sentence above every angle, 2–3
+  “Did you know” facts under it, event lines on the timeline. Step 0 (AskUserQuestion, both as recommended): events only
+  where they are new — the plan's (а) first models are the first dot of each lane and 6 of 8 fall in 9 months of 2023
+  (≈ 2 px a month at 360 px), (б) first days at No. 1 are the starts of C's bars → A gets ChatGPT's launch + Anthropic /
+  xAI / DeepSeek / Google first days at No. 1 (OpenAI's 6 Dec 2023 = series start, left out); C keeps its style-control
+  marker; D none (a leaderboard event beside a user count suggests a cause). Headline varies with the view (period,
+  company, split). ChatGPT launch read first-party in Chrome (openai.com/index/chatgpt/, 30 Nov 2022).
+  Built: `insights.ts` (pure: `MANUAL_EVENTS`, `arenaFirsts`, `busiestMonth`, `recentShare`, `largestOfYear`,
+  `firstVsLargest`, `biggestJump`, `firstOpenMajority`) + C · D · E rules in `views.ts` (`companyRuns`, `leadFacts`,
+  `fastestDoubling`, `oneIn`, `topBases`, `baseFacts` — there so they stay in the lazy chunks: in insights.ts Rolldown
+  put them in the main chunk); `Lead` / `Facts` in `common.tsx` (`.angle-lead`, `.angle-facts`; a UK sentence ending in
+  “р.” gets no second stop); words in each angle's `txt`; A loads `arena.json` (1.9 kB gzip) for the events and has an
+  events table; D joins `population-by-country` at runtime (the angle draws without it). `renderLanes` opt-in `events`
+  (dashed line + diamond, merged within 9 px, tooltip lists all, hover after dots within 6 px); without the option the
+  SVG is byte-identical to the old renderer (28 fixtures, old file from a scratch `.git` copy). `meta.ts`: + OpenAI
+  launch and UN WPP sources, description paragraph, `updated` 2026‑10‑15. Facts now (rules, not picks): GPT‑6 Astra =
+  56.9 M × GPT‑1, 1 s → 1.8 years, 1.19 M × JFT (2017); lead changed company 14 times, longest Anthropic 236 days,
+  shortest xAI 2 days; ChatGPT 250 → 500 M weekly in 180 days, 1.2 bn ≈ 1 in 7 people; Llama 2‑70B 20 direct
+  descendants, then Mistral 7B and SigLIP 400M 14; 2023 ×2.7 models, first open-weights majority. §7c's “Gemini 2.5 Pro
+  No. 1 three times” was model-level — Claude Opus 4.6 variants alternate 5 times inside one company — replaced by the
+  company-level rule.
+  Tests: `test-ai-models` 14 → 21 groups (each fact recomputed a second way), `test-lanes` +1 (events: opt-in, view,
+  merge, tooltip as text, z-order); smoke 2,585 → 2,671. `verify` green in a scratch copy (Node 25.7; build: `ai-models`
+  23.9 → 27.35 kB gzip ≤ 30, shared lazy `views` chunk 1.5 kB, `index` 26.55 kB, `d3-vendor` 24.67 unchanged).
+  Playwright (playwright-core 1.64 + cached headless shell 1243 via `executablePath`, built site under the production
+  URL): 12 views × 360/390/768/1280 × EN dark / UK light = 96 — no horizontal scroll, nothing outside the column, lead +
+  ≥ 2 facts, 0 console messages; 5 event lines (4 at 360: xAI + DeepSeek merge); event tooltip on hover.
+  CHANGELOG **Updated** line. Branch (proposed) `viz/2026-10-ai-models-s3ai3`.
+  Open: Safari / iPhone (event lines by tap); the main chunk has 2.65 kB left for S3‑ai4.

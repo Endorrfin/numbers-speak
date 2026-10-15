@@ -2,18 +2,19 @@
 // rule's second test). One row per company: a bar of the derived models, how many other organizations made them, and
 // small columns a year (the last year marked "*": Epoch is still adding it). Opening a row (= ?company=) draws its
 // family tree with d3-hierarchy, cut to the largest families; the table view lists every model.
+// CHANGED (S3-ai3): a headline sentence and "Did you know" facts (the models with the most models built on them).
 import { useId, useMemo } from 'react';
 import { Tree } from '../../charts/Tree';
 import { useLang } from '../../i18n/lang';
 import { fill, ui } from '../../i18n/ui';
 import { formatDate, formatNumber } from '../../lib/format';
 import { dataUrl, useDataset } from '../../lib/useDataset';
-import { DataState, EpochCredit } from './common';
+import { DataState, EpochCredit, Facts, Lead } from './common';
 import type { AngleProps } from './common';
 import { FILES, familyTrees, knownCompany, parseLineage, parseReleases, partialYear } from './data';
 import type { Hero, LineageDataset, ReleasesDataset } from './data';
 import { txt as shared } from './text';
-import { TREE_CAPS, familyView } from './views';
+import { TREE_CAPS, baseFacts, familyView } from './views';
 
 const parse = (json: unknown): LineageDataset => parseLineage(json, FILES.lineage);
 const parseHeroes = (json: unknown): ReleasesDataset => parseReleases(json, FILES.releases);
@@ -55,6 +56,22 @@ const txt = {
   colMaker: { en: 'Made by', uk: 'Розробник' },
   sumCaption: { en: 'Models built on each company’s models, by year, {from}–{to}', uk: 'Моделі на моделях кожної компанії, за роками, {from}–{to}' },
   listCaption: { en: '{name}: every model built on its models ({n})', uk: '{name}: усі моделі на її моделях ({n})' },
+  // CHANGED (S3-ai3)
+  lead: {
+    en: 'The most models are built on {name}’s models: {n}, by {orgs} other organizations.',
+    uk: 'Найбільше моделей побудовано на моделях {name}: {n}; інших організацій — {orgs}.',
+  },
+  leadCompany: {
+    en: '{name}: {n} models built on its models, by {orgs} other organizations; the largest family starts at {model} ({size} models).',
+    uk: '{name}: моделей на її моделях — {n}, інших організацій — {orgs}; найбільша родина — від {model} (моделей — {size}).',
+  },
+  leadCompanyNone: {
+    en: '{name}: no model in Epoch AI’s database is recorded as built on its models.',
+    uk: '{name}: у базі Epoch AI не записано жодної моделі на її моделях.',
+  },
+  factTop: { en: '{model} ({name}) has the most models built directly on it: {n}.', uk: 'Найбільше моделей безпосередньо на одній основі — {n}: {model} ({name}).' },
+  factNext: { en: 'Next, among the other companies: {list}.', uk: 'Далі, серед інших компаній: {list}.' },
+  factItem: { en: '{model} ({name}, {n})', uk: '{model} ({name}, {n})' },
   pick: { en: 'Pick a company (Highlight, or open its row in the chart) to list every model built on its models.', uk: 'Виберіть компанію («Виділити» або рядок на графіку), щоб побачити всі моделі на її моделях.' },
 } as const;
 
@@ -93,10 +110,34 @@ function LineageView({ ds, heroes, settings, update }: AngleProps & { ds: Lineag
     .flatMap((h) => (trees.get(h.id) ?? []).map((f) => ({ f, id: h.id })))
     .reduce((a, b) => (b.f.size > a.f.size ? b : a));
   const full = partial ? last - 1 : last;
+  // CHANGED (S3-ai3): headline (the company with the most, or the highlighted one) and facts.
+  const picked = company ? ds.heroes.find((h) => h.id === company) : undefined;
+  const pickedFamily = picked ? (trees.get(picked.id) ?? [])[0] : undefined;
+  const lead = picked
+    ? picked.derived > 0 && pickedFamily
+      ? fill(t(txt.leadCompany), {
+          name: name(picked.id),
+          n: formatNumber(picked.derived, lang),
+          orgs: formatNumber(picked.orgs, lang),
+          model: pickedFamily.model,
+          size: formatNumber(pickedFamily.size, lang),
+        })
+      : fill(t(txt.leadCompanyNone), { name: name(picked.id) })
+    : fill(t(txt.lead), { name: name(most.id), n: formatNumber(most.derived, lang), orgs: formatNumber(most.orgs, lang) });
+  const bases = baseFacts(ds);
+  const facts = bases
+    ? [
+        fill(t(txt.factTop), { model: bases.top.model, name: name(bases.top.hero), n: formatNumber(bases.top.children, lang) }),
+        ...(bases.next.length
+          ? [fill(t(txt.factNext), { list: bases.next.map((b) => fill(t(txt.factItem), { model: b.model, name: name(b.hero), n: formatNumber(b.children, lang) })).join(', ') })]
+          : []),
+      ]
+    : [];
   const inFull = new Set(ds.heroes.flatMap((h) => h.nodes.filter((n) => n.parent !== null && Number(n.date.slice(0, 4)) === ds.years[full]).map((n) => n.model))).size;
 
   return (
     <>
+      <Lead text={lead} />
       <div className="controls" role="group" aria-label={t(ui.chartSettings)}>
         <div className="field">
           <label htmlFor={`${base}-company`}>{t(shared.company)}</label>
@@ -239,6 +280,7 @@ function LineageView({ ds, heroes, settings, update }: AngleProps & { ds: Lineag
           <span className="kpi-label">{fill(t(txt.kpiYear), { year: ds.years[full]! })}</span>
         </li>
       </ul>
+      <Facts items={facts} />
       {partial && <p className="chart-note">{fill(t(txt.notePartial), { year: ds.years[last]!, date: formatDate(ds.through, lang) })}</p>}
       <p className="chart-note muted">{t(txt.noteCount)}</p>
       <EpochCredit ds={ds} />

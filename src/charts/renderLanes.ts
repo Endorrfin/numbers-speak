@@ -12,7 +12,12 @@
  * whole span visible no selection is drawn: a selection as wide as the strip could only be moved, never drawn anew
  * (the mockup's v1 bug). The page owns the span and keeps it in the URL; selects are the keyboard path.
  *
- * Hover: the nearest dot within 18 px (pointer only; the table view serves keyboards and screen readers).
+ * CHANGED (S3-ai3): optional `events` — dated moments outside the lanes' own data (a launch, a first day at No. 1): a thin
+ * dashed line across the lanes with a small diamond on top; events closer than EVENT_GAP px share one line, and the
+ * tooltip names them all. Without `events` the SVG is the same as before (a test compares it).
+ *
+ * Hover: the nearest dot within 18 px, else an event line within EVENT_SNAP px (pointer only; the table view serves
+ * keyboards and screen readers).
  * Safety: text is written with `.text()` / `textContent` only. The whole SVG is redrawn per call (idempotent).
  */
 import { pointer, scaleUtc, select } from 'd3';
@@ -38,6 +43,9 @@ export type LanePoint = {
   tooltip: TipContent;
 };
 
+/** CHANGED (S3-ai3): a dated moment drawn as a line across the lanes; the tooltip carries its words. */
+export type LaneEvent = { key: string; /** UTC milliseconds. */ t: number; tooltip: TipContent };
+
 export type LanesOptions = {
   width: number;
   tooltip: HTMLElement | null;
@@ -49,6 +57,8 @@ export type LanesOptions = {
   formatTick: (t: number, fine: boolean) => string;
   /** The span the reader brushed, or null for "the whole span" (a click on the strip). */
   onBrush?: (span: [number, number] | null) => void;
+  /** CHANGED (S3-ai3): optional event lines (only the ones inside the visible span are drawn). */
+  events?: readonly LaneEvent[];
 };
 
 export type LanesLayout = {
@@ -137,6 +147,32 @@ export function mergeLabels(items: ReadonlyArray<{ i: number; x: number; text?: 
   return out.map((o) => ({ i: o.i, text: o.more ? `${o.first} +${o.more}` : o.first }));
 }
 
+/** CHANGED (S3-ai3): event lines closer than this (px) merge into one; the pointer finds a line within EVENT_SNAP px. */
+export const EVENT_GAP = 9;
+export const EVENT_SNAP = 6;
+
+/**
+ * Events that stand (almost) on the same x share one line (exported for tests): in x order, an event within `gap` px of
+ * the group's first joins it; the group's tooltip lists every member — titles and lines, in date order.
+ */
+export function mergeEvents(items: ReadonlyArray<{ x: number; event: LaneEvent }>, gap: number): Array<{ key: string; x: number; n: number; tooltip: TipContent }> {
+  const groups: Array<{ x: number; members: LaneEvent[] }> = [];
+  for (const it of [...items].sort((a, b) => a.x - b.x || a.event.t - b.event.t)) {
+    const last = groups.at(-1);
+    if (last && it.x - last.x < gap) last.members.push(it.event);
+    else groups.push({ x: it.x, members: [it.event] });
+  }
+  return groups.map((g) => {
+    const [first, ...rest] = g.members;
+    return {
+      key: first!.key,
+      x: g.x,
+      n: g.members.length,
+      tooltip: rest.length ? { title: first!.tooltip.title, lines: [...first!.tooltip.lines, ...rest.flatMap((e) => [e.tooltip.title, ...e.tooltip.lines])] } : first!.tooltip,
+    };
+  });
+}
+
 export function renderLanes(
   svgEl: SVGSVGElement,
   lanes: readonly LaneRow[],
@@ -175,6 +211,29 @@ export function renderLanes(
     .attr('y', L.lanesBottom + 16)
     .attr('text-anchor', 'middle')
     .text((t) => options.formatTick(t, fine));
+
+  // ── CHANGED (S3-ai3): event lines, under the lanes and dots ─────────────────────────────────────────────
+  const eventGroups = options.events
+    ? mergeEvents(
+        options.events.filter((e) => e.t >= options.view[0] && e.t < options.view[1]).map((event) => ({ x: x(event.t), event })),
+        EVENT_GAP,
+      )
+    : [];
+  if (options.events) {
+    const ev = svg
+      .append('g')
+      .attr('class', 'ln-events')
+      .selectAll<SVGGElement, (typeof eventGroups)[number]>('g')
+      .data(eventGroups, (d) => d.key)
+      .join('g')
+      .attr('class', (d) => (d.n > 1 ? 'ln-event is-merged' : 'ln-event'));
+    ev.append('line')
+      .attr('x1', (d) => d.x)
+      .attr('x2', (d) => d.x)
+      .attr('y1', L.lanesTop)
+      .attr('y2', L.lanesBottom);
+    ev.append('path').attr('d', (d) => `M${d.x},${L.lanesTop - 5}l4,4l-4,4l-4,-4z`);
+  }
 
   // ── Lanes ─────────────────────────────────────────────────────────────────────────────────────────
   const rows = svg
@@ -270,7 +329,13 @@ export function renderLanes(
       const [mx, my] = pointer(event, svgEl);
       const i = nearestPoint(cx, cy, mx, my, SNAP);
       const d = visible[i];
-      if (!d) return hide();
+      if (!d) {
+        // CHANGED (S3-ai3): no dot near — an event line under the pointer?
+        const e = eventGroups.find((g) => Math.abs(g.x - mx) <= EVENT_SNAP);
+        if (!e) return hide();
+        ring.attr('display', 'none');
+        return showTip(tooltip, svgEl, event, e.tooltip);
+      }
       ring.attr('cx', cx[i]!).attr('cy', cy[i]!).attr('display', null);
       showTip(tooltip, svgEl, event, d.tooltip);
     })

@@ -58,7 +58,7 @@ export const VIZ_CARDS: readonly VizCard[] = [
     },
     "status": "published",
     "added": "2026-10-13",
-    "updated": "2026-10-13",
+    "updated": "2026-10-15",
     "related": [
       "robotization",
       "global-brands-race",

@@ -3,6 +3,7 @@
 // sub-span, a drag reports the span, a click reports null), Scatter's opt-in segments and zoom (no option = the same SVG
 // as before; zoom: clip, redraw on a transform, ticks of the zoomed domain, kept across redraws, cleanup), the zoom
 // gesture filter, and the build's chunk rule (brush / zoom / drag / hierarchy never in d3-vendor). Run: npm test.
+// CHANGED (S3-ai3): + Lanes' opt-in event lines (inside the view only, close ones merged, tooltip, no option = no group).
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
@@ -13,7 +14,7 @@ g.window = dom.window;
 g.document = dom.window.document;
 for (const k of ['MouseEvent', 'TouchEvent', 'WheelEvent', 'Event', 'SVGElement', 'Element', 'Node']) g[k] = (dom.window as unknown as Record<string, unknown>)[k];
 
-const { dodge, fitSub, layoutLanes, mergeLabels, renderLanes, LABEL_ROOM } = await import('../src/charts/renderLanes');
+const { dodge, fitSub, layoutLanes, mergeEvents, mergeLabels, renderLanes, LABEL_ROOM, EVENT_GAP } = await import('../src/charts/renderLanes');
 const { renderScatter } = await import('../src/charts/renderScatter');
 const { attachScatterZoom, zoomFilter } = await import('../src/charts/scatterZoom');
 const { zoomIdentity } = await import('d3');
@@ -122,6 +123,59 @@ await test('lanes: phone layout — narrow label column, no sublabels; dodge kee
     { i: 0, text: 'A +2' },
     { i: 3, text: 'D' },
   ]);
+});
+
+// CHANGED (S3-ai3)
+await test('lanes: event lines — opt-in, inside the view only, close ones merged, tooltip names them all', () => {
+  const ev = (key: string, iso: string, title: string) => ({ key, t: T(iso), tooltip: { title, lines: [iso] } });
+  const events = [ev('launch', '2022-11-30', 'Launch <b>'), ev('e1', '2024-03-26', 'First'), ev('e2', '2024-03-31', 'Second'), ev('late', '2026-12-01', 'Outside')];
+  // No option: no group at all (the SVG is the pre-S3-ai3 one).
+  const plain = freshSvg();
+  renderLanes(plain, lanes, points, { width: 900, tooltip: tip, domain, view: domain, formatTick: fmt });
+  assert.equal(plain.querySelector('.ln-events'), null);
+  const before = plain.outerHTML;
+  const again = freshSvg();
+  renderLanes(again, lanes, points, { width: 900, tooltip: tip, domain, view: domain, formatTick: fmt, events: undefined });
+  assert.equal(again.outerHTML, before);
+
+  const svg = freshSvg();
+  const cleanup = renderLanes(svg, lanes, points, { width: 900, tooltip: tip, domain, view: domain, formatTick: fmt, events });
+  const groups = [...svg.querySelectorAll('g.ln-event')];
+  assert.equal(groups.length, 2, 'five days apart merge on the whole span; outside the view is dropped');
+  assert.equal(svg.querySelectorAll('g.ln-event.is-merged').length, 1);
+  assert.equal(svg.querySelectorAll('.ln-event line').length, 2);
+  assert.equal(svg.querySelectorAll('.ln-event path').length, 2);
+  // Lines sit under the dots (drawn before the lanes group).
+  const order = [...svg.children].map((c) => c.getAttribute('class'));
+  assert.ok(order.indexOf('ln-events') < order.indexOf('ln-dots'));
+  // Hover on the launch line, away from every dot: the event's tooltip, as text.
+  const x = Number(groups[0]!.querySelector('line')!.getAttribute('x1'));
+  const L = layoutLanes(900, lanes);
+  svg.querySelector('.ln-hit')!.dispatchEvent(new dom.window.MouseEvent('pointermove', { bubbles: true, clientX: x + 2, clientY: L.lanesTop + 2 }));
+  assert.equal(tip.hidden, false);
+  assert.equal(tip.querySelector('strong')!.textContent, 'Launch <b>');
+  assert.equal(tip.querySelector('b'), null, 'text, not markup');
+  cleanup();
+  // A narrower view drops what falls outside it.
+  const svg2 = freshSvg();
+  renderLanes(svg2, lanes, points, { width: 900, tooltip: tip, domain, view: [T('2024-01-01'), T('2025-01-01')], formatTick: fmt, events });
+  assert.equal(svg2.querySelectorAll('g.ln-event').length, 2, 'at this scale the two March days stand apart');
+  // mergeEvents: in x order, within the gap of the group's first; members listed in date order.
+  const merged = mergeEvents(
+    [
+      { x: 14, event: ev('b', '2024-01-02', 'B') },
+      { x: 10, event: ev('a', '2024-01-01', 'A') },
+      { x: 10 + EVENT_GAP, event: ev('c', '2024-02-01', 'C') },
+    ],
+    EVENT_GAP,
+  );
+  assert.deepEqual(
+    merged.map((m) => [m.key, m.n, m.tooltip.title, m.tooltip.lines]),
+    [
+      ['a', 2, 'A', ['2024-01-01', 'B', '2024-01-02']],
+      ['c', 1, 'C', ['2024-02-01']],
+    ],
+  );
 });
 
 // ── Scatter: segments + zoom are opt-in ─────────────────────────────────────────────────────────────

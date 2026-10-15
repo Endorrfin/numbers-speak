@@ -22,6 +22,8 @@ export const txt = {
   colTo: { en: 'To', uk: 'До' },
   colDays: { en: 'Days', uk: 'Днів' },
   colSource: { en: 'Source', uk: 'Джерело' },
+  // CHANGED (S3-ai3)
+  factsTitle: { en: 'Did you know', uk: 'Цікаво' },
   creditArena: {
     en: 'Data: LMArena leaderboard-dataset (CC BY 4.0), text leaderboard, overall; read {retrieved}.',
     uk: 'Дані: LMArena leaderboard-dataset (CC BY 4.0), текстовий рейтинг, overall; прочитано {retrieved}.',

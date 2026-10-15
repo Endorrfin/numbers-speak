@@ -700,6 +700,36 @@ async function main(): Promise<void> {
     const hl = r('hostile lineage', { show: 'lineage', company: '<x>', view: 'zz' }, 'en', ['Built on']);
     ok(!hl.includes('aria-expanded="true"') && !hl.includes('<x>'), 'ready:ai hostile lineage: no tree, nothing echoed');
     r('hostile users', { show: 'users', company: 'nobody', split: 'access', from: '2024-01' }, 'en', ['Users']);
+    // CHANGED (S3-ai3): a headline sentence + "Did you know" on every angle; events on the timeline (numbers from insights.ts).
+    const ins = await import('../src/viz/ai-models/insights');
+    const { formatMonth, formatPeople, formatYears } = await import('../src/lib/format');
+    const peak = ins.busiestMonth(rel.rows)!;
+    const firsts = ins.arenaFirsts(ar);
+    r('S3-ai3 timeline', {}, 'en', ['class="angle-lead"', 'models of the eight companies; the busiest month was', 'Did you know', `The busiest month on the lanes: ${formatMonth(peak.month, 'en')}, with ${peak.n}`, 'ChatGPT launched (OpenAI), 30 Nov 2022', 'events (hover']);
+    r('S3-ai3 timeline openai', { company: 'openai' }, 'en', ['OpenAI: ', 'the first GPT-1']);
+    r('S3-ai3 timeline xai 2019', { company: 'xai', from: '2019-01', to: '2019-12' }, 'en', ['xAI: no models, Jan 2019 – Dec 2019.']);
+    r('S3-ai3 timeline table', { view: 'table' }, 'en', [`Events on the timeline (${firsts.length + ins.MANUAL_EVENTS.length})`, 'href="https://openai.com/index/chatgpt/"', 'Anthropic: first day at No. 1 on LMArena', firsts[0]!.model]);
+    r('S3-ai3 timeline uk', {}, 'uk', ['Цікаво', 'Запуск ChatGPT (OpenAI)', 'Найбільше моделей вісімки за місяць']);
+    const vs = ins.firstVsLargest(cmp.rows);
+    r('S3-ai3 scale', { show: 'scale' }, 'en', ['The largest training run grew from', `took ${formatPeople(vs.ratio, 'en')} times the compute of ${vs.first.model}`, `would take ${formatYears(vs.years, 'en')}`]);
+    r('S3-ai3 scale anthropic', { show: 'scale', company: 'anthropic' }, 'en', ['Anthropic: the largest training run with a figure is']);
+    r('S3-ai3 scale uk', { show: 'scale' }, 'uk', ['Найбільше навчання зросло з', `тривало б ${formatYears(vs.years, 'uk')}`]);
+    const vw = await import('../src/viz/ai-models/views');
+    const lf = vw.leadFacts(vw.companyRuns(ar));
+    r('S3-ai3 arena', { show: 'arena' }, 'en', ['held No. 1 the longest', `The lead passed from one company to another ${lf.changes} times.`, 'The longest stretch of one company:', 'The shortest:']);
+    r('S3-ai3 arena mistral', { show: 'arena', company: 'mistral' }, 'en', ['Mistral: never No. 1 from']);
+    r('S3-ai3 arena anthropic uk', { show: 'arena', company: 'anthropic' }, 'uk', ['Anthropic: №1 —', 'Переходів першого місця']);
+    const pop = JSON.parse(readFileSync('public/data/population-by-country/population-2025.json', 'utf8')) as { world: number };
+    const big = Math.max(...cl.claims.map((c) => c.value));
+    r('S3-ai3 users', { show: 'users' }, 'en', ['ChatGPT: more than 1.2 billion weekly active users as of', 'The fastest doubling: ChatGPT', `as many as 1 in ${vw.oneIn(pop.world, big)} of the world’s`, 'is not a count of people']);
+    r('S3-ai3 users uk', { show: 'users' }, 'uk', ['Найшвидше подвоєння', `кожен ${vw.oneIn(pop.world, big)}-й`]);
+    const bf = vw.baseFacts(ln)!;
+    r('S3-ai3 lineage', { show: 'lineage' }, 'en', ['The most models are built on', `${bf.top.model} (Meta) has the most models built directly on it: ${bf.top.children}.`, 'Next, among the other companies:']);
+    r('S3-ai3 lineage xai', { show: 'lineage', company: 'xai' }, 'en', ['xAI: no model in Epoch AI’s database is recorded as built on its models.']);
+    r('S3-ai3 lineage uk', { show: 'lineage', company: 'meta' }, 'uk', ['Meta: моделей на її моделях —', 'Далі, серед інших компаній']);
+    const jump = ins.biggestJump(aD.parseOrigins(A(aD.FILES.origins)))!;
+    r('S3-ai3 origins', { show: 'origins' }, 'en', ['— the most models recorded,', `The biggest jump: ${jump.year}`, 'more than half of the models recorded had open weights']);
+    r('S3-ai3 origins access uk', { show: 'origins', split: 'access' }, 'uk', ['з відкритими вагами —', 'Найбільший стрибок']);
     const hostile = r('hostile', { show: '<x>', company: '<script>', from: '9999-99', to: '2010-01', split: 'zz' }, 'en', ['Timeline']);
     ok(!hostile.includes('<script>'), 'ready:ai hostile params never echoed');
   }

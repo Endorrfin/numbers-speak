@@ -2,6 +2,7 @@
 // per company that held it, its runs as bars, its days in the top 3 as a thin strip, the days at No. 1 as a bar on the
 // right). The board is the one the site showed: raw until the style-control switch, style-controlled after (a marker).
 // The table lists every run; a second table gives the eight companies' days at No. 1 and in the top 3.
+// CHANGED (S3-ai3): a headline sentence and "Did you know" facts (company stretches, insights.ts).
 import { useCallback, useMemo } from 'react';
 import { Spans } from '../../charts/Spans';
 import type { SpanRow } from '../../charts/renderSpans';
@@ -9,12 +10,13 @@ import { useLang } from '../../i18n/lang';
 import { fill, ui } from '../../i18n/ui';
 import { formatDate, formatDays, formatMonth, formatNumber, formatShare } from '../../lib/format';
 import { dataUrl, useDataset } from '../../lib/useDataset';
-import { CompanySelect, DataState } from './common';
+import { CompanySelect, DataState, Facts, Lead } from './common';
 import type { AngleProps } from './common';
 import { FILES, arenaLeaders, arenaRuns, daysBetween, knownCompany, monthOfMs, parseArena, parseReleases, top3Spans } from './data';
 import type { ArenaDataset, ArenaRun, Hero, ReleasesDataset } from './data';
 import { txt as shared } from './text';
-import { lastDay, ms } from './views';
+import { companyRuns, lastDay, leadFacts, ms } from './views';
+import type { CompanyRun } from './views';
 
 const parse = (json: unknown): ArenaDataset => parseArena(json, FILES.arena);
 const parseHeroes = (json: unknown): ReleasesDataset => parseReleases(json, FILES.releases);
@@ -50,6 +52,17 @@ const txt = {
   colShare: { en: 'Share of the days at No. 1', uk: 'Частка днів на №1' },
   runsCaption: { en: 'Every run at No. 1, {from} – {to} ({n})', uk: 'Усі серії на №1, {from} – {to} ({n})' },
   sumCaption: { en: 'The eight companies on the LMArena text leaderboard, {from} – {to}', uk: 'Вісім компаній у текстовому рейтингу LMArena, {from} – {to}' },
+  // CHANGED (S3-ai3)
+  lead: { en: '{name} held No. 1 the longest: {days} of {total} ({share}).', uk: '{name} найдовше була №1: {days} із {total} ({share}).' },
+  leadCompany: {
+    en: '{name}: No. 1 for {days} of {total} ({share}), in {runs} stretches; the first began {date}.',
+    uk: '{name}: №1 — {days} із {total} ({share}), серій — {runs}; перша почалася {date}.',
+  },
+  leadCompanyOne: { en: '{name}: No. 1 for {days} of {total} ({share}), in one stretch from {date}.', uk: '{name}: №1 — {days} із {total} ({share}), однією серією з {date}.' },
+  leadNever: { en: '{name}: never No. 1 from {from} to {to}; {top3} in the top 3.', uk: '{name}: жодного дня на №1 з {from} до {to}; у трійці — {top3}.' },
+  factChanges: { en: 'The lead passed from one company to another {n} times.', uk: 'Переходів першого місця від однієї компанії до іншої — {n}.' },
+  factLongest: { en: 'The longest stretch of one company: {name}, {days} ({from} – {to}).', uk: 'Найдовша серія однієї компанії: {name}, {days} ({from} – {to}).' },
+  factShortest: { en: 'The shortest: {name}, {days} — {model}, from {from}.', uk: 'Найкоротша: {name}, {days} — {model}, з {from}.' },
 } as const;
 
 export function ArenaAngle(props: AngleProps) {
@@ -108,10 +121,36 @@ function ArenaView({ ds, heroes, settings, update }: AngleProps & { ds: ArenaDat
     runs: runs.length,
   });
   const top3Of = new Map(heroes.map((h) => [h.id, h.top3Days]));
+
+  // CHANGED (S3-ai3): headline (the leader, or the highlighted company) and facts on company stretches.
+  const stretches = useMemo(() => companyRuns(ds), [ds]);
+  const facts = leadFacts(stretches);
+  const totalN = formatNumber(total, lang);
+  const own = company ? leaders.find((l) => l.org === company) : undefined;
+  const ownRuns = company ? stretches.filter((r) => r.org === company) : [];
+  const lead = company
+    ? own
+      ? fill(t(ownRuns.length === 1 ? txt.leadCompanyOne : txt.leadCompany), {
+          name: name(company),
+          days: formatDays(own.first, lang),
+          total: totalN,
+          share: formatShare(own.first / total, lang),
+          runs: formatNumber(ownRuns.length, lang),
+          date: formatDate(ownRuns[0]!.from, lang),
+        })
+      : fill(t(txt.leadNever), { name: name(company), from: fromText, to: toText, top3: formatDays(top3Of.get(company) ?? 0, lang) })
+    : fill(t(txt.lead), { name: name(top.org), days: formatDays(top.first, lang), total: totalN, share: formatShare(top.first / total, lang) });
+  const until = (r: CompanyRun): string => (r.open ? fill(t(txt.stillFirst), { date: toText }) : formatDate(lastDay(r.to), lang));
+  const factItems = [
+    fill(t(txt.factChanges), { n: formatNumber(facts.changes, lang) }),
+    fill(t(txt.factLongest), { name: name(facts.longest.org), days: formatDays(facts.longest.days, lang), from: formatDate(facts.longest.from, lang), to: until(facts.longest) }),
+    fill(t(txt.factShortest), { name: name(facts.shortest.org), days: formatDays(facts.shortest.days, lang), model: facts.shortest.models.join(', '), from: formatDate(facts.shortest.from, lang) }),
+  ];
   const firstOf = new Map(leaders.map((l) => [l.org, l.first]));
 
   return (
     <>
+      <Lead text={lead} />
       <div className="controls" role="group" aria-label={t(ui.chartSettings)}>
         <CompanySelect heroes={heroes} value={company} onChange={(id) => update({ company: id })} />
       </div>
@@ -228,6 +267,7 @@ function ArenaView({ ds, heroes, settings, update }: AngleProps & { ds: ArenaDat
           </li>
         ) : null}
       </ul>
+      <Facts items={factItems} />
       <p className="chart-note muted">{fill(t(txt.noteMissing), { from: fromText })}</p>
       <p className="chart-note muted">{fill(t(txt.noteMethod), { last: formatDate(lastDay(ds.switchDate), lang), switch: formatDate(ds.switchDate, lang) })}</p>
       <p className="chart-note muted">{fill(t(shared.creditArena), { retrieved: formatDate(ds.retrieved, lang) })}</p>

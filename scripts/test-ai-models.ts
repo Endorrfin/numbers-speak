@@ -3,6 +3,8 @@
 // raw rows, the derivations the angles draw (periods, lanes, trend, origins), the axis ticks and the URL state.
 // CHANGED (S3-ai2): + angles C · D · E — No. 1 runs, claims (raw = shipped, one line per product + measure), lineage trees
 // (= the rule's counts), the tree cut, the user axis; six data files.
+// CHANGED (S3-ai3): + the headline / "Did you know" numbers (insights.ts), each recomputed here a second way from the
+// shipped files, and the timeline's events (first-party launch; first days at No. 1 without the series start).
 // Run: npm test.
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -10,6 +12,7 @@ import { DatasetError } from '../src/lib/dataset';
 import {
   DATA_FILES,
   FILES,
+  FIRST_YEAR,
   ancestorOrgs,
   accessOf,
   arenaDays,
@@ -54,6 +57,9 @@ import { flopTicks, formatFlopTick, formatYearTick, yearTicks } from '../src/viz
 import { formatFlop, formatMonth, formatPowerOfTen } from '../src/lib/format';
 import { readArena, readClaims, readEpoch, readHeroes } from '../data-raw/ai-models/raw';
 import { TREE_CAPS, claimText, familyView, lastDay, userAxis } from '../src/viz/ai-models/views';
+import { MANUAL_EVENTS, arenaFirsts, biggestJump, busiestMonth, firstOpenMajority, firstVsLargest, largestOfYear, recentShare } from '../src/viz/ai-models/insights';
+import { baseFacts, companyRuns, fastestDoubling, leadFacts, oneIn, topBases } from '../src/viz/ai-models/views';
+import { parsePopDataset } from '../src/viz/population-by-country/data';
 
 let passed = 0;
 function test(name: string, fn: () => void): void {
@@ -362,6 +368,122 @@ test('E: the tree cut — at most 6 families, 5 children, 3 grandchildren; the r
       }, 0);
     assert.equal(shown + count(roots), h.derived, h.id);
   }
+});
+
+// ── CHANGED (S3-ai3): insights ───────────────────────────────────────────────────────────────────────
+
+test('S3-ai3 A: events — the launch is first-party and inside the span; first days at No. 1 skip the series start', () => {
+  for (const e of MANUAL_EVENTS) {
+    assert.match(e.url, /^https:\/\/openai\.com\//);
+    assert.ok(e.date >= `${FIRST_YEAR}-01-01` && e.date <= releases.through, e.key);
+    assert.ok(e.quote.length > 20 && e.title.en && e.title.uk);
+  }
+  // A second way: walk the snapshots, note each organization's first day at rank 1.
+  const seen = new Map<string, string>();
+  for (const s of arena.snapshots) {
+    const org = s.top.find((x) => x.rank === 1)!.org;
+    if (!seen.has(org)) seen.set(org, s.date);
+  }
+  const start = arena.snapshots[0]!.date;
+  const expected = [...seen].filter(([, d]) => d !== start).map(([org, date]) => ({ org, date }));
+  assert.deepEqual(arenaFirsts(arena).map(({ org, date }) => ({ org, date })), expected);
+  assert.ok(expected.length >= 1 && !expected.some((e) => e.date === start));
+  // Every company with a first day is one of the eight (its name comes from releases.json).
+  for (const f of arenaFirsts(arena)) assert.ok(releases.heroes.some((h) => h.id === f.org), f.org);
+});
+
+test('S3-ai3 A: busiest month and the share of the last three years', () => {
+  const counts = new Map<string, number>();
+  for (const r of releases.rows) counts.set(r.date.slice(0, 7), (counts.get(r.date.slice(0, 7)) ?? 0) + 1);
+  const max = Math.max(...counts.values());
+  const first = [...counts].filter(([, n]) => n === max).map(([m]) => m).sort()[0];
+  assert.deepEqual(busiestMonth(releases.rows), { month: first, n: max });
+  assert.equal(busiestMonth([]), null);
+  const from = Number(releases.through.slice(0, 4)) - 2;
+  const r = recentShare(releases.rows, releases.through, 3);
+  assert.deepEqual(r, { from, n: releases.rows.filter((x) => x.date >= `${from}-01-01`).length, total: releases.rows.length });
+});
+
+test('S3-ai3 B: first model of the eight with a figure vs the largest; the largest of the first year', () => {
+  const eight = compute.rows.filter((r) => r.hero !== null).sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : b.flop - a.flop));
+  const top = [...compute.rows].sort((a, b) => b.flop - a.flop)[0]!;
+  const c = firstVsLargest(compute.rows);
+  assert.equal(c.first, eight[0]);
+  assert.equal(c.top, top);
+  assert.ok(Math.abs(c.ratio - top.flop / eight[0]!.flop) < 1e-6 * c.ratio);
+  assert.ok(Math.abs(c.years * 365.25 * 86400 - c.ratio) < 1e-6 * c.ratio, 'one second → years');
+  const y0 = compute.rows.filter((r) => r.date.startsWith(String(FIRST_YEAR))).sort((a, b) => b.flop - a.flop)[0]!;
+  assert.equal(largestOfYear(compute.rows, FIRST_YEAR), y0);
+  assert.equal(largestOfYear(compute.rows, 1990), null);
+});
+
+test('S3-ai3 C: company stretches = model runs merged by company; changes, longest, shortest finished', () => {
+  const runs = arenaRuns(arena);
+  const cr = companyRuns(arena);
+  // A second way: count the snapshots where the leading organization differs from the snapshot before.
+  let changes = 0;
+  arena.snapshots.forEach((s, i) => {
+    if (i && s.top.find((x) => x.rank === 1)!.org !== arena.snapshots[i - 1]!.top.find((x) => x.rank === 1)!.org) changes++;
+  });
+  const f = leadFacts(cr);
+  assert.equal(f.changes, changes);
+  assert.equal(cr.reduce((s, r) => s + r.days, 0), runs.reduce((s, r) => s + r.days, 0), 'stretches cover the same days');
+  for (let i = 1; i < cr.length; i++) assert.notEqual(cr[i]!.org, cr[i - 1]!.org);
+  assert.equal(cr.at(-1)!.open, cr.at(-1)!.to === arena.end);
+  assert.equal(f.longest.days, Math.max(...cr.map((r) => r.days)));
+  assert.equal(f.shortest.days, Math.min(...cr.filter((r) => !r.open).map((r) => r.days)));
+  assert.ok(!f.shortest.open);
+  for (const r of cr) assert.ok(r.models.length >= 1 && new Set(r.models).size === r.models.length);
+});
+
+test('S3-ai3 D: fastest doubling within one product and one measure; 1 in N people (UN world population)', () => {
+  const series = claimSeries(claimsDs);
+  let best = Infinity;
+  for (const s of series)
+    for (let a = 0; a < s.claims.length; a++)
+      for (let b = a + 1; b < s.claims.length; b++)
+        if (s.claims[b]!.value >= 2 * s.claims[a]!.value) {
+          best = Math.min(best, (Date.parse(s.claims[b]!.asOf) - Date.parse(s.claims[a]!.asOf)) / 86_400_000);
+          break; // the first doubling after a is the shortest from a
+        }
+  const d = fastestDoubling(series)!;
+  assert.equal(d.days, best);
+  assert.ok(d.series.claims[d.b]!.value >= 2 * d.series.claims[d.a]!.value && d.b > d.a);
+  assert.equal(fastestDoubling([]), null);
+  const pop = parsePopDataset(JSON.parse(readFileSync('public/data/population-by-country/population-2025.json', 'utf8')));
+  const biggest = Math.max(...series.map((s) => s.claims.at(-1)!.value));
+  const n = oneIn(pop.world, biggest);
+  assert.ok(Number.isInteger(n) && n >= 1 && Math.abs(pop.world / biggest - n) <= 0.5);
+});
+
+test('S3-ai3 E: the models with the most models built directly on them', () => {
+  // A second way: count parents in the shipped nodes (one model counted once, with its largest count).
+  const best = new Map<string, number>();
+  for (const h of lineageDs.heroes) {
+    const kids = new Map<string, Set<string>>();
+    for (const n of h.nodes) if (n.parent) kids.set(n.parent, (kids.get(n.parent) ?? new Set()).add(n.model));
+    for (const [m, set] of kids) best.set(m, Math.max(best.get(m) ?? 0, set.size));
+  }
+  const tb = topBases(lineageDs);
+  assert.equal(tb[0]!.children, Math.max(...best.values()));
+  for (const b of tb.slice(0, 20)) assert.equal(b.children, best.get(b.model), b.model);
+  const bf = baseFacts(lineageDs)!;
+  assert.deepEqual(bf.top, tb[0]);
+  assert.ok(bf.next.length <= 2 && bf.next.every((b) => b.hero !== bf.top.hero));
+  assert.equal(new Set(bf.next.map((b) => b.hero)).size, bf.next.length, 'one per company');
+});
+
+test('S3-ai3 F: biggest jump among complete years; first year with an open-weights majority', () => {
+  const totals = origins.years.map((_, i) => yearTotal(origins, i));
+  const last = partialYear(origins) ? totals.length - 2 : totals.length - 1;
+  let best = { i: -1, r: 0 };
+  for (let i = 1; i <= last; i++) if (totals[i - 1]! > 0 && totals[i]! / totals[i - 1]! > best.r) best = { i, r: totals[i]! / totals[i - 1]! };
+  const j = biggestJump(origins)!;
+  assert.equal(j.year, origins.years[best.i]);
+  assert.equal(j.after, totals[best.i]);
+  const k = origins.years.findIndex((_, i) => origins.access.open[i]! * 2 > totals[i]!);
+  const m = firstOpenMajority(origins);
+  assert.equal(m?.year ?? null, k >= 0 ? origins.years[k] : null);
 });
 
 console.log(`✓ ai-models — ${passed} test groups passed (releases ${releases.rows.length} · compute ${compute.rows.length} · arena ${arena.snapshots.length} · claims ${claimsDs.claims.length} · lineage ${lineageDs.heroes.length}).`);
