@@ -10,10 +10,13 @@
 //                  "days in the top 3")
 //   claims.json    CHANGED (S3-ai2): user counts the companies published themselves (angle D), one row per claim
 //   lineage.json   CHANGED (S3-ai2): models built on each company's models, with the base each one names (angle E)
+//   records.json   CHANGED (S3-ai4): the record for the largest training run, each day it was broken (angle G — 19 rows,
+//                  so the angle does not load compute.json for them)
 //
 // The eight companies are not chosen by hand (docs/AI-MODELS-PLAN.md §2): a company is on the page if one of its models
 // spent ≥ 30 days in the LMArena top 3, or if ≥ 100 Epoch models descend from its models. `heroCriterion` recomputes it.
 import { array, fail, finite, oneOf, record, string } from '../../lib/dataset';
+import type { Localized } from '../../catalog/types';
 
 export const FILES = {
   releases: 'releases.json',
@@ -23,6 +26,8 @@ export const FILES = {
   // CHANGED (S3-ai2): angles D and E.
   claims: 'claims.json',
   lineage: 'lineage.json',
+  // CHANGED (S3-ai4): angle G.
+  records: 'records.json',
 } as const;
 export const DATA_FILES: readonly string[] = Object.values(FILES);
 
@@ -531,6 +536,48 @@ export function computeTrend(rows: readonly Pick<ComputeRow, 'date' | 'flop'>[])
 /** The largest training run (the first one listed on a tie). */
 export const largest = (rows: readonly ComputeRow[]): ComputeRow => rows.reduce((a, b) => (b.flop > a.flop ? b : a));
 
+// ── CHANGED (S3-ai4): records.json (angle G) ───────────────────────────────────────────────────────
+
+/**
+ * Every day the record for the largest training run was broken: the largest run of that day (the first listed on a tie)
+ * when it beats every earlier day. Prep writes it; the test recomputes it from compute.json.
+ */
+export function flopRecords(rows: readonly ComputeRow[]): ComputeRow[] {
+  const out: ComputeRow[] = [];
+  for (const r of rows) {
+    const last = out.at(-1);
+    if (last && r.flop <= last.flop) continue;
+    // A larger run on the day of the last record replaces it (one record a day); a later day adds one.
+    if (last && last.date === r.date) out[out.length - 1] = r;
+    else out.push(r);
+  }
+  return out;
+}
+
+export type RecordsDataset = { epochUpdated: string; retrieved: string; through: string; rows: ComputeRow[] };
+
+export function parseRecords(json: unknown, where: string = FILES.records): RecordsDataset {
+  const o = record(json, where);
+  const head = header(o, where);
+  let prev: ComputeRow | null = null;
+  const rows = array(o.rows, `${where}.rows`, 1).map((raw, i): ComputeRow => {
+    const at = `${where}.rows[${i}]`;
+    const r = record(raw, at);
+    const row: ComputeRow = {
+      model: string(r.model, `${at}.model`),
+      org: r.org === null ? null : string(r.org, `${at}.org`),
+      hero: r.hero === null ? null : string(r.hero, `${at}.hero`, ID),
+      date: date(r.date, `${at}.date`),
+      flop: finite(r.flop, `${at}.flop`, 1, MAX_FLOP),
+    };
+    if (row.date < `${FIRST_YEAR}-01-01` || row.date > head.through) fail(`${at}.date`, `${row.date} is outside ${FIRST_YEAR}…${head.through}`);
+    if (prev && (row.date <= prev.date || row.flop <= prev.flop)) fail(at, 'each record must come later and be larger than the one before');
+    prev = row;
+    return row;
+  });
+  return { ...head, rows };
+}
+
 // ── origins.json (angle F) ─────────────────────────────────────────────────────────────────────────
 
 export const SPLITS = ['country', 'access'] as const;
@@ -845,5 +892,41 @@ export function validateDataFile(file: string, json: unknown): void {
   else if (file === FILES.arena) parseArena(json, file);
   else if (file === FILES.claims) parseClaims(json, file); // CHANGED (S3-ai2)
   else if (file === FILES.lineage) parseLineage(json, file);
+  else if (file === FILES.records) parseRecords(json, file); // CHANGED (S3-ai4)
   else fail(file, `no parser for this file (expected one of ${DATA_FILES.join(', ')})`);
+}
+
+// ── CHANGED (S3-ai4): events of the timeline (angle A), also angle G's jumps ─────────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Moved from insights.ts (S3-ai3) in S3-ai4: a lazy chunk (angle G) importing any main-chunk module other than data.ts made
+ * Rolldown split data.ts + text.ts into a shared chunk (+1.8 kB gzip on the default angle); data.ts is safe to share.
+ * A dated moment with a first-party source (owner decision, S3-ai3: only with a link to the company's own page). */
+export type ManualEvent = { date: string; key: string; title: Localized; url: string; quote: string; retrieved: string };
+
+export const MANUAL_EVENTS: readonly ManualEvent[] = [
+  {
+    date: '2022-11-30',
+    key: 'chatgpt-launch',
+    title: { en: 'ChatGPT launched (OpenAI)', uk: 'Запуск ChatGPT (OpenAI)' },
+    url: 'https://openai.com/index/chatgpt/',
+    quote: 'We’ve trained a model called ChatGPT which interacts in a conversational way.',
+    retrieved: '2026-10-15',
+  },
+];
+
+/**
+ * The first day each company's model was No. 1 on the board. The company at No. 1 in the first snapshot is left out:
+ * that day is where the series starts (the first snapshot with GPT-4), not a day it took the lead.
+ */
+export function arenaFirsts(ds: ArenaDataset): Array<{ org: string; date: string; model: string }> {
+  const start = ds.snapshots[0]!.date;
+  const seen = new Set<string>();
+  const out: Array<{ org: string; date: string; model: string }> = [];
+  for (const r of arenaRuns(ds)) {
+    if (seen.has(r.org)) continue;
+    seen.add(r.org);
+    if (r.from !== start) out.push({ org: r.org, date: r.from, model: r.model });
+  }
+  return out;
 }

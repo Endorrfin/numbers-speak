@@ -2993,3 +2993,233 @@
   margin: 0.25rem 0;
   line-height: 1.45;
 }
+
+/* ── CHANGED (S3-ai4): ai-models angle G "Then and now" — a day picker and a then / latest comparison ─────────── */
+.day-when {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+.day-when-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: flex-end;
+}
+.day-when input[type='date'] {
+  width: auto;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.day-range {
+  flex: 1 1 14rem;
+}
+.day-range input[type='range'] {
+  height: 2.6rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  accent-color: var(--accent);
+}
+.day-jumps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.day-jump {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--tx2);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.day-jump[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--tx);
+}
+.day-jump time {
+  margin-left: 0.3rem;
+  white-space: nowrap;
+  color: var(--tx3);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+.day-cmp {
+  display: grid;
+  border-top: 1px solid var(--line);
+}
+.day-cmp-head,
+.day-cmp-row {
+  display: grid;
+  grid-template-columns: minmax(0, 11rem) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.4rem 1.1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.day-cmp-head {
+  padding: 0.5rem 0;
+  color: var(--tx3);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.day-cmp-label {
+  margin: 0;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--tx);
+}
+.day-cmp-label small {
+  display: block;
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: var(--tx3);
+}
+.day-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+.day-tag {
+  display: none;
+  color: var(--tx3);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.day-big {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.day-model {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+}
+.day-meta {
+  display: block;
+  color: var(--tx2);
+  font-size: 0.82rem;
+}
+.day-none {
+  color: var(--tx3);
+  font-size: 0.85rem;
+}
+.day-x {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0 0.35rem;
+  border-radius: 4px;
+  background: var(--s2);
+  color: var(--tx);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  vertical-align: 0.2em;
+}
+.day-users {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.day-bars {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 0.2rem;
+  margin-top: 0.4rem;
+}
+.day-bar {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr) 5.5rem;
+  gap: 0.6rem;
+  align-items: center;
+  font-size: 0.82rem;
+}
+.day-bar-name {
+  overflow: hidden;
+  color: var(--tx2);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* The SVG sits absolutely inside a sized box (WebKit and in-flow inline SVG — CLAUDE.md §12). */
+.day-bar-track {
+  position: relative;
+  height: 0.75rem;
+  min-width: 0;
+}
+.day-bar-track svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.day-bar-now {
+  fill: var(--c-series-primary);
+  fill-opacity: 0.28;
+}
+.day-bar-then {
+  fill: var(--c-series-primary);
+}
+.day-bar-nums {
+  color: var(--tx2);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+.day-bars-key {
+  margin-top: 0.3rem;
+  font-size: 0.78rem;
+}
+.day-swatch {
+  display: inline-block;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 2px;
+  background: var(--c-series-primary);
+}
+.day-swatch.is-now {
+  opacity: 0.28;
+}
+/* Phone: the measure on top, then and latest side by side, each cell tagged. */
+@media (max-width: 559px) {
+  .day-cmp-head {
+    display: none;
+  }
+  .day-cmp-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .day-cmp-label {
+    grid-column: 1 / -1;
+  }
+  .day-tag {
+    display: block;
+  }
+  .day-big {
+    font-size: 1.1rem;
+  }
+  .day-model {
+    font-size: 0.82rem;
+  }
+  .day-bar {
+    grid-template-columns: 4.6rem minmax(0, 1fr) 4.9rem;
+    gap: 0.4rem;
+  }
+}

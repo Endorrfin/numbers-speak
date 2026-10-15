@@ -10,7 +10,7 @@ import { useLang } from '../../i18n/lang';
 import { fill, ui } from '../../i18n/ui';
 import { formatDate, formatDays, formatMonth, formatNumber, formatShare } from '../../lib/format';
 import { dataUrl, useDataset } from '../../lib/useDataset';
-import { CompanySelect, DataState, Facts, Lead } from './common';
+import { ArenaCredit, CompanySelect, DataState, Facts, Lead } from './common';
 import type { AngleProps } from './common';
 import { FILES, arenaLeaders, arenaRuns, daysBetween, knownCompany, monthOfMs, parseArena, parseReleases, top3Spans } from './data';
 import type { ArenaDataset, ArenaRun, Hero, ReleasesDataset } from './data';
@@ -270,7 +270,7 @@ function ArenaView({ ds, heroes, settings, update }: AngleProps & { ds: ArenaDat
       <Facts items={factItems} />
       <p className="chart-note muted">{fill(t(txt.noteMissing), { from: fromText })}</p>
       <p className="chart-note muted">{fill(t(txt.noteMethod), { last: formatDate(lastDay(ds.switchDate), lang), switch: formatDate(ds.switchDate, lang) })}</p>
-      <p className="chart-note muted">{fill(t(shared.creditArena), { retrieved: formatDate(ds.retrieved, lang) })}</p>
+      <ArenaCredit retrieved={ds.retrieved} />
     </>
   );
 }

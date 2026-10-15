@@ -125,3 +125,17 @@ d845f68989881cb922ee6fd131d2bce6fb9c88dce5978eb0719a4c053476eff9  all_ai_models.
     years, first model of the eight with a FLOP figure vs the largest, company stretches at No. 1 (changes, longest,
     shortest finished), fastest doubling inside one product + measure, most direct descendants, biggest yearly jump, first
     open-weights majority. `test-ai-models` recomputes each a second way from the shipped files.
+
+## S3-ai4 changes (2026-10-15) — one new file, no new source
+
+18. **Angle G “Then and now”** — owner decision (AskUserQuestion 2026-10-15) after the step-0 value check: every row of a
+    day already appears on A–D, and LMArena (from 6 Dec 2023) and user counts (from 2 Oct 2024) cover only the last 2 of 9
+    years, so a Play animation would mostly tick a model counter. Built narrower: one day against the latest figure of each
+    file, no Play; date field + range slider + jumps (a year and two years before the end, and angle A's events). Default
+    day (no `?on=`) = a year before the end of the data (13 Oct 2025 now). Mockup: https://claude.ai/artifact/QQRVguNLvv7oz67LSeC958
+19. **`records.json`** (`flopRecords` in data.ts) — the days compute.json's record for the largest training run was broken
+    (one per day: the day's largest run when it beats every earlier day; GPT-2's three sizes on 14 Feb 2019 are not three
+    records): 19 rows, 2.0 kB (0.7 kB gzip), so angle G does not load compute.json (25.5 kB gzip) for 19 numbers. Any
+    organization, as on angle B. `test-ai-models` recomputes it from compute.json by a plain scan.
+20. **Nothing is interpolated**: each “then” is the last row dated on or before the day (No. 1 holds from one snapshot to the
+    next, as on angle C; user counts per product AND measure, the change ×N only inside one series).

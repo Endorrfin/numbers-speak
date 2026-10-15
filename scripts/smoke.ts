@@ -732,6 +732,55 @@ async function main(): Promise<void> {
     r('S3-ai3 origins access uk', { show: 'origins', split: 'access' }, 'uk', ['з відкритими вагами —', 'Найбільший стрибок']);
     const hostile = r('hostile', { show: '<x>', company: '<script>', from: '9999-99', to: '2010-01', split: 'zz' }, 'en', ['Timeline']);
     ok(!hostile.includes('<script>'), 'ready:ai hostile params never echoed');
+    // CHANGED (S3-ai4): G — "Then and now", a lazy chunk: warm it up like C · D · E, then check the day against dayState.
+    check('ready:ai day first render', h(Ai, { params: { show: 'day' }, setParams: noop }), 'en', 100);
+    await import('../src/viz/ai-models/day');
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const ds = await import('../src/viz/ai-models/dayState');
+    const recs = aD.parseRecords(A(aD.FILES.records)).rows;
+    const lastDay = ds.dayLast(ar, rel);
+    const def = ds.defaultDay(lastDay);
+    const { formatDate } = await import('../src/lib/format');
+    const mDef = ds.modelsOn(rel, def);
+    const lDef = ds.leaderOn(runs, def)!;
+    const g = r('day', { show: 'day' }, 'en', [
+      'Then and now',
+      'class="angle-lead"',
+      `On ${formatDate(def, 'en')}, the eight companies had released ${formatNumber(mDef.then, 'en')} models`,
+      `by ${formatDate(rel.through, 'en')}, ${formatNumber(rel.rows.length, 'en')}`,
+      `value="${def}"`,
+      'type="range"',
+      'A year earlier',
+      'ChatGPT launched (OpenAI)',
+      'Anthropic: first No. 1',
+      lDef.run.model,
+      runs.at(-1)!.model,
+      ds.recordOn(recs, def)!.model,
+      recs.at(-1)!.model,
+      'Did you know',
+      'nothing is interpolated',
+      'Users, as each company counts them',
+    ]);
+    ok(g.includes('aria-pressed="true"'), 'ready:ai day: the default day is pressed among the jumps');
+    r('day chatgpt', { show: 'day', on: '2022-11-30' }, 'en', [
+      'value="2022-11-30"',
+      'The LMArena data begin on',
+      'No company had published a user count yet (the first: 2 Oct 2024)',
+      `the eight companies had released ${ds.modelsOn(rel, '2022-11-30').then} models`,
+      ds.recordOn(recs, '2022-11-30')!.model,
+      'where the LMArena data begin',
+    ]);
+    r('day 2018', { show: 'day', on: '2018-06-01' }, 'en', ['the eight companies had released 1 model;']);
+    r('day 2017', { show: 'day', on: '2017-01-02' }, 'en', ['none of the eight companies had a model on the lanes yet', 'No figure yet.']);
+    r('day last', { show: 'day', on: lastDay }, 'en', ['is still the record']);
+    r('day table', { show: 'day', on: '2025-03-31', view: 'table' }, 'en', ['<table', 'On 31 Mar 2025 and in the latest data', 'Models per company', 'GPT-4.5', '>202<', 'Users, as each company counts them: ChatGPT']);
+    r('day uk', { show: 'day' }, 'uk', ['Тоді й тепер', 'у восьми компаній було моделей —', 'Рік тому', 'Запуск ChatGPT (OpenAI)', 'Цікаво', 'Найбільше навчання']);
+    const gUk = r('day uk 2022', { show: 'day', on: '2022-11-30' }, 'uk', ['Дані LMArena починаються', 'Жодна компанія ще не публікувала']);
+    ok(!/р\.\./.test(gUk.replace(/<[^>]+>/g, '')), 'ready:ai day uk: no double full stop after an abbreviated date');
+    for (const on of ['2016-01-01', '2099-01-01', '2025-02-29', '<script>']) {
+      const bad = r(`day hostile ${on}`, { show: 'day', on }, 'en', [`value="${def}"`]);
+      ok(!bad.includes('<script>'), `ready:ai day hostile ${on}: nothing echoed`);
+    }
   }
 
   // CHANGED (S3-rb): GDP (PPP) per capita — three years, "× world average", table, region filter, EN + UK.

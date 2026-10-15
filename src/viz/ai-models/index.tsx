@@ -20,6 +20,8 @@ import { TimelineAngle } from './timeline';
 const ArenaAngle = lazy(() => import('./arena').then((m) => ({ default: m.ArenaAngle })));
 const UsersAngle = lazy(() => import('./users').then((m) => ({ default: m.UsersAngle })));
 const LineageAngle = lazy(() => import('./lineage').then((m) => ({ default: m.LineageAngle })));
+// CHANGED (S3-ai4): G — "Then and now", a lazy chunk too (the main chunk keeps its 30 kB gzip budget).
+const DayAngle = lazy(() => import('./day').then((m) => ({ default: m.DayAngle })));
 
 export default function AiModels({ params, setParams }: VizBodyProps) {
   const { t } = useLang();
@@ -35,6 +37,7 @@ export default function AiModels({ params, setParams }: VizBodyProps) {
     users: <UsersAngle settings={settings} update={update} />,
     lineage: <LineageAngle settings={settings} update={update} />,
     origins: <OriginsAngle settings={settings} update={update} />,
+    day: <DayAngle settings={settings} update={update} />,
   };
 
   return (
