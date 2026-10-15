@@ -2,41 +2,12 @@
 // and the events on the timeline (C · D · E keep theirs in views.ts, so they stay in their lazy chunks). Pure and unit-tested (scripts/test-ai-models.ts recomputes every figure from the files): each
 // fact is a rule over the data, never a picked model or a typed number, so a data refresh updates the sentence. The
 // words live next to the markup in each angle; the wording rule holds (counts, dates and ratios — no judgements).
-import type { Localized } from '../../catalog/types';
-import { arenaRuns, monthOf, partialYear, yearTotal } from './data';
-import type { ArenaDataset, ComputeRow, OriginsDataset, Release } from './data';
+import { monthOf, partialYear, yearTotal } from './data';
+import type { ComputeRow, OriginsDataset, Release } from './data';
 
-// ── Events (angle A) ─────────────────────────────────────────────────────────────────────────────────
-
-/** A dated moment with a first-party source (owner decision, S3-ai3: only with a link to the company's own page). */
-export type ManualEvent = { date: string; key: string; title: Localized; url: string; quote: string; retrieved: string };
-
-export const MANUAL_EVENTS: readonly ManualEvent[] = [
-  {
-    date: '2022-11-30',
-    key: 'chatgpt-launch',
-    title: { en: 'ChatGPT launched (OpenAI)', uk: 'Запуск ChatGPT (OpenAI)' },
-    url: 'https://openai.com/index/chatgpt/',
-    quote: 'We’ve trained a model called ChatGPT which interacts in a conversational way.',
-    retrieved: '2026-10-15',
-  },
-];
-
-/**
- * The first day each company's model was No. 1 on the board. The company at No. 1 in the first snapshot is left out:
- * that day is where the series starts (the first snapshot with GPT-4), not a day it took the lead.
- */
-export function arenaFirsts(ds: ArenaDataset): Array<{ org: string; date: string; model: string }> {
-  const start = ds.snapshots[0]!.date;
-  const seen = new Set<string>();
-  const out: Array<{ org: string; date: string; model: string }> = [];
-  for (const r of arenaRuns(ds)) {
-    if (seen.has(r.org)) continue;
-    seen.add(r.org);
-    if (r.from !== start) out.push({ org: r.org, date: r.from, model: r.model });
-  }
-  return out;
-}
+// ── Events (angle A) — CHANGED (S3-ai4): moved to data.ts (see there why), re-exported here ───────────
+export { MANUAL_EVENTS, arenaFirsts } from './data';
+export type { ManualEvent } from './data';
 
 // ── A ────────────────────────────────────────────────────────────────────────────────────────────────
 

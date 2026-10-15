@@ -3,6 +3,14 @@
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
 ## 2026‑10‑15
+- **Updated:** [AI models, 2017–2026 / AI-моделі, 2017–2026](https://endorrfin.github.io/numbers-speak/#/v/ai-models?show=day) —
+  a seventh angle, “Then and now”: pick a day and see what the data showed then next to the latest figures — No. 1 on
+  LMArena, the eight companies' models (16 on ChatGPT's launch day, 382 by 30 Sep 2026), the largest training run (Minerva
+  540B then, GPT-6 Astra with ×365 its compute now) and the companies' own user counts, each as of its own date; nothing is
+  interpolated. /
+  Сьомий погляд, «Тоді й тепер»: оберіть день і порівняйте, що показували дані тоді, з останніми числами — №1 на LMArena,
+  моделі восьми компаній (16 у день запуску ChatGPT, 382 до 30 вер. 2026), найбільше навчання (тоді Minerva 540B, тепер
+  GPT-6 Astra — ×365 обчислень) і числа користувачів від самих компаній, кожне на свою дату; нічого не інтерпольовано.
 - **Updated:** [AI models, 2017–2026 / AI-моделі, 2017–2026](https://endorrfin.github.io/numbers-speak/#/v/ai-models) —
   every angle now opens with one sentence on what the current view shows and closes with “Did you know” facts, each
   computed from the data: the largest training run took 56.9 million times the compute of GPT-1 — at GPT-1's one second,

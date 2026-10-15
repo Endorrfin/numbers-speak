@@ -12,6 +12,7 @@
  * add up to the whole span; every company has a lane; F's two splits add up to the same yearly totals; every file
  * passes the page's own parser. CHANGED (S3-ai2): every lineage root is the company's own model and every tree has as many
  * derived models as the rule counted; every claim's URL is https and every company of a claim is named.
+ * CHANGED (S3-ai4): records.json = the days compute.json's record was broken (flopRecords), for angle G.
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -27,6 +28,7 @@ import {
   arenaDays,
   candidates,
   derivedFrom,
+  flopRecords,
   heroCriterion,
   lineageTree,
   heroOfModel,
@@ -37,9 +39,10 @@ import {
   parseCompute,
   parseLineage,
   parseOrigins,
+  parseRecords,
   parseReleases,
 } from '../../src/viz/ai-models/data';
-import type { ComputeDataset, LineageDataset, OriginsDataset, Release, ReleasesDataset } from '../../src/viz/ai-models/data';
+import type { ComputeDataset, LineageDataset, OriginsDataset, RecordsDataset, Release, ReleasesDataset } from '../../src/viz/ai-models/data';
 import { ARENA_END, EPOCH_RETRIEVED, EPOCH_UPDATED, readArena, readClaims, readEpoch, readHeroes } from './raw';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -126,6 +129,9 @@ const compute: ComputeDataset = {
     .sort(byKey),
 };
 
+// CHANGED (S3-ai4): records.json (G) — the same rows, only the days the record was broken.
+const records: RecordsDataset = { ...head, rows: flopRecords(compute.rows) };
+
 // ── origins.json (F) ──────────────────────────────────────────────────────────────────────────────
 const lastYear = Number(through.slice(0, 4));
 const years = Array.from({ length: lastYear - FIRST_YEAR + 1 }, (_, i) => FIRST_YEAR + i);
@@ -172,6 +178,7 @@ const out: Array<[string, unknown, (json: unknown) => unknown]> = [
   [FILES.arena, arena, (j) => parseArena(j)],
   [FILES.claims, claims, (j) => parseClaims(j)],
   [FILES.lineage, lineageDs, (j) => parseLineage(j)],
+  [FILES.records, records, (j) => parseRecords(j)],
 ];
 for (const [file, json, parse] of out) {
   try {
@@ -196,4 +203,4 @@ console.log(
   `releases ${rows.length} · compute ${compute.rows.length} of ${compute.models} · origins ${years[0]}–${lastYear} (through ${through}) · ` +
     `arena ${arena.snapshots.length} snapshots ${arena.snapshots[0]!.date}–${ARENA_END}`,
 );
-console.log(`lineage: ${lineageDs.heroes.map((h) => `${h.id} ${h.derived}/${h.orgs}`).join(' · ')} · claims ${claims.claims.length}`);
+console.log(`lineage: ${lineageDs.heroes.map((h) => `${h.id} ${h.derived}/${h.orgs}`).join(' · ')} · claims ${claims.claims.length} · records ${records.rows.length}`);

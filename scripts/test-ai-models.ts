@@ -5,6 +5,8 @@
 // (= the rule's counts), the tree cut, the user axis; six data files.
 // CHANGED (S3-ai3): + the headline / "Did you know" numbers (insights.ts), each recomputed here a second way from the
 // shipped files, and the timeline's events (first-party launch; first days at No. 1 without the series start).
+// CHANGED (S3-ai4): + angle G — records.json = the record days of compute.json, and every "then" / "latest" figure of a
+// day recomputed from the files by a plain scan (no shared helper), incl. the edges: before the data, Feb 29, the last day.
 // Run: npm test.
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -41,8 +43,10 @@ import {
   monthStartMs,
   monthsBetween,
   originOf,
+  flopRecords,
   parseArena,
   parseCompute,
+  parseRecords,
   parseOrigins,
   parseReleases,
   partialYear,
@@ -60,6 +64,22 @@ import { TREE_CAPS, claimText, familyView, lastDay, userAxis } from '../src/viz/
 import { MANUAL_EVENTS, arenaFirsts, biggestJump, busiestMonth, firstOpenMajority, firstVsLargest, largestOfYear, recentShare } from '../src/viz/ai-models/insights';
 import { baseFacts, companyRuns, fastestDoubling, leadFacts, oneIn, topBases } from '../src/viz/ai-models/views';
 import { parsePopDataset } from '../src/viz/population-by-country/data';
+import {
+  DAY_FIRST,
+  addDays,
+  afterDay,
+  claimsOn,
+  dayLast,
+  dayPresets,
+  defaultDay,
+  firstClaimDay,
+  leaderNow,
+  leaderOn,
+  modelsOn,
+  recordOn,
+  resolveDay,
+  yearsBefore,
+} from '../src/viz/ai-models/dayState';
 
 let passed = 0;
 function test(name: string, fn: () => void): void {
@@ -81,6 +101,7 @@ const origins = parseOrigins(shipped(FILES.origins));
 const arena = parseArena(shipped(FILES.arena));
 const claimsDs = parseClaims(shipped(FILES.claims)); // CHANGED (S3-ai2)
 const lineageDs = parseLineage(shipped(FILES.lineage));
+const recordsDs = parseRecords(shipped(FILES.records)); // CHANGED (S3-ai4)
 const heroes = readHeroes();
 const epoch = readEpoch();
 const lineage = ancestorOrgs(epoch);
@@ -245,7 +266,7 @@ test('ticks and formats of angle B', () => {
 
 test('URL state: defaults omitted, shapes checked, angle-only parameters dropped', () => {
   const s = parseAiState({});
-  assert.deepEqual(s, { show: 'timeline', company: null, from: null, to: null, split: 'country', view: 'chart' });
+  assert.deepEqual(s, { show: 'timeline', company: null, from: null, to: null, split: 'country', on: null, view: 'chart' });
   assert.deepEqual(toAiParams(s), {});
   const a = parseAiState({ company: 'openai', from: '2024-01', to: '2025-06', view: 'table' });
   assert.deepEqual(toAiParams(a), { company: 'openai', from: '2024-01', to: '2025-06', view: 'table' });
@@ -254,7 +275,7 @@ test('URL state: defaults omitted, shapes checked, angle-only parameters dropped
   assert.deepEqual(toAiParams(parseAiState({ show: 'origins', split: 'access' })), { show: 'origins', split: 'access' });
   const bad = parseAiState({ show: 'x', company: '<script>', from: '2024-13', to: '24-01', split: 'y', view: 'z' });
   assert.deepEqual(bad, s);
-  assert.deepEqual([...SHOWS], ['timeline', 'scale', 'arena', 'users', 'lineage', 'origins']);
+  assert.deepEqual([...SHOWS], ['timeline', 'scale', 'arena', 'users', 'lineage', 'origins', 'day']);
   // CHANGED (S3-ai2): C · D · E keep the highlighted company and nothing else.
   for (const show of ['arena', 'users', 'lineage'] as const) {
     assert.deepEqual(toAiParams(switchShow(a, show)), { show, company: 'openai', view: 'table' });
@@ -484,6 +505,136 @@ test('S3-ai3 F: biggest jump among complete years; first year with an open-weigh
   const k = origins.years.findIndex((_, i) => origins.access.open[i]! * 2 > totals[i]!);
   const m = firstOpenMajority(origins);
   assert.equal(m?.year ?? null, k >= 0 ? origins.years[k] : null);
+});
+
+// ── CHANGED (S3-ai4): angle G ────────────────────────────────────────────────────────────────────────
+
+test('S3-ai4 records.json: exactly the days compute.json’s record was broken, one a day, each later and larger', () => {
+  // A plain scan by day: the largest run of each day that beats every earlier day.
+  const days = [...new Set(compute.rows.map((r) => r.date))].sort();
+  const expected: Array<{ date: string; flop: number; model: string }> = [];
+  let best = 0;
+  for (const d of days) {
+    const top = compute.rows.filter((r) => r.date === d).reduce((a, b) => (b.flop > a.flop ? b : a));
+    if (top.flop > best) {
+      best = top.flop;
+      expected.push({ date: top.date, flop: top.flop, model: top.model });
+    }
+  }
+  assert.deepEqual(recordsDs.rows.map((r) => ({ date: r.date, flop: r.flop, model: r.model })), expected);
+  assert.deepEqual(recordsDs.rows, flopRecords(compute.rows));
+  assert.equal(recordsDs.rows.length, 19);
+  assert.equal(recordsDs.rows.at(-1)!.model, 'GPT-6 Astra');
+  assert.equal(recordsDs.through, compute.through);
+  // Same-day runs: one record for the day, the largest (GPT-2's three sizes are not three records).
+  const r = (date: string, flop: number, model: string) => ({ model, org: null, hero: null, date, flop });
+  assert.deepEqual(flopRecords([r('2019-01-01', 5, 'a'), r('2019-02-14', 7, 'b'), r('2019-02-14', 9, 'c'), r('2019-03-01', 9, 'd')]).map((x) => x.model), ['a', 'c']);
+  // The contract: later AND larger.
+  const bad = clone(shipped(FILES.records)) as { rows: Array<{ flop: number; date: string }> };
+  bad.rows[3]!.flop = bad.rows[2]!.flop;
+  rejects(() => parseRecords(bad), /later and be larger/);
+  const late = clone(shipped(FILES.records)) as { rows: Array<{ date: string }>; through: string };
+  late.rows.at(-1)!.date = '2027-01-01';
+  rejects(() => parseRecords(late), /outside/);
+  validateDataFile(FILES.records, shipped(FILES.records));
+});
+
+test('S3-ai4 G: the day — default a year before the end, range check, Feb 29, presets from the events', () => {
+  const last = dayLast(arena, releases);
+  assert.equal(last, [arena.end, releases.through].sort().at(-1));
+  assert.equal(defaultDay(last), `${Number(last.slice(0, 4)) - 1}${last.slice(4)}`);
+  assert.equal(yearsBefore('2028-02-29', 1), '2027-02-28');
+  assert.equal(yearsBefore('2028-02-29', 4), '2024-02-29');
+  assert.equal(addDays('2024-02-28', 1), '2024-02-29');
+  assert.equal(resolveDay(null, last), defaultDay(last));
+  assert.equal(resolveDay('2016-12-31', last), defaultDay(last));
+  assert.equal(resolveDay(addDays(last, 1), last), defaultDay(last));
+  assert.equal(resolveDay(DAY_FIRST, last), DAY_FIRST);
+  assert.equal(resolveDay(last, last), last);
+  // URL: a real calendar day only; G keeps `on`, other angles drop it; switching angles clears it.
+  assert.deepEqual(toAiParams(parseAiState({ show: 'day', on: '2022-11-30', company: 'openai' })), { show: 'day', on: '2022-11-30' });
+  for (const on of ['2025-02-29', '2025-13-01', '22-11-30', '<x>']) assert.equal(parseAiState({ show: 'day', on }).on, null, on);
+  assert.deepEqual(toAiParams(parseAiState({ on: '2022-11-30' })), {});
+  assert.deepEqual(toAiParams(switchShow(parseAiState({ show: 'day', on: '2022-11-30', view: 'table' }), 'scale')), { show: 'scale', view: 'table' });
+  const presets = dayPresets(arena, last);
+  const dates = presets.map((p) => p.date);
+  assert.deepEqual(dates, [...dates].sort());
+  assert.equal(new Set(dates).size, dates.length);
+  assert.ok(dates.includes(yearsBefore(last, 1)) && dates.includes(yearsBefore(last, 2)));
+  for (const e of MANUAL_EVENTS) assert.ok(dates.includes(e.date), e.key);
+  for (const f of arenaFirsts(arena)) assert.ok(presets.some((p) => p.kind === 'first' && p.org === f.org && p.date === f.date), f.org);
+  assert.equal(presets.length, 2 + MANUAL_EVENTS.length + arenaFirsts(arena).length);
+});
+
+test('S3-ai4 G: “then” and “latest” on any day = a plain scan of the files', () => {
+  const runs = arenaRuns(arena);
+  const last = dayLast(arena, releases);
+  const series = claimSeries(claimsDs);
+  const check = (day: string): void => {
+    // No. 1: the leader of the last snapshot on or before the day; days in a row since its run began (the day counts).
+    const snap = arena.snapshots.filter((s) => s.date <= day).at(-1);
+    const l = leaderOn(runs, day);
+    if (!snap) assert.equal(l, null, day);
+    else {
+      const top = snap.top.find((e) => e.rank === 1)!;
+      assert.equal(l!.run.model, top.model, day);
+      assert.equal(l!.run.org, top.org, day);
+      // walk back while the same model led
+      let i = arena.snapshots.indexOf(snap);
+      while (i > 0 && arena.snapshots[i - 1]!.top.find((e) => e.rank === 1)!.model === top.model) i--;
+      assert.equal(l!.run.from, arena.snapshots[i]!.date, day);
+      assert.equal(l!.inRow, Math.round((Date.parse(day) - Date.parse(arena.snapshots[i]!.date)) / 86_400_000) + 1, day);
+    }
+    // Models of the eight.
+    const m = modelsOn(releases, day);
+    assert.equal(m.then, releases.rows.filter((r) => r.date <= day).length, day);
+    assert.equal(m.now, releases.rows.length);
+    assert.equal(m.byCompany.reduce((s, c) => s + c.then, 0), m.then);
+    assert.deepEqual(m.byCompany.map((c) => c.hero.id), releases.heroes.map((h) => h.id));
+    // The record: the largest figure in compute.json dated on or before the day.
+    const before = compute.rows.filter((r) => r.date <= day);
+    const rec = recordOn(recordsDs.rows, day);
+    if (!before.length) assert.equal(rec, null, day);
+    else assert.equal(rec!.flop, Math.max(...before.map((r) => r.flop)), day);
+    // Users: per product AND measure, the last figure on or before the day.
+    const c = claimsOn(claimsDs, day);
+    assert.equal(c.length, series.length);
+    for (const u of c) {
+      const own = claimsDs.claims.filter((x) => x.product === u.series.product && x.metric === u.series.metric).sort((a, b) => (a.asOf < b.asOf ? -1 : 1));
+      assert.equal(u.then?.asOf ?? null, own.filter((x) => x.asOf <= day).at(-1)?.asOf ?? null, `${day} ${u.series.key}`);
+      assert.equal(u.now.asOf, own.at(-1)!.asOf);
+      if (u.then) assert.equal(u.then.metric, u.now.metric);
+    }
+    // After the day.
+    const a = afterDay(m, recordsDs.rows, runs, day);
+    assert.equal(a.models, releases.rows.filter((r) => r.date > day).length, day);
+    assert.equal(a.records, recordsDs.rows.filter((r) => r.date > day).length, day);
+    const orgsAfter = arena.snapshots.filter((s) => s.date > day).map((s) => s.top.find((e) => e.rank === 1)!.org);
+    const startOrg = snap ? snap.top.find((e) => e.rank === 1)!.org : orgsAfter[0];
+    let changes = 0;
+    let prev = startOrg;
+    for (const o of orgsAfter) {
+      if (o !== prev) changes++;
+      prev = o;
+    }
+    assert.equal(a.changes, changes, day);
+    assert.equal(a.beforeArena, !snap, day);
+  };
+  // Every 9th day across the span + the edges and every preset.
+  for (let d = DAY_FIRST; d <= last; d = addDays(d, 9)) check(d);
+  for (const d of [DAY_FIRST, last, arena.snapshots[0]!.date, addDays(arena.snapshots[0]!.date, -1), firstClaimDay(claimsDs), ...dayPresets(arena, last).map((p) => p.date)]) check(d);
+  // Known values (the mockup approved on 2026-10-15).
+  assert.equal(modelsOn(releases, '2022-11-30').then, 16);
+  assert.equal(recordOn(recordsDs.rows, '2022-11-30')!.model, 'Minerva (540B)');
+  assert.equal(leaderOn(runs, '2022-11-30'), null);
+  assert.equal(claimsOn(claimsDs, '2022-11-30').filter((u) => u.then).length, 0);
+  assert.equal(firstClaimDay(claimsDs), '2024-10-02');
+  assert.equal(modelsOn(releases, '2025-03-31').then, 202);
+  assert.equal(recordOn(recordsDs.rows, '2025-03-31')!.model, 'GPT-4.5');
+  // The leader now: the last run, its days as angle C counts them.
+  const now = leaderNow(arena);
+  assert.equal(now.run.model, runs.at(-1)!.model);
+  assert.equal(now.inRow, runs.at(-1)!.days);
 });
 
 console.log(`✓ ai-models — ${passed} test groups passed (releases ${releases.rows.length} · compute ${compute.rows.length} · arena ${arena.snapshots.length} · claims ${claimsDs.claims.length} · lineage ${lineageDs.heroes.length}).`);

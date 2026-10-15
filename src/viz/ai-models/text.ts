@@ -43,6 +43,10 @@ export const txt = {
   },
 } as const satisfies Record<string, Localized>;
 
+/** A sentence that ends in an abbreviated date ("30 вер. 2026 р.") gets no second full stop. CHANGED (S3-ai4): moved here
+ * from common.tsx so that angle G can use it (a .tsx file exports components only — React Fast Refresh). */
+export const oneStop = (text: string): string => text.replace(/\.\.$/, '.');
+
 export const ACCESS_TEXT: Record<Access, Localized> = {
   open: { en: 'Open weights', uk: 'Відкриті ваги' },
   closed: { en: 'Closed (API, product or unreleased)', uk: 'Закриті (API, продукт або не випущено)' },
@@ -103,6 +107,15 @@ export const SHOW_TEXT: Record<Show, { key: string; tab: Localized; intro: Local
     intro: {
       en: 'Language and multimodal models Epoch AI recorded each year, by the developer’s country or by whether the weights are published.',
       uk: 'Мовні й мультимодальні моделі, які Epoch AI записав за кожен рік, — за країною розробника або за тим, чи опубліковано ваги.',
+    },
+  },
+  // CHANGED (S3-ai4)
+  day: {
+    key: 'G',
+    tab: { en: 'Then and now', uk: 'Тоді й тепер' },
+    intro: {
+      en: 'Pick a day: what the data showed then, next to the latest figure of each file — No. 1 on LMArena, the eight companies’ models, the largest training run and the companies’ own user counts.',
+      uk: 'Оберіть день: що показували дані тоді, поруч з останнім числом кожного файлу, — №1 на LMArena, моделі восьми компаній, найбільше навчання і числа користувачів від самих компаній.',
     },
   },
 };

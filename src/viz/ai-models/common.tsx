@@ -6,7 +6,7 @@ import { fill, ui } from '../../i18n/ui';
 import { formatDate, formatNumber } from '../../lib/format';
 import type { Hero, ReleasesDataset } from './data';
 import type { AiState } from './state';
-import { txt } from './text';
+import { oneStop, txt } from './text';
 
 export type AngleProps = { settings: AiState; update: (patch: Partial<AiState>) => void };
 
@@ -43,9 +43,16 @@ export function CompanySelect({ heroes, value, onChange }: { heroes: readonly He
   );
 }
 
+// CHANGED (S3-ai4): oneStop — a Ukrainian date ends in "р.", so "{retrieved}." printed "р..".
 export function EpochCredit({ ds }: { ds: { epochUpdated: string; retrieved: string } }) {
   const { t, lang } = useLang();
-  return <p className="chart-note muted">{fill(t(txt.creditEpoch), { updated: formatDate(ds.epochUpdated, lang), retrieved: formatDate(ds.retrieved, lang) })}</p>;
+  return <p className="chart-note muted">{oneStop(fill(t(txt.creditEpoch), { updated: formatDate(ds.epochUpdated, lang), retrieved: formatDate(ds.retrieved, lang) }))}</p>;
+}
+
+/** CHANGED (S3-ai4): the LMArena credit (angles C and G). */
+export function ArenaCredit({ retrieved }: { retrieved: string }) {
+  const { t, lang } = useLang();
+  return <p className="chart-note muted">{oneStop(fill(t(txt.creditArena), { retrieved: formatDate(retrieved, lang) }))}</p>;
 }
 
 /** The rule, its result and the closest companies outside — stated on the page, not only in the docs. */
@@ -77,9 +84,6 @@ export function RuleNote({ ds }: { ds: ReleasesDataset }) {
     </details>
   );
 }
-
-/** A sentence that ends in an abbreviated date ("30 вер. 2026 р.") gets no second full stop. */
-const oneStop = (text: string): string => text.replace(/\.\.$/, '.');
 
 /** CHANGED (S3-ai3): one sentence above the chart that says what the current view shows (numbers from the data). */
 export function Lead({ text }: { text: string }) {

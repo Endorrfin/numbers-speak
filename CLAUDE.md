@@ -146,7 +146,8 @@ on drag end; no selection over the whole span) · `Scatter` opt‑in `segments` 
 Ctrl/⌘ + wheel or pinch, a plain wheel scrolls the page, one finger scrolls until zoomed; without the options the SVG is
 byte‑identical) · `Spans` (S3‑ai2: Gantt rows of stretches + a thin secondary strip + a total bar per row, one dated
 marker) · `Milestones` (S3‑ai2: dated figures on a log axis, point shape = measure, a line only inside one series) · `Tree`
-(S3‑ai2: d3-hierarchy tidy tree, one column per depth, caller cuts the forest, labels fitted + `<title>`) · one‑offs. Every chart:
+(S3‑ai2: d3-hierarchy tidy tree, one column per depth, caller cuts the forest, labels fitted + `<title>`) · one‑offs (S3‑ai4:
+`ai-models` G “Then and now” — HTML rows + tiny bars, no chart core). Every chart:
 responsive width (ResizeObserver; labels stack above bars < 560 px), `role="img"` + a label that states the
 view, keyboard‑operable controls, a **table view** (the keyboard / screen‑reader path; tooltips are
 pointer‑only, text‑only), `prefers-reduced-motion` → no transitions, all settings in the URL query with
@@ -250,6 +251,10 @@ current. **Agent sessions never push.**
   d3-selection & co. in. What works: import d3-brush / d3-zoom (and d3-hierarchy in S3‑ai2) **from their own packages**
   (declared in package.json), leave them unassigned (`PAGE_ONLY_D3` in vite.config.ts), and mark the umbrella free of side
   effects (`treeshake.moduleSideEffects`). Check after a build: `grep -l __zoom dist/assets/*.js` names the page chunk only.
+- **A lazy chunk importing a main‑chunk module (S3‑ai4):** angle G importing `insights.ts` (or a new `events.ts`) made
+  Rolldown split `data.ts` + `text.ts` out of `ai-models` into a shared `data-*.js` (+1.8 kB gzip on the default angle);
+  importing `data.ts` itself does not. Shared helpers a lazy angle needs go into `data.ts` / `text.ts`; after a build check
+  that no new `data-*.js` sits next to the page chunk.
 - **Lazy angles inside a page (S3‑ai2):** `ai-models` loads C · D · E with `React.lazy` (own chunks, the default angle stays
   ≤ 30 kB gzip). SSR smoke renders a `Suspense` fallback for a lazy angle on the first pass — smoke renders each once, awaits
   the module imports and a timer tick, then checks; a new lazy angle needs the same warm‑up.
@@ -302,6 +307,9 @@ d3-hierarchy), card ×4.7 a year. Open: Safari / iPhone checklist (owner).
 + comparisons, events on the axes (S3‑ai3); “time machine” date slider (S3‑ai4, mockup first) — prompts in `docs/AI-MODELS-PLAN.md` §7c.
 **S3‑ai3 (2026‑10‑15):** done — headline + “Did you know” on all six angles, events on A only (owner). Next: **S3‑ai4** (mockup
 first); page chunk headroom 2.65 kB gzip.
+**S3‑ai4 (2026‑10‑15):** narrower “time machine” — angle G “Then and now” (no Play; owner after the value check). Page chunk
+27.89 kB gzip (headroom 2.11). Open: Safari / iPhone (date field, slider).
+
 
 ## 14. Status / progress log
 - **S0** (2026‑09‑17) — repo named `numbers-speak`; decisions D1–D10 accepted; `PROJECT-BRIEF.md`,
@@ -1199,3 +1207,29 @@ first); page chunk headroom 2.65 kB gzip.
   ≥ 2 facts, 0 console messages; 5 event lines (4 at 360: xAI + DeepSeek merge); event tooltip on hover.
   CHANGELOG **Updated** line. Branch (proposed) `viz/2026-10-ai-models-s3ai3`.
   Open: Safari / iPhone (event lines by tap); the main chunk has 2.65 kB left for S3‑ai4.
+- **S3‑ai4** (2026‑10‑15) — `ai-models` angle **G “Then and now”** (`?show=day&on=YYYY-MM-DD`). Step 0 (value check): every
+  row of a day is already on A–D (No. 1 = C's Gantt, models = A's brush, record = B's frontier, users = D), and the files
+  cover a day only partly — LMArena from 6 Dec 2023, user counts from 2 Oct 2024 (2 of 9 years); records change 19 times,
+  No. 1 32 times, so Play would tick a counter. New = the cross‑section of one day + “then → latest” ratios. Owner
+  (AskUserQuestion, all as recommended): narrower version without Play; records as a prep file; mockup approved
+  (https://claude.ai/artifact/QQRVguNLvv7oz67LSeC958); default = a year before the end of the data; range slider kept.
+  Data: `records.json` (`flopRecords`, one per day, 19 rows, 0.7 kB gzip; other six files byte‑identical after prep).
+  Page: `dayState.ts` (pure: `dayLast`, `yearsBefore` (29 Feb → 28 Feb), `defaultDay`, `resolveDay`, `dayPresets`,
+  `leaderOn` / `leaderNow`, `modelsOn`, `recordOn`, `claimsOn` per product AND measure, `afterDay`), `day.tsx` (lazy; lead +
+  date field + range (arrows = 1 day, `aria-valuetext` = the date) + jumps (`aria-pressed`) + four rows then / latest with
+  per‑company bars (absolute SVG in a sized box) + table view + 3 facts: models after the day, records broken since,
+  company changes at No. 1); `state.ts` `on` (real calendar days only, dropped by other angles, cleared on angle switch;
+  the default day goes back to the canonical link); `meta` description “Seven angles”, `data` + records.json.
+  Events (`MANUAL_EVENTS`, `arenaFirsts`) moved from insights.ts to data.ts (re‑exported) — §12 Rolldown note. Fixed
+  (pre‑existing since S3‑ai1): Ukrainian credits printed “р..” — `oneStop` (now in text.ts) in `EpochCredit` and new `ArenaCredit`.
+  Tests: `test-ai-models` 21 → 24 groups (records = plain scan of compute.json + contract rejections; day/default/Feb 29/
+  presets/URL; every “then”/“latest” on every 9th day 2017 → end + edges + presets vs a plain scan of the files, mockup
+  numbers pinned: 16 models / Minerva on 30 Nov 2022, 202 / GPT‑4.5 on 31 Mar 2025); smoke 2,671 → 2,746 (G EN + UK, table,
+  2017 / 2018 / last day / ChatGPT day, lazy warm‑up, hostile `on`, no “р..”). `verify` green in a scratch copy (Node 25.7;
+  38 test files · build): `ai-models` 27.35 → 27.89 kB gzip (≤ 30), `day` chunk 5.87 kB, `index` 26.55 and `d3-vendor`
+  24.67 unchanged. Playwright (playwright-core 1.64 + cached headless shell 1243, built site under the production URL):
+  3 views × 360/390/768/1280 × EN dark / UK light = 24 — no horizontal scroll, nothing outside the column, 4 rows + 8 bars,
+  ≥ 2 facts, 0 console messages; slider keys, a jump, the date field, back to the canonical link, angle switch drops `on`.
+  Fixes from the screenshots: double stop after «груд. 2023 р.», jump dates wrapping at 360 (`nowrap`).
+  CHANGELOG **Updated** line. Branch (proposed) `viz/2026-10-ai-models-s3ai4`.
+  Open: Safari / iPhone — the native date picker and the range slider by touch (owner).
