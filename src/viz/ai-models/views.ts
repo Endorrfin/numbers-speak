@@ -5,7 +5,8 @@ import type { Localized } from '../../catalog/types';
 import type { Lang } from '../../i18n/lang';
 import { fill } from '../../i18n/ui';
 import { formatPeople } from '../../lib/format';
-import type { Claim, FamilyNode, Metric, Qualifier } from './data';
+import { arenaRuns, daysBetween, familyTrees } from './data';
+import type { ArenaDataset, Claim, ClaimSeries, FamilyNode, LineageDataset, Metric, Qualifier } from './data';
 
 /** Midnight UTC of a YYYY-MM-DD day. */
 export const ms = (iso: string): number => Date.parse(`${iso}T00:00:00Z`);
@@ -85,3 +86,75 @@ export function familyView(trees: readonly FamilyNode[], caps: typeof TREE_CAPS,
   return { roots, shown };
 }
 
+// ── CHANGED (S3-ai3): headline / "Did you know" numbers of C · D · E (rules, recomputed in test-ai-models) ──
+
+// C──────────────────────────────────────────────────────────────────────────────────────────────
+
+/** Consecutive model runs of one company merged: a company's stretch at No. 1. `open` = still No. 1 on the last day. */
+export type CompanyRun = { org: string; from: string; to: string; days: number; models: string[]; open: boolean };
+
+export function companyRuns(ds: ArenaDataset): CompanyRun[] {
+  const out: CompanyRun[] = [];
+  for (const r of arenaRuns(ds)) {
+    const last = out.at(-1);
+    if (last && last.org === r.org) {
+      last.to = r.to;
+      last.days = daysBetween(last.from, r.to);
+      if (!last.models.includes(r.model)) last.models.push(r.model);
+    } else out.push({ org: r.org, from: r.from, to: r.to, days: r.days, models: [r.model], open: false });
+  }
+  if (out.length) out.at(-1)!.open = out.at(-1)!.to === ds.end;
+  return out;
+}
+
+/** How often the lead passed to another company; the longest stretch; the shortest finished one (earliest of equals). */
+export function leadFacts(runs: readonly CompanyRun[]): { changes: number; longest: CompanyRun; shortest: CompanyRun } {
+  const longest = runs.reduce((a, b) => (b.days > a.days ? b : a));
+  const shortest = runs.filter((r) => !r.open).reduce((a, b) => (b.days < a.days ? b : a));
+  return { changes: runs.length - 1, longest, shortest };
+}
+
+// D──────────────────────────────────────────────────────────────────────────────────────────────
+
+/** The shortest time in which one series' published figure at least doubled (within one product AND one measure). */
+export function fastestDoubling(series: readonly ClaimSeries[]): { series: ClaimSeries; a: number; b: number; days: number } | null {
+  let best: { series: ClaimSeries; a: number; b: number; days: number } | null = null;
+  for (const s of series)
+    s.claims.forEach((ca, a) => {
+      const b = s.claims.findIndex((cb, j) => j > a && cb.value >= 2 * ca.value);
+      if (b < 0) return;
+      const days = daysBetween(ca.asOf, s.claims[b]!.asOf);
+      if (!best || days < best.days || (days === best.days && ca.asOf < best.series.claims[best.a]!.asOf)) best = { series: s, a, b, days };
+    });
+  return best;
+}
+
+/** "1 in N people on Earth": N rounded to a whole number (a user count is not a count of people — the page says so). */
+export const oneIn = (world: number, value: number): number => Math.round(world / value);
+
+// E──────────────────────────────────────────────────────────────────────────────────────────────
+
+/** Models with the most models built directly on them, across the eight (a model in two companies' trees counted once). */
+export function topBases(ds: LineageDataset): Array<{ model: string; hero: string; children: number }> {
+  const best = new Map<string, { model: string; hero: string; children: number }>();
+  for (const h of ds.heroes)
+    for (const f of familyTrees(h)) {
+      const walk = (n: FamilyNode): void => {
+        const prev = best.get(n.model);
+        if (!prev || n.children.length > prev.children) best.set(n.model, { model: n.model, hero: h.id, children: n.children.length });
+        n.children.forEach(walk);
+      };
+      walk(f);
+    }
+  return [...best.values()].filter((b) => b.children > 0).sort((a, b) => b.children - a.children || (a.model < b.model ? -1 : 1));
+}
+
+/** The top base, then the top base of each other company — the next two of them. */
+export function baseFacts(ds: LineageDataset): { top: { model: string; hero: string; children: number }; next: Array<{ model: string; hero: string; children: number }> } | null {
+  const all = topBases(ds);
+  const top = all[0];
+  if (!top) return null;
+  const next: typeof all = [];
+  for (const b of all) if (b.hero !== top.hero && !next.some((n) => n.hero === b.hero)) next.push(b);
+  return { top, next: next.slice(0, 2) };
+}

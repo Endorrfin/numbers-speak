@@ -2,6 +2,19 @@
 
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
+## 2026‑10‑15
+- **Updated:** [AI models, 2017–2026 / AI-моделі, 2017–2026](https://endorrfin.github.io/numbers-speak/#/v/ai-models) —
+  every angle now opens with one sentence on what the current view shows and closes with “Did you know” facts, each
+  computed from the data: the largest training run took 56.9 million times the compute of GPT-1 — at GPT-1's one second,
+  1.8 years; the lead on LMArena passed from one company to another 14 times; ChatGPT's more than 1.2 billion weekly users
+  are as many as 1 in 7 people on Earth (a count of users, not of people). The timeline marks ChatGPT's launch and the
+  first day each company was No. 1. /
+  Кожен погляд тепер починається одним реченням про те, що показує поточний вигляд, і закінчується фактами «Цікаво»,
+  пораховані з даних: на найбільше навчання пішло в 56,9 млн разів більше обчислень, ніж на GPT-1, — якщо GPT-1 це одна
+  секунда, то 1,8 року; перше місце в LMArena 14 разів переходило до іншої компанії; понад 1,2 млрд користувачів ChatGPT
+  на тиждень — стільки, скільки кожен 7-й житель Землі (користувачі — не те саме, що люди). На хронології позначено
+  запуск ChatGPT і перший день кожної компанії на №1.
+
 ## 2026‑10‑13
 - **New:** [AI models, 2017–2026 / AI-моделі, 2017–2026](https://endorrfin.github.io/numbers-speak/#/v/ai-models) — six
   angles on eight companies chosen by a rule computed from the data (≥ 30 days in the LMArena top 3, or ≥ 100 models in

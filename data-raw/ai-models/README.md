@@ -106,3 +106,22 @@ d845f68989881cb922ee6fd131d2bce6fb9c88dce5978eb0719a4c053476eff9  all_ai_models.
     angle E only. The page draws at most 6 families × 5 children × 3 grandchildren; the table lists every model.
 13. **Arena runs** (angle C) are computed on the page from `arena.json` (`arenaRuns`): 32 runs, 31 changes of the No. 1
     model; the longest is claude-fable-5, 107 days from 10 Jun 2026.
+
+## S3-ai3 changes (2026-10-15) — no new data file, no prep change
+
+14. **Events on the timeline (angle A)** — owner decision (AskUserQuestion 2026-10-15): only what is new for the angle.
+    A gets ChatGPT's launch + the first day each company was No. 1 on LMArena (computed on the page from `arena.json`,
+    `arenaFirsts` in `src/viz/ai-models/insights.ts`; OpenAI's 6 Dec 2023 is left out — it is where the series starts,
+    not a day it took the lead). C keeps its one style-control marker (a first day at No. 1 is already the start of a
+    bar); D gets none (a leaderboard event beside a user count would suggest a cause the data do not show). A company's
+    first model is not an event — it is the first dot of its lane.
+15. **The one hand-entered event** — ChatGPT, 30 Nov 2022: `MANUAL_EVENTS` in `insights.ts` with the first-party URL
+    (https://openai.com/index/chatgpt/, “Introducing ChatGPT”, dated November 30, 2022) and the quoted sentence; read
+    2026-10-15 in the owner's Chrome (openai.com answers 403 to curl). A new event goes there only with such a link.
+16. **“1 in N people”** (angle D) divides the world population of the gallery's `population-by-country` file (UN WPP 2024,
+    1 July 2025) by the largest latest user count — joined at runtime, not copied; the sentence says that a count of users
+    is not a count of people.
+17. **Every headline and “Did you know” number is a rule**, never a picked model: busiest month, share of the last three
+    years, first model of the eight with a FLOP figure vs the largest, company stretches at No. 1 (changes, longest,
+    shortest finished), fastest doubling inside one product + measure, most direct descendants, biggest yearly jump, first
+    open-weights majority. `test-ai-models` recomputes each a second way from the shipped files.

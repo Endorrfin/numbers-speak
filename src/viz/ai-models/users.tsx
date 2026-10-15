@@ -1,23 +1,28 @@
 // users.tsx — CHANGED (S3-ai2): angle D, user counts the companies published themselves (Milestones: a log axis, the
 // shape of a point = what was counted, a line only inside one product AND one measure). First-party sources only — every
 // row of the table links the page the number is on and quotes its sentence. Companies with no such number are named.
+// CHANGED (S3-ai3): a headline sentence and "Did you know" facts; world population joined at runtime from the
+// population-by-country entry's file (UN WPP), like oil's per-person figures — not copied.
 import { useMemo } from 'react';
 import { Milestones } from '../../charts/Milestones';
 import type { MilestoneSeries, MilestonesOptions } from '../../charts/renderMilestones';
 import type { Localized } from '../../catalog/types';
 import { useLang } from '../../i18n/lang';
 import { fill, ui } from '../../i18n/ui';
-import { formatCountTick, formatDate, formatMonth } from '../../lib/format';
+import { formatCountTick, formatDate, formatDays, formatMonth, formatNumber, formatPeople } from '../../lib/format';
 import { dataUrl, useDataset } from '../../lib/useDataset';
-import { CompanySelect, DataState } from './common';
+import { DATA_FILE as POP_FILE, parsePopDataset } from '../population-by-country/data';
+import type { PopDataset } from '../population-by-country/data';
+import { CompanySelect, DataState, Facts, Lead } from './common';
 import type { AngleProps } from './common';
 import { FILES, METRIC_SHAPE, claimSeries, knownCompany, monthOfMs, parseClaims, parseReleases, silentCompanies } from './data';
-import type { ClaimsDataset, Hero, MetricShape, ReleasesDataset } from './data';
+import type { ClaimSeries, ClaimsDataset, Hero, MetricShape, ReleasesDataset } from './data';
 import { txt as shared } from './text';
-import { CHART_LABEL, METRIC_TEXT, PRODUCT_TEXT, claimText, ms, userAxis } from './views';
+import { CHART_LABEL, METRIC_TEXT, PRODUCT_TEXT, claimText, fastestDoubling, ms, oneIn, userAxis } from './views';
 
 const parse = (json: unknown): ClaimsDataset => parseClaims(json, FILES.claims);
 const parseHeroes = (json: unknown): ReleasesDataset => parseReleases(json, FILES.releases);
+const parsePop = (json: unknown): PopDataset => parsePopDataset(json, POP_FILE);
 const DAY = 86_400_000;
 
 const SHAPE_TEXT: Record<MetricShape, Localized> = {
@@ -57,17 +62,33 @@ const txt = {
   colFigure: { en: 'Figure', uk: 'Число' },
   colQuote: { en: 'In the company’s words', uk: 'Словами компанії' },
   caption: { en: 'Every figure, {from} – {to} ({n})', uk: 'Усі числа, {from} – {to} ({n})' },
+  // CHANGED (S3-ai3)
+  lead: {
+    en: '{product}: {latest} {metric} as of {date} — ×{x} the first figure here ({first}, {d0}).',
+    uk: '{product}: {latest} {metric} станом на {date} — ×{x} від першого числа тут ({first}, {d0}).',
+  },
+  leadOne: { en: '{product}: {latest} {metric} as of {date}.', uk: '{product}: {latest} {metric} станом на {date}.' },
+  factDoubling: {
+    en: 'The fastest doubling: {product}, from {a} to {b} {metric} in {days} ({d1} → {d2}).',
+    uk: 'Найшвидше подвоєння: {product}, з {a} до {b} {metric} за {days} ({d1} → {d2}).',
+  },
+  factPeople: {
+    en: '{product}: {latest} {metric} — as many as 1 in {n} of the world’s {world} people (UN, {year}); a count of users, though, is not a count of people.',
+    uk: '{product}: {latest} {metric} — стільки, скільки кожен {n}-й із {world} жителів Землі (ООН, {year}); утім, користувачі — не те саме, що люди.',
+  },
 } as const;
 
 export function UsersAngle(props: AngleProps) {
   const state = useDataset(dataUrl('ai-models', FILES.claims), parse);
   const heroes = useDataset(dataUrl('ai-models', FILES.releases), parseHeroes);
+  const pop = useDataset(dataUrl('population-by-country', POP_FILE), parsePop);
   if (state.status !== 'ready') return <DataState status={state.status} retry={state.status === 'error' ? state.retry : undefined} />;
   if (heroes.status !== 'ready') return <DataState status={heroes.status} retry={heroes.status === 'error' ? heroes.retry : undefined} />;
-  return <UsersView ds={state.data} heroes={heroes.data.heroes} {...props} />;
+  // CHANGED (S3-ai3): the population only feeds one fact — the angle draws without it (loading or failed).
+  return <UsersView ds={state.data} heroes={heroes.data.heroes} pop={pop.status === 'ready' ? pop.data : null} {...props} />;
 }
 
-function UsersView({ ds, heroes, settings, update }: AngleProps & { ds: ClaimsDataset; heroes: readonly Hero[] }) {
+function UsersView({ ds, heroes, pop, settings, update }: AngleProps & { ds: ClaimsDataset; heroes: readonly Hero[]; pop: PopDataset | null }) {
   const { t, lang } = useLang();
   const company = knownCompany(heroes, settings.company);
   const groups = useMemo(() => claimSeries(ds), [ds]);
@@ -118,14 +139,58 @@ function UsersView({ ds, heroes, settings, update }: AngleProps & { ds: ClaimsDa
   });
   const shapes = [...new Set(groups.map((g) => METRIC_SHAPE[g.metric]))];
 
+  // CHANGED (S3-ai3): headline = the series with the largest latest figure (of the highlighted company, if any).
+  const lastOf = (g: ClaimSeries) => g.claims.at(-1)!;
+  const pickSeries = (list: readonly ClaimSeries[]): ClaimSeries | undefined => [...list].sort((a, b) => lastOf(b).value - lastOf(a).value)[0];
+  const headSeries = company ? pickSeries(groups.filter((g) => g.hero === company)) : pickSeries(groups);
+  const sentence = (g: ClaimSeries): string => {
+    const c = lastOf(g);
+    const c0 = g.claims[0]!;
+    const words = { product: product(g.product), latest: claimText(c, lang), metric: t(METRIC_TEXT[g.metric]), date: formatDate(c.asOf, lang) };
+    return g.claims.length > 1
+      ? fill(t(txt.lead), { ...words, x: formatNumber(Math.round((c.value / c0.value) * 10) / 10, lang), first: claimText(c0, lang), d0: formatDate(c0.asOf, lang) })
+      : fill(t(txt.leadOne), words);
+  };
+  const lead = headSeries ? sentence(headSeries) : picked ? fill(t(txt.silentOne), { name: picked.name }) : '';
+  const dbl = fastestDoubling(groups);
+  const biggest = latest[0]!;
+  const facts = [
+    ...(dbl
+      ? [
+          fill(t(txt.factDoubling), {
+            product: product(dbl.series.product),
+            a: claimText(dbl.series.claims[dbl.a]!, lang),
+            b: claimText(dbl.series.claims[dbl.b]!, lang),
+            metric: t(METRIC_TEXT[dbl.series.metric]),
+            days: formatDays(dbl.days, lang),
+            d1: formatDate(dbl.series.claims[dbl.a]!.asOf, lang),
+            d2: formatDate(dbl.series.claims[dbl.b]!.asOf, lang),
+          }),
+        ]
+      : []),
+    ...(pop
+      ? [
+          fill(t(txt.factPeople), {
+            product: product(biggest.product),
+            latest: claimText(biggest, lang),
+            metric: t(METRIC_TEXT[biggest.metric]),
+            n: formatNumber(oneIn(pop.world, biggest.value), lang),
+            world: formatPeople(pop.world, lang),
+            year: pop.year,
+          }),
+        ]
+      : []),
+  ];
+
   return (
     <>
+      {lead && <Lead text={lead} />}
       <div className="controls" role="group" aria-label={t(ui.chartSettings)}>
         <CompanySelect heroes={heroes} value={company} onChange={(id) => update({ company: id })} />
       </div>
+      {/* CHANGED (S3-ai3): "no count found" for a picked company moved into the headline. */}
       <p className="viz-status" aria-live="polite">
         {fill(t(txt.status), { n: ds.claims.length, companies, from: fromText, to: toText })}
-        {picked && silent.includes(picked.name) ? ` · ${fill(t(txt.silentOne), { name: picked.name })}` : ''}
       </p>
 
       {settings.view === 'table' ? (
@@ -184,6 +249,7 @@ function UsersView({ ds, heroes, settings, update }: AngleProps & { ds: ClaimsDa
           </li>
         ))}
       </ul>
+      <Facts items={facts} />
       {silent.length > 0 && <p className="chart-note">{fill(t(txt.silent), { names: silent.join(', ') })}</p>}
       <p className="chart-note muted">{fill(t(txt.noteMetrics), { grok: grok ? formatDate(grok.asOf, lang) : '—' })}</p>
       <p className="chart-note muted">{t(txt.noteEarly)}</p>

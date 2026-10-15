@@ -1,5 +1,5 @@
 // common.tsx — CHANGED (S3-ai1): pieces the angles share — props, loading / error state, the company select, the
-// Epoch credit and the rule that chose the eight companies.
+// Epoch credit and the rule that chose the eight companies. CHANGED (S3-ai3): the headline sentence and "Did you know".
 import { useId } from 'react';
 import { useLang } from '../../i18n/lang';
 import { fill, ui } from '../../i18n/ui';
@@ -75,5 +75,30 @@ export function RuleNote({ ds }: { ds: ReleasesDataset }) {
         ))}
       </ul>
     </details>
+  );
+}
+
+/** A sentence that ends in an abbreviated date ("30 вер. 2026 р.") gets no second full stop. */
+const oneStop = (text: string): string => text.replace(/\.\.$/, '.');
+
+/** CHANGED (S3-ai3): one sentence above the chart that says what the current view shows (numbers from the data). */
+export function Lead({ text }: { text: string }) {
+  return <p className="angle-lead">{oneStop(text)}</p>;
+}
+
+/** CHANGED (S3-ai3): two or three facts under the chart, each computed by a rule in insights.ts. */
+export function Facts({ items }: { items: readonly string[] }) {
+  const { t } = useLang();
+  const id = useId();
+  if (!items.length) return null;
+  return (
+    <section className="angle-facts" aria-labelledby={id}>
+      <h3 id={id}>{t(txt.factsTitle)}</h3>
+      <ul>
+        {items.map((f) => (
+          <li key={f}>{oneStop(f)}</li>
+        ))}
+      </ul>
+    </section>
   );
 }

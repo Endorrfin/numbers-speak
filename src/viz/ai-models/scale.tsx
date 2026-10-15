@@ -1,7 +1,7 @@
 // scale.tsx — CHANGED (S3-ai1): angle B, training compute of every model since 2017 that Epoch has a figure for (Scatter on
 // a log axis + d3-zoom, opt-in), with the least-squares trend. The eight companies are one dark tone (no eight colours:
 // a name tells them apart — tooltip, labels, table); the highlighted one is the accent. Buttons are the keyboard path to
-// the zoom; the table lists the same models.
+// the zoom; the table lists the same models. CHANGED (S3-ai3): a headline sentence and "Did you know" facts.
 import { useMemo } from 'react';
 import { Scatter } from '../../charts/Scatter';
 import { attachScatterZoom } from '../../charts/scatterZoom';
@@ -9,12 +9,13 @@ import type { ScatterZoomProps } from '../../charts/Scatter';
 import type { ScatterAxis, ScatterPoint, ScatterSegment } from '../../charts/renderScatter';
 import { useLang } from '../../i18n/lang';
 import { fill, ui } from '../../i18n/ui';
-import { formatDate, formatFlop, formatNumber } from '../../lib/format';
+import { formatDate, formatFlop, formatNumber, formatPeople, formatYears } from '../../lib/format';
 import { dataUrl, useDataset } from '../../lib/useDataset';
-import { CompanySelect, DataState, EpochCredit } from './common';
+import { CompanySelect, DataState, EpochCredit, Facts, Lead } from './common';
 import type { AngleProps } from './common';
 import { FILES, FIRST_YEAR, computeTrend, decimalYear, knownCompany, largest, parseCompute, parseReleases } from './data';
 import type { ComputeDataset, ComputeRow, Hero, ReleasesDataset } from './data';
+import { firstVsLargest, largestOfYear } from './insights';
 import { flopTicks, formatFlopTick, formatYearTick, yearTicks } from './ticks';
 import { txt as shared } from './text';
 
@@ -62,6 +63,31 @@ const txt = {
   colFlop: { en: 'Training compute, FLOP', uk: 'Обчислення, FLOP' },
   tableTop: { en: 'The {n} largest training runs since {from}', uk: '{n} найбільших навчань від {from} року' },
   tableCompany: { en: '{name}: every model with a figure ({n})', uk: '{name}: усі моделі з числом ({n})' },
+  // CHANGED (S3-ai3)
+  lead: {
+    en: 'The largest training run grew from {f0} FLOP ({m0}, {y0}) to {f1} ({m1}, {y1}) — ×{k} a year on the trend.',
+    uk: 'Найбільше навчання зросло з {f0} FLOP ({m0}, {y0}) до {f1} ({m1}, {y1}) — за трендом ×{k} на рік.',
+  },
+  leadCompany: {
+    en: '{name}: the largest training run with a figure is {model}, {flop} FLOP ({date}); {known} of its {total} models have a figure.',
+    uk: '{name}: найбільше навчання з відомим числом — {model}, {flop} FLOP ({date}); число є для {known} з {total} її моделей.',
+  },
+  leadCompanyNone: {
+    en: '{name}: none of its {total} models has a training-compute figure in Epoch AI’s database.',
+    uk: '{name}: для жодної з {total} її моделей у базі Epoch AI немає числа обчислень.',
+  },
+  factRatio: {
+    en: '{top} ({date}) took {ratio} times the compute of {first} ({year}), the first model of the eight companies with a figure.',
+    uk: 'На {top} ({date}) пішло в {ratio} разів більше обчислень, ніж на {first} ({year}) — першу модель вісімки з відомим числом.',
+  },
+  factSecond: {
+    en: 'If {first}’s training had taken one second, {top}’s at the same speed would take {years}.',
+    uk: 'Якби навчання {first} тривало одну секунду, навчання {top} з тією ж швидкістю тривало б {years}.',
+  },
+  factYear: {
+    en: '{top} took {ratio} times the compute of {year}’s largest run, {model}.',
+    uk: 'На {top} пішло в {ratio} разів більше обчислень, ніж на найбільше навчання {year} року — {model}.',
+  },
 } as const;
 
 export function ScaleAngle(props: AngleProps) {
@@ -143,6 +169,25 @@ function ScaleView({ ds, heroes, settings, update }: AngleProps & { ds: ComputeD
   const k = formatNumber(Math.round(trend.perYear * 10) / 10, lang);
   const doubling = formatNumber(Math.round((12 * Math.log(2)) / Math.log(trend.perYear) * 10) / 10, lang);
   const byEight = ds.rows.filter((r) => r.hero !== null).length;
+
+  // CHANGED (S3-ai3): headline (the whole cloud, or the highlighted company) and facts (rules in insights.ts).
+  const y0 = largestOfYear(ds.rows, FIRST_YEAR);
+  const cname = company ? (nameOf.get(company) ?? '') : '';
+  const ownTop = company ? ds.rows.filter((r) => r.hero === company).reduce<ComputeRow | null>((a, b) => (!a || b.flop > a.flop ? b : a), null) : null;
+  const [known, ownTotal] = company ? (ds.disclosed[company] ?? [0, 0]) : [0, 0];
+  const lead = company
+    ? ownTop
+      ? fill(t(txt.leadCompany), { name: cname, model: ownTop.model, flop: formatFlop(ownTop.flop, lang), date: formatDate(ownTop.date, lang), known: formatNumber(known, lang), total: formatNumber(ownTotal, lang) })
+      : fill(t(txt.leadCompanyNone), { name: cname, total: formatNumber(ownTotal, lang) })
+    : y0
+      ? fill(t(txt.lead), { f0: formatFlop(y0.flop, lang), m0: y0.model, y0: FIRST_YEAR, f1: formatFlop(top.flop, lang), m1: top.model, y1: top.date.slice(0, 4), k })
+      : '';
+  const cmp = firstVsLargest(ds.rows);
+  const facts = [
+    fill(t(txt.factRatio), { top: cmp.top.model, date: formatDate(cmp.top.date, lang), ratio: formatPeople(cmp.ratio, lang), first: cmp.first.model, year: cmp.first.date.slice(0, 4) }),
+    fill(t(txt.factSecond), { first: cmp.first.model, top: cmp.top.model, years: formatYears(cmp.years, lang) }),
+    ...(y0 ? [fill(t(txt.factYear), { year: FIRST_YEAR, model: y0.model, ratio: formatPeople(top.flop / y0.flop, lang), top: top.model })] : []),
+  ];
   const label = fill(t(txt.chartLabel), {
     n: formatNumber(ds.rows.length, lang),
     from: FIRST_YEAR,
@@ -154,6 +199,7 @@ function ScaleView({ ds, heroes, settings, update }: AngleProps & { ds: ComputeD
 
   return (
     <>
+      {lead && <Lead text={lead} />}
       <div className="controls" role="group" aria-label={t(ui.chartSettings)}>
         <CompanySelect heroes={heroes} value={company} onChange={(id) => update({ company: id })} />
       </div>
@@ -205,6 +251,7 @@ function ScaleView({ ds, heroes, settings, update }: AngleProps & { ds: ComputeD
           <span className="kpi-label">{t(txt.kpiEight)}</span>
         </li>
       </ul>
+      <Facts items={facts} />
       <p className="chart-note">
         {fill(t(txt.disclosed), {
           list: heroes
