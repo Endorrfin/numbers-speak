@@ -441,8 +441,8 @@ async function main(): Promise<void> {
     const { SHOWS: AA_SHOWS } = await import('../src/viz/air-attacks-on-ukraine/state');
     check('ready:air chart', h(Aa, { params: {}, setParams: noop }), 'en', 1500, [
       'role="img"',
-      '119,405',
-      '7,639',
+      '130,596', // CHANGED (S3-aa5): refresh to 7 Nov 2026
+      '7,897',
       '87%',
       '61%',
       '823',
@@ -466,7 +466,8 @@ async function main(): Promise<void> {
     check('ready:air rates table', h(Aa, { params: { show: 'interception', view: 'table' }, setParams: noop }), 'en', 2000, ['<table', 'Cruise missiles', 'All years']);
     check('ready:air largest table', h(Aa, { params: { show: 'largest', view: 'table' }, setParams: noop }), 'en', 2000, ['<table', '823', '17:00–09:30']);
     check('ready:air largest missiles', h(Aa, { params: { show: 'largest', rank: 'missiles' }, setParams: noop }), 'en', 1500, ['127']);
-    check('ready:air civilians table', h(Aa, { params: { show: 'civilians', view: 'table' }, setParams: noop }), 'en', 2000, ['<table', '2,514', 'not published', '2026 (Jan–Aug)']);
+    // CHANGED (S3-aa5): HRMMU now Jan–Sep 2026; ICU writes Sep or Sept.
+    check('ready:air civilians table', h(Aa, { params: { show: 'civilians', view: 'table' }, setParams: noop }), 'en', 2000, ['<table', '2,514', 'not published', '2026 (Jan–Sep']);
     check('ready:air civilians uk', h(Aa, { params: { show: 'civilians', who: 'killed' }, setParams: noop }), 'uk', 1500, ['Далекобійні ракети й дрони']);
   }
 

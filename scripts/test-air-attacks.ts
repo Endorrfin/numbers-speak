@@ -78,9 +78,9 @@ const mini = () => ({
 
 test('real dataset: range, reports, notes', () => {
   assert.equal(ds.first, '2022-09-28');
-  assert.equal(ds.last, '2026-09-19');
+  assert.equal(ds.last, '2026-11-07'); // CHANGED (S3-aa5): refresh to 7 Nov 2026
   assert.equal(ds.hiddenFrom, '2026-08-10');
-  assert.equal(ds.reports.length, 1236);
+  assert.equal(ds.reports.length, 1297);
   assert.deepEqual(yearsOf(ds), [2022, 2023, 2024, 2025, 2026]);
   const hidden = ds.reports.flatMap((r) => r.items).filter((i) => i.note === 'launched-hidden');
   assert.ok(hidden.length > 0 && hidden.every((i) => i.class !== 'drones'));
@@ -88,8 +88,8 @@ test('real dataset: range, reports, notes', () => {
 
 test('summaries match the prep report (and the page copy)', () => {
   const all = summarize(ds, 'all');
-  assert.equal(all.drones.launched, 119_405);
-  assert.equal(all.missiles.launched, 7_639);
+  assert.equal(all.drones.launched, 130_596);
+  assert.equal(all.missiles.launched, 7_897);
   assert.equal(all.largest?.report.date, '2025-09-07');
   assert.deepEqual([all.largest?.total, all.largest?.drones, all.largest?.missiles], [823, 810, 13]);
   assert.equal(summarize(ds, 2023).drones.launched, 3_113);
@@ -110,8 +110,12 @@ test('buckets conserve every weapon, for every step and period', () => {
     }
   }
   const months = aggregate(ds, 'month', 'all');
-  assert.equal(months.length, 49);
-  assert.deepEqual([months[0]!.partial, months[1]!.partial, months[48]!.partial], [true, false, true]);
+  // CHANGED (S3-aa5): the month count follows first/last, so a refresh no longer breaks it.
+  const ym = (d: string) => Number(d.slice(0, 4)) * 12 + Number(d.slice(5, 7));
+  const span = ym(ds.last) - ym(ds.first) + 1;
+  assert.equal(months.length, span);
+  const lastPartial = ds.last.slice(8) !== String(new Date(Date.UTC(+ds.last.slice(0, 4), +ds.last.slice(5, 7), 0)).getUTCDate());
+  assert.deepEqual([months[0]!.partial, months[1]!.partial, months[span - 1]!.partial], [true, false, lastPartial]);
   assert.equal(aggregate(ds, 'month', 2025).length, 12);
   assert.ok(aggregate(ds, 'month', 2025).every((b) => !b.partial));
 });
@@ -123,7 +127,7 @@ test('calendar helpers: Monday weeks, month roll-over, period clamp', () => {
   assert.equal(nextBucket('2025-12-01', 'month'), '2026-01-01');
   assert.equal(nextBucket('2024-02-28', 'day'), '2024-02-29');
   assert.deepEqual(periodRange(ds, 2022), { from: '2022-09-28', to: '2022-12-31' });
-  assert.deepEqual(periodRange(ds, 2026), { from: '2026-01-01', to: '2026-09-19' });
+  assert.deepEqual(periodRange(ds, 2026), { from: '2026-01-01', to: '2026-11-07' });
 });
 
 test('rates: stopped = shot down + lost over rated items; hidden items stay out', () => {
@@ -261,7 +265,7 @@ test('spec B–E: shares sum to 1, rates need ≥ RATE_MIN, largest rows, civili
   assert.ok(drOnly.rows.every((r) => r.segments.length === 1 && r.segments[0]!.key === 'drones'));
   const cs = civiliansSpec(civ, 'all', 'en', en);
   assert.equal(cs.spans.length, 4);
-  assert.equal(new Date(cs.spans[3]!.end).toISOString().slice(0, 10), '2026-09-01');
+  assert.equal(new Date(cs.spans[3]!.end).toISOString().slice(0, 10), '2026-10-01'); // CHANGED (S3-aa5): HRMMU Jan–Sep 2026
   assert.deepEqual(cs.partial, [false, false, false, true]);
   assert.deepEqual(cs.panels[0]!.notes!.map((n) => n.index), [2, 3]);
   assert.equal(cs.xFormat(cs.xTicks[3]!), '2026*');

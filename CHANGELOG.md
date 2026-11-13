@@ -2,6 +2,17 @@
 
 New and updated visualizations, newest first. / Нові й оновлені візуалізації, найновіші — вгорі.
 
+## 2026‑11‑13
+- **Updated:** [Russian missile and drone attacks on Ukraine, 2022–2026 / Російські ракетні й дронові атаки на Україну, 2022–2026](https://endorrfin.github.io/numbers-speak/#/v/air-attacks-on-ukraine) —
+  Air Force reports to 7 Nov 2026 (were 19 Sep): 130,596 drones and 7,897 missiles since 28 Sep 2022; in 2026 alone
+  61,584 drones, more than in the whole of 2025 (54,536). Civilian casualties from long-range strikes now cover
+  January–September 2026 (UN HRMMU: 1,042 killed, 6,530 injured; September alone 165 and 1,119). One source slip
+  corrected — the day report of 3 Nov repeated the previous day's “139 shot down”; the Air Force said 62 of 81. /
+  Звіти Повітряних сил до 7 листопада 2026 (було до 19 вересня): 130 596 дронів і 7 897 ракет з 28.09.2022; лише за
+  2026 рік — 61 584 дрони, більше, ніж за весь 2025-й (54 536). Цивільні жертви далекобійних ударів тепер за
+  січень–вересень 2026 (HRMMU ООН: 1 042 загиблих, 6 530 поранених; лише у вересні — 165 і 1 119). Виправлено одну
+  помилку джерела: денний звіт за 3 листопада повторював учорашні «139 збито», Повітряні сили повідомили 62 з 81.
+
 ## 2026‑10‑15
 - **Updated:** [AI models, 2017–2026 / AI-моделі, 2017–2026](https://endorrfin.github.io/numbers-speak/#/v/ai-models?show=day) —
   a seventh angle, “Then and now”: pick a day and see what the data showed then next to the latest figures — No. 1 on
