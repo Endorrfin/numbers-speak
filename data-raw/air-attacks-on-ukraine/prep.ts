@@ -57,6 +57,8 @@ const MODEL_CLASS: Record<string, WeaponClass> = {
   'X-35': 'cruise',
   'X-35Y': 'cruise',
   Banderol: 'cruise',
+  // CHANGED (S3-aa5): Banderol is reported together with Dan-T from 22 Sep 2026 (one group in the source).
+  'Banderol/Dan-T': 'cruise',
   'Iskander-M': 'ballistic',
   'KN-23': 'ballistic',
   'Iskander-M/KN-23': 'ballistic',
@@ -70,6 +72,8 @@ const MODEL_CLASS: Record<string, WeaponClass> = {
   'X-32': 'antiship',
   'P-800 Oniks': 'antiship',
   '3M22 Zircon': 'antiship',
+  // CHANGED (S3-aa5): Zircon and Oniks given as one number from 29 Sep 2026.
+  '3M22 Zircon/P-800 Oniks': 'antiship',
   'X-31': 'other',
   'X-31P': 'other',
   'X-31PD': 'other',
@@ -101,6 +105,15 @@ const OUT_OF_SCOPE = new Set([
   'Aerial Bomb',
 ]);
 
+/**
+ * CHANGED (S3-aa5): source slips checked against the Air Force's own post (time_end|model → field values).
+ * 3 Nov 2026, day report 06:30–19:00: the CSV repeats the previous day's 139 destroyed; the Air Force said 62 of 81
+ * (https://www.pravda.com.ua/news/2026/11/03/8061098/). Applied before the checks; each use is printed.
+ */
+const FIXES: Record<string, { destroyed: number }> = {
+  '2026-11-03 19:00|Shahed-136/131': { destroyed: 62 },
+};
+
 /** Rule 1: regional commands and oblast administrations. */
 const REGIONAL_SOURCE = /^(https?:\/\/t\.me\/)?(pvk|kharkivoda)/i;
 
@@ -110,6 +123,7 @@ const rows = csvParse(csv);
 
 const stats = { rows: rows.length, regional: 0, regionalLaunched: 0, outOfScope: 0, outLaunched: 0, hidden: 0, destroyedMissing: 0, mixed: 0 };
 const capped: string[] = [];
+const fixed: string[] = [];
 const noCount: string[] = [];
 const problems: string[] = [];
 
@@ -168,7 +182,9 @@ for (const [i, d] of rows.entries()) {
   if (cls === 'mixed') stats.mixed++;
 
   const launched = Math.round(launchedRaw);
-  const destroyedRaw = num(d.destroyed);
+  const fix = FIXES[`${end}|${model}`];
+  if (fix) fixed.push(`${at} ${end} ${model}: destroyed ${d.destroyed} → ${fix.destroyed}`);
+  const destroyedRaw = fix ? fix.destroyed : num(d.destroyed);
   let lost = Math.round(num(d.not_reach_goal) ?? 0);
   let note: ItemNote | undefined;
   if ((d.status_data ?? '').trim() === 'hidden') {
@@ -308,6 +324,11 @@ console.log(`✓ ${RAW} sha256 ${sha}`);
 console.log(`  ${stats.rows} rows · regional dropped ${stats.regional} (${stats.regionalLaunched} launched) · out of scope ${stats.outOfScope} (${stats.outLaunched} launched)`);
 console.log(`  mixed rows ${stats.mixed} · hidden ${stats.hidden} (from ${dataset.hiddenFrom}) · destroyed missing ${stats.destroyedMissing}`);
 for (const c of capped) console.log(`  capped: ${c}`);
+for (const c of fixed) console.log(`  fixed: ${c}`);
+if (fixed.length !== Object.keys(FIXES).length) {
+  console.error(`✗ ${Object.keys(FIXES).length - fixed.length} fix(es) matched no row — check FIXES`);
+  process.exit(1);
+}
 for (const c of noCount) console.log(`  no number launched (skipped): ${c}`);
 console.log(`  ${dataset.reports.length} reports ${dataset.first} … ${dataset.last} · ${dataset.models.length} models`);
 for (const [y, acc] of byYear) console.log(`  ${y}: ${CLASS_ORDER.map((c) => `${c} ${acc[c] ?? 0}`).join(' · ')}`);

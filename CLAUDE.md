@@ -309,6 +309,7 @@ d3-hierarchy), card ×4.7 a year. Open: Safari / iPhone checklist (owner).
 first); page chunk headroom 2.65 kB gzip.
 **S3‑ai4 (2026‑10‑15):** narrower “time machine” — angle G “Then and now” (no Play; owner after the value check). Page chunk
 27.89 kB gzip (headroom 2.11). Open: Safari / iPhone (date field, slider).
+**S3‑aa5 (2026‑11‑13):** air attacks refreshed to 7 Nov 2026 (Kaggle) + HRMMU September 2026.
 
 
 ## 14. Status / progress log
@@ -1233,3 +1234,26 @@ first); page chunk headroom 2.65 kB gzip.
   Fixes from the screenshots: double stop after «груд. 2023 р.», jump dates wrapping at 360 (`nowrap`).
   CHANGELOG **Updated** line. Branch (proposed) `viz/2026-10-ai-models-s3ai4`.
   Open: Safari / iPhone — the native date picker and the range slider by touch (owner).
+- **S3‑aa5** (2026‑11‑13) — `air-attacks-on-ukraine` refresh (owner: “update air attacks”). Found first: the S3‑aa4 changes
+  logged above were **never committed** — `main` still had the v211 CSV (to 19 Sep 2026, sha 8278a8d2…) and the old pins; this
+  session redoes them on the new data. Owner's files in `data-raw/air-attacks-on-ukraine/data/` (untracked): Kaggle CSV + HRMMU
+  August and September 2026 PDFs. Audit (Node, scratchpad): 4,152 → 4,336 rows, same columns, reports to **7 Nov 2026**;
+  0 rows removed, 0 numbers revised (5 rows changed only unused detail columns — `Banderol` → `Banderol/Dan-T` inside
+  `launched_details`, launch‑place order, whitespace). New spellings: `Banderol/Dan-T` → cruise, `3M22 Zircon/P-800 Oniks` →
+  anti-ship (`MODEL_CLASS` + `labels.ts`); `Geran-2/4/5` only in PvkZahid posts (rule 1). **Source slip:** the 3 Nov day
+  report (06:30–19:00) had destroyed 139 > launched 81 — the previous day's figure; the Air Force said 62 of 81 (read via
+  Ukrainska Pravda) → new `FIXES` table in `prep.ts`, printed, prep fails if a fix matches no row. The 8 Oct national
+  report comes from GeneralStaff.ua only — no overlap with kpszsu. HRMMU September 2026 (page checked, 15 Oct 2026): month
+  long-range 165/1,119, short-range drones 87/475, Jan–Sep total 2,570/15,211 → 2026 row 1–9, 1,042/6,530 · 694/4,318.
+  Now: 1,297 reports, 130,596 drones, 7,897 missiles, 138,493 launched (card); 2026 drones 61,584 > 2025's 54,536; largest
+  attack unchanged (7 Sep 2025, 823); rounded rates in the copy unchanged. `meta.ts`: description numbers + “Six angles … a
+  calendar”, Kaggle source title (version not recorded), `retrieved` 2026‑11‑13 (the 2025 HRMMU page not re-read),
+  `updated` 2026‑11‑13; “January–September” in the civilians copy. Tests: pins updated; the month count and the last
+  month's “partial” now follow `first`/`last`; HRMMU span end 2026‑10‑01; smoke `130,596` / `7,897` / `2026 (Jan–Sep` (ICU
+  “Sep”/“Sept”). Scratch copy on Windows (Node 22.23 — `.nvmrc` says 25, `npm ci` warns EBADENGINE): typecheck · lint ·
+  check:catalog · check:data · 37 of 38 test files · smoke 2,746 · build green (page chunk 18.91 kB gzip, `index` 26.56).
+  The one red test is `ai-models` “ticks of angle B” (`flopTicks` gives 9.999999999999999e25 for 1e26 on Node 22) —
+  untouched by this session; CI runs Node 25 from `.nvmrc`. `country-facts.json` unchanged. CHANGELOG **Updated** line.
+  No browser check this session. Branch (proposed) `viz/2026-11-air-attacks-refresh`.
+  Open: `data-raw/air-attacks-on-ukraine/data/` (≈ 10 MB, PDFs) is not gitignored — delete it or move it to `docs/data/`
+  before committing; HRMMU October 2026 (expected mid‑November) for the next refresh.

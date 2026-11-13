@@ -104,7 +104,7 @@ export const VIZ_CARDS: readonly VizCard[] = [
     },
     "status": "published",
     "added": "2026-09-21",
-    "updated": "2026-09-24",
+    "updated": "2026-11-13",
     "related": [
       "volunteers-growth",
       "donations",

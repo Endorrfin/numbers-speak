@@ -32,3 +32,6 @@ _examples/
 public/flags/
 docs/info.txt
 docs/data
+
+# owner downloads dropped next to a dataset before a refresh (raw Kaggle CSV, HRMMU PDFs) — the committed copy is data-raw/<id>/<file>
+data-raw/*/data/

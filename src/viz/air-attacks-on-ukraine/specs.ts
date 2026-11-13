@@ -1,4 +1,4 @@
-// specs.ts — pure builders: formatters, the chart specs of the five angles and their accessible labels.
+// specs.ts — pure builders: formatters, the chart specs of the six angles and their accessible labels.
 // No React and no DOM, so the numbers every view prints are unit-tested (scripts/test-air-attacks.ts).
 // CHANGED (S3-aa): new.
 import type { SrRow, SrSpec } from '../../charts/renderStackedRows';

@@ -79,12 +79,12 @@ export const SHOW_TEXT: Readonly<Record<Show, ShowText>> = {
       uk: 'Цивільні, загиблі й поранені в Україні за рік, за верифікованими даними Моніторингової місії ООН з прав людини (HRMMU), і частка далекобійних ракет і дронів — там, де HRMMU її публікує.',
     },
     see: {
-      en: 'Long-range strikes caused {lr25} of civilian casualties in 2025 and {lr26} in January–August 2026 — about {ph25} and {ph26} people killed or injured per 100 long-range weapons launched.',
-      uk: 'Далекобійні удари спричинили {lr25} цивільних жертв у 2025 році і {lr26} у січні–серпні 2026-го — приблизно {ph25} і {ph26} загиблих чи поранених на 100 запущених ракет і дронів.',
+      en: 'Long-range strikes caused {lr25} of civilian casualties in 2025 and {lr26} in January–September 2026 — about {ph25} and {ph26} people killed or injured per 100 long-range weapons launched.',
+      uk: 'Далекобійні удари спричинили {lr25} цивільних жертв у 2025 році і {lr26} у січні–вересні 2026-го — приблизно {ph25} і {ph26} загиблих чи поранених на 100 запущених ракет і дронів.',
     },
     mind: {
-      en: 'HRMMU counts only verified cases, so these are lower bounds. For 2023 no breakdown by weapon is published as annual numbers, for 2024 only short-range drones; 2026 (*) is January–August, its breakdown the sum of the monthly updates. Casualties per 100 weapons set two sources side by side — a scale, not a measured rate.',
-      uk: 'HRMMU рахує лише верифіковані випадки, тож це нижня межа. Для 2023 року розбивку за зброєю річними числами не опубліковано, для 2024-го — лише дрони малої дальності; 2026 (*) — січень–серпень, розбивка — сума щомісячних оновлень. «Жертв на 100 запущених» ставить поруч два джерела — це масштаб, а не виміряна ймовірність.',
+      en: 'HRMMU counts only verified cases, so these are lower bounds. For 2023 no breakdown by weapon is published as annual numbers, for 2024 only short-range drones; 2026 (*) is January–September, its breakdown the sum of the monthly updates. Casualties per 100 weapons set two sources side by side — a scale, not a measured rate.',
+      uk: 'HRMMU рахує лише верифіковані випадки, тож це нижня межа. Для 2023 року розбивку за зброєю річними числами не опубліковано, для 2024-го — лише дрони малої дальності; 2026 (*) — січень–вересень, розбивка — сума щомісячних оновлень. «Жертв на 100 запущених» ставить поруч два джерела — це масштаб, а не виміряна ймовірність.',
     },
   },
   calendar: { // CHANGED (S3-aa3): new
